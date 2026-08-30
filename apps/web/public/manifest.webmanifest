@@ -1,0 +1,25 @@
+{
+  "name": "Kop Platform",
+  "short_name": "Kop",
+  "description": "Official OLSC Lebanon platform for membership, predictions, events, and community.",
+  "theme_color": "#c8102e",
+  "background_color": "#f5f1ea",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/pwa-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

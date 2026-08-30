@@ -1,0 +1,715 @@
+@import "tailwindcss";
+
+@theme {
+  --color-lfc-red: #c8102e;
+  --color-lfc-red-dark: #8a0b1f;
+  --color-pitch: #0b3d2e;
+  --color-ink: #101418;
+  --color-paper: #f0ebe4;
+  --color-gold: #d4a017;
+  --color-surface: #f8f5f0;
+  --color-surface-raised: #faf8f4;
+  --color-muted: #6b7280;
+  --font-sans: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+}
+
+:root {
+  --lfc-red: #c8102e;
+  --lfc-red-dark: #8a0b1f;
+  --pitch-green: #0b3d2e;
+  --ink: #101418;
+  --paper: #f0ebe4;
+  --surface: #f8f5f0;
+  --surface-raised: #faf8f4;
+  --gold: #d4a017;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(200, 16, 46, 0.07), transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba(11, 61, 46, 0.06), transparent 35%),
+    linear-gradient(180deg, #f3efe8 0%, #e8e2d9 100%);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+html {
+  background: #f0ebe4;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Design tokens as utilities */
+.kop-container {
+  @apply mx-auto w-full max-w-6xl px-4;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.kop-card {
+  @apply rounded-2xl border border-black/5 bg-surface/95 shadow-[0_8px_30px_rgba(16,20,24,0.06)] backdrop-blur-sm;
+}
+
+.kop-card-hover {
+  @apply transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(16,20,24,0.1)];
+}
+
+.kop-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition duration-200;
+}
+
+.kop-btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-lfc-red px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:bg-lfc-red-dark hover:shadow-lg;
+}
+
+.kop-btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-surface-raised px-5 py-3 text-sm font-semibold transition duration-200 hover:border-black/20 hover:bg-black/[0.02];
+}
+
+.kop-btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white;
+}
+
+.kop-input {
+  @apply mt-1.5 w-full rounded-xl border border-black/10 bg-surface-raised px-4 py-3 text-sm outline-none transition focus:border-lfc-red/40 focus:ring-2 focus:ring-lfc-red/15;
+}
+
+.kop-badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide;
+}
+
+.kop-badge-red {
+  @apply inline-flex items-center rounded-full bg-lfc-red/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-lfc-red;
+}
+
+.kop-badge-green {
+  @apply inline-flex items-center rounded-full bg-pitch/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-pitch;
+}
+
+.kop-badge-gold {
+  @apply inline-flex items-center rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#8a6914];
+}
+
+.kop-section-title {
+  @apply text-3xl font-extrabold tracking-tight text-ink md:text-4xl;
+}
+
+.kop-gradient-hero {
+  background: linear-gradient(135deg, #c8102e 0%, #8a0b1f 42%, #0b3d2e 100%);
+}
+
+.kop-gradient-dark {
+  background: linear-gradient(180deg, #101418 0%, #1a222d 100%);
+}
+
+.kop-feed-item {
+  @apply rounded-2xl border border-black/5 bg-surface p-4 transition hover:border-lfc-red/15 hover:shadow-md;
+}
+
+.kop-nav-link {
+  @apply rounded-lg px-3 py-2 text-sm font-medium text-white/75 transition hover:bg-white/10 hover:text-white;
+}
+
+.kop-nav-link-active {
+  @apply rounded-lg bg-white/15 px-3 py-2 text-sm font-semibold text-white;
+}
+
+.kop-member-nav-link {
+  @apply flex flex-col items-center gap-1 rounded-xl px-3 py-2 text-[11px] font-semibold text-white/70 transition hover:bg-white/10 hover:text-white;
+}
+
+.kop-member-nav-link-active {
+  @apply flex flex-col items-center gap-1 rounded-xl bg-white/15 px-3 py-2 text-[11px] font-semibold text-white;
+}
+
+.kop-divider {
+  @apply h-px bg-black/5;
+}
+
+.install-banner {
+  @apply mb-4 flex flex-col gap-3 rounded-3xl border border-lfc-red/10 bg-surface/90 p-4 shadow-[0_8px_30px_rgba(16,20,24,0.06)] backdrop-blur sm:flex-row sm:items-center sm:justify-between;
+}
+
+.install-banner-copy {
+  @apply min-w-0;
+}
+
+.install-banner-title {
+  @apply text-sm font-extrabold tracking-tight text-ink;
+}
+
+.install-banner-text {
+  @apply mt-1 text-xs leading-relaxed text-black/55 sm:text-sm;
+}
+
+/* Reactions & comments */
+.reaction-chip {
+  @apply inline-flex items-center gap-2 rounded-full border border-black/10 bg-surface-raised px-4 py-2.5 text-sm shadow-sm transition duration-200 hover:border-lfc-red/30 hover:shadow-md active:scale-95 disabled:opacity-50;
+}
+
+.reaction-chip-active {
+  @apply border-lfc-red/40 bg-lfc-red/10 text-lfc-red shadow-md ring-2 ring-lfc-red/20;
+}
+
+.reaction-count {
+  @apply rounded-full bg-black/5 px-2 py-0.5 text-xs font-bold text-black/50;
+}
+
+.reaction-count-active {
+  @apply bg-lfc-red/15 text-lfc-red;
+}
+
+.comment-composer {
+  @apply flex flex-col gap-3 rounded-2xl border border-black/5 bg-black/[0.02] p-4 sm:flex-row sm:items-end;
+}
+
+.comment-input {
+  @apply min-h-[72px] w-full flex-1 resize-none rounded-xl border border-black/10 bg-surface-raised px-4 py-3 text-sm outline-none transition focus:border-lfc-red/30 focus:ring-2 focus:ring-lfc-red/10;
+}
+
+.comment-card {
+  @apply flex gap-3 rounded-2xl border border-black/5 bg-surface p-4 shadow-sm;
+}
+
+.comment-avatar {
+  @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-lfc-red to-lfc-red-dark text-xs font-bold text-white;
+}
+
+.toggle-chip {
+  @apply inline-flex items-center gap-2 rounded-xl border border-black/10 bg-surface-raised px-4 py-2.5 text-sm font-medium transition hover:border-black/20;
+}
+
+.toggle-chip-active {
+  @apply border-lfc-red/40 bg-lfc-red/10 text-lfc-red;
+}
+
+.toggle-chip-dot {
+  @apply h-2 w-2 rounded-full bg-black/15 transition;
+}
+
+.toggle-chip-dot-active {
+  @apply bg-lfc-red;
+}
+
+.empty-state {
+  @apply rounded-2xl border border-dashed border-black/10 py-12 text-center;
+}
+
+.empty-state-icon {
+  @apply text-4xl;
+}
+
+.empty-state-title {
+  @apply mt-3 font-semibold text-black/55;
+}
+
+.empty-state-desc {
+  @apply mt-1 text-sm text-black/35;
+}
+
+.notification-card {
+  @apply rounded-2xl border p-4 transition hover:shadow-md;
+}
+
+.notification-unread {
+  @apply border-lfc-red/25 bg-gradient-to-r from-lfc-red/[0.06] to-white shadow-sm;
+}
+
+.notification-read {
+  @apply border-black/5 bg-surface;
+}
+
+.stat-pill {
+  @apply rounded-2xl border border-black/5 bg-gradient-to-br from-white to-black/[0.02] p-4 text-center;
+}
+
+.stat-pill-value {
+  @apply mt-1 text-2xl font-extrabold text-ink;
+}
+
+.stat-pill-label {
+  @apply text-[11px] font-semibold uppercase tracking-wide text-black/40;
+}
+
+.match-hub-hero {
+  @apply overflow-hidden rounded-[2rem] border border-white/10 px-6 py-6 text-white shadow-[0_20px_60px_rgba(16,20,24,0.18)] md:px-8 md:py-8;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 22%),
+    linear-gradient(135deg, #101418 0%, #1a222d 35%, #c8102e 100%);
+}
+
+.match-hub-hero-top {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.match-hub-scoreline {
+  @apply mt-6 grid gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center;
+}
+
+.match-hub-team {
+  @apply flex items-center gap-4;
+}
+
+.match-hub-crest {
+  @apply flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-sm font-black tracking-[0.2em] text-white shadow-lg backdrop-blur;
+}
+
+.match-hub-team-name {
+  @apply text-lg font-bold tracking-tight text-white;
+}
+
+.match-hub-team-sub {
+  @apply mt-1 text-xs uppercase tracking-[0.2em] text-white/55;
+}
+
+.match-hub-center {
+  @apply text-center;
+}
+
+.match-score-input {
+  @apply w-full rounded-[1.5rem] border border-black/10 bg-gradient-to-b from-white to-black/[0.02] px-5 py-5 text-center text-4xl font-extrabold text-ink shadow-sm outline-none transition focus:border-lfc-red/30 focus:ring-4 focus:ring-lfc-red/10;
+}
+
+.match-score-separator {
+  @apply flex items-center justify-center pb-5 text-4xl font-extrabold text-black/20;
+}
+
+.match-pick-card {
+  @apply block rounded-[1.75rem] border border-black/5 bg-surface p-4 shadow-[0_10px_30px_rgba(16,20,24,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(16,20,24,0.1)] md:p-5;
+}
+
+.match-pick-crest {
+  @apply flex h-12 w-12 items-center justify-center rounded-2xl bg-ink text-xs font-black tracking-[0.15em] text-white;
+}
+
+.score-stepper {
+  @apply rounded-[1.5rem] border border-black/5 bg-gradient-to-b from-white to-black/[0.02] p-4 text-center shadow-sm;
+}
+
+.score-stepper-label {
+  @apply mb-3 truncate text-xs font-semibold uppercase tracking-wide text-black/45;
+}
+
+.score-stepper-controls {
+  @apply flex items-center justify-center gap-3;
+}
+
+.score-stepper-btn {
+  @apply flex h-12 w-12 items-center justify-center rounded-2xl bg-ink text-2xl font-bold text-white transition active:scale-95;
+}
+
+.score-stepper-value {
+  @apply min-w-[3rem] text-4xl font-black tabular-nums text-ink;
+}
+
+.winner-pick-btn {
+  @apply rounded-2xl border border-black/10 bg-surface-raised px-2 py-4 text-center text-xs font-bold text-black/65 transition active:scale-[0.98] sm:text-sm;
+}
+
+.winner-pick-btn-active {
+  @apply border-lfc-red/40 bg-lfc-red text-white shadow-lg shadow-lfc-red/20;
+}
+
+.leaderboard-hero {
+  @apply grid gap-4 rounded-[2rem] border border-black/5 bg-surface/80 p-6 shadow-[0_14px_50px_rgba(16,20,24,0.08)] backdrop-blur md:grid-cols-[1.3fr_1fr];
+}
+
+.leaderboard-podium {
+  @apply rounded-[2rem] border border-black/5 bg-surface p-6 shadow-[0_16px_50px_rgba(16,20,24,0.08)];
+}
+
+.leaderboard-podium-first {
+  @apply border-gold/35 bg-gradient-to-br from-[#fff6dd] via-white to-[#fff2cc];
+}
+
+.leaderboard-podium-rank {
+  @apply inline-flex rounded-full bg-ink px-3 py-1 text-xs font-extrabold uppercase tracking-[0.2em] text-white;
+}
+
+.leaderboard-rank-pill {
+  @apply inline-flex rounded-full bg-black/[0.05] px-3 py-1 text-xs font-bold uppercase tracking-wide text-ink;
+}
+
+.leaderboard-rank-pill-first {
+  @apply bg-gold/20 text-[#8a6914];
+}
+
+.achievement-badge {
+  @apply inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-ink to-[#1a222d] px-4 py-2 text-xs font-semibold text-white shadow;
+}
+
+.avatar-upload-btn {
+  @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-black/10 bg-surface-raised px-4 py-2 text-xs font-semibold transition hover:border-black/20 hover:bg-black/[0.02];
+}
+
+.avatar-upload-btn input[type='file'] {
+  @apply hidden;
+}
+
+.back-button {
+  @apply inline-flex items-center gap-2 rounded-xl border border-black/10 bg-surface-raised px-4 py-2.5 text-sm font-semibold text-ink shadow-sm transition hover:border-lfc-red/30 hover:bg-lfc-red/[0.03] hover:text-lfc-red active:scale-[0.98];
+}
+
+.back-button-icon {
+  @apply text-base leading-none;
+}
+
+.page-back-bar {
+  @apply sticky top-0 z-20 -mx-4 mb-4 border-b border-black/5 bg-paper/95 px-4 py-3 backdrop-blur md:static md:mx-0 md:mb-5 md:border-0 md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-none;
+}
+
+.page-back-bar-public {
+  @apply sticky top-[var(--public-header-offset,4.5rem)] z-20 mb-0 border-b border-black/5 bg-paper/95 px-4 py-3 backdrop-blur;
+}
+
+.card-upload-zone {
+  @apply rounded-2xl border-2 border-dashed border-lfc-red/20 bg-gradient-to-b from-lfc-red/[0.03] to-transparent;
+}
+
+.membership-card-visual {
+  @apply ring-1 ring-black/5;
+}
+
+.event-date-tile {
+  @apply rounded-3xl border border-black/5 bg-surface px-8 py-6 shadow-[0_12px_40px_rgba(16,20,24,0.08)];
+}
+
+.event-info-pill {
+  @apply flex items-start gap-4 rounded-2xl border border-black/5 bg-surface/95 p-5 shadow-[0_8px_30px_rgba(16,20,24,0.06)] backdrop-blur-sm;
+}
+
+.event-info-icon {
+  @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-lfc-red/10 text-xl;
+}
+
+.event-capacity-bar {
+  @apply h-2 overflow-hidden rounded-full bg-black/5;
+}
+
+.event-capacity-fill {
+  @apply h-full rounded-full bg-gradient-to-r from-pitch to-lfc-red transition-all duration-500;
+}
+
+.goal-alert-banner {
+  @apply fixed left-0 right-0 top-0 z-[100] px-4 pt-4 md:left-[260px];
+  animation: goal-slide-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.goal-alert-inner {
+  @apply mx-auto flex max-w-2xl items-start gap-4 rounded-2xl border px-5 py-4 shadow-2xl backdrop-blur-md;
+}
+
+.goal-alert-liverpool .goal-alert-inner {
+  @apply border-lfc-red/30 bg-[linear-gradient(135deg,#c8102e_0%,#8a0b1f_55%,#101418_100%)] text-white;
+  animation: goal-pulse 1.2s ease-in-out infinite;
+}
+
+.goal-alert-kickoff .goal-alert-inner {
+  @apply border-lfc-red/20 bg-ink text-white;
+}
+
+.goal-alert-opponent .goal-alert-inner {
+  @apply border-black/10 bg-surface text-ink;
+}
+
+.goal-alert-icon {
+  @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-2xl;
+}
+
+.goal-alert-title {
+  @apply text-lg font-extrabold uppercase tracking-wide;
+}
+
+.goal-alert-message {
+  @apply mt-1 text-sm leading-relaxed opacity-90;
+}
+
+.goal-alert-link {
+  @apply mt-2 inline-flex text-sm font-bold underline underline-offset-2;
+}
+
+.goal-alert-dismiss {
+  @apply shrink-0 rounded-lg px-2 py-1 text-lg opacity-70 transition hover:bg-white/10 hover:opacity-100;
+}
+
+/* Full-screen GOOOOAAAAAL celebration overlay */
+.goal-overlay {
+  @apply fixed inset-0 z-[9999] flex items-center justify-center p-4;
+  animation: goal-overlay-fade-in 0.35s ease-out;
+}
+
+.goal-overlay-backdrop {
+  @apply absolute inset-0;
+}
+
+.goal-overlay-liverpool .goal-overlay-backdrop {
+  background: radial-gradient(circle at 50% 30%, rgba(200, 16, 46, 0.92) 0%, rgba(16, 20, 24, 0.96) 65%);
+}
+
+.goal-overlay-kickoff .goal-overlay-backdrop {
+  background: radial-gradient(circle at 50% 30%, rgba(200, 16, 46, 0.75) 0%, rgba(16, 20, 24, 0.94) 70%);
+}
+
+.goal-overlay-opponent .goal-overlay-backdrop {
+  background: radial-gradient(circle at 50% 30%, rgba(60, 60, 70, 0.9) 0%, rgba(16, 20, 24, 0.96) 70%);
+}
+
+.goal-overlay-panel {
+  @apply relative z-10 w-full max-w-lg rounded-3xl border border-white/15 px-6 py-10 text-center text-white shadow-2xl md:px-10 md:py-12;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+  backdrop-filter: blur(12px);
+  animation: goal-overlay-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.goal-overlay-close {
+  @apply absolute right-4 top-4 rounded-full px-3 py-1 text-lg text-white/70 transition hover:bg-white/10 hover:text-white;
+}
+
+.goal-overlay-badge {
+  @apply mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.25em];
+}
+
+.goal-overlay-crest {
+  @apply mx-auto mb-4 h-24 w-24;
+  animation: goal-crest-pulse 1.4s ease-in-out infinite;
+}
+
+.goal-overlay-headline {
+  @apply flex flex-wrap justify-center gap-0 text-4xl font-black uppercase leading-none tracking-tight md:text-6xl;
+}
+
+.goal-overlay-letter {
+  display: inline-block;
+  animation: goal-letter-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.goal-overlay-scorer {
+  @apply mt-5 text-3xl font-extrabold tracking-tight md:text-4xl;
+}
+
+.goal-overlay-minute {
+  @apply mt-2 inline-flex rounded-full bg-white/15 px-4 py-1 text-sm font-bold tabular-nums;
+}
+
+.goal-overlay-kickoff-message {
+  @apply mx-auto mt-4 max-w-md text-base leading-relaxed text-white/80;
+}
+
+.goal-overlay-scoreboard {
+  @apply mt-6 flex items-center justify-center gap-4 rounded-2xl bg-black/25 px-5 py-4;
+}
+
+.goal-overlay-team {
+  @apply flex min-w-[5.5rem] flex-col items-center gap-1;
+}
+
+.goal-overlay-team-name {
+  @apply text-xs font-bold uppercase tracking-wider text-white/65;
+}
+
+.goal-overlay-team-score {
+  @apply text-4xl font-black tabular-nums;
+}
+
+.goal-overlay-score-sep {
+  @apply text-2xl font-light text-white/40;
+}
+
+.goal-overlay-ynwa {
+  @apply mt-5 text-xs font-bold uppercase tracking-[0.2em] text-white/50;
+}
+
+.goal-overlay-cta {
+  @apply mt-6 inline-flex rounded-xl bg-white px-5 py-3 text-sm font-bold text-ink transition hover:bg-white/90;
+}
+
+.goal-overlay-hint {
+  @apply mt-4 text-xs text-white/40;
+}
+
+.goal-confetti {
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+.goal-confetti-piece {
+  @apply absolute top-0 h-3 w-2 rounded-sm opacity-90;
+  animation: goal-confetti-fall 2.8s linear infinite;
+}
+
+.goal-admin-goooal-btn {
+  @apply flex min-h-[120px] flex-col items-center justify-center gap-1 rounded-2xl border-2 border-lfc-red bg-gradient-to-br from-lfc-red to-[#6b0818] px-4 py-5 text-white shadow-xl shadow-lfc-red/30 transition hover:scale-[1.02] hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50;
+  animation: goal-admin-pulse 2s ease-in-out infinite;
+}
+
+.goal-admin-goooal-icon {
+  @apply text-3xl;
+}
+
+.goal-admin-goooal-text {
+  @apply text-2xl font-black uppercase tracking-wide md:text-3xl;
+}
+
+.goal-admin-goooal-sub {
+  @apply text-xs font-semibold text-white/80;
+}
+
+.goal-admin-opponent-btn {
+  @apply flex min-h-[120px] flex-col items-center justify-center gap-1 rounded-2xl border border-black/10 bg-surface px-4 py-5 text-ink shadow-md transition hover:bg-black/[0.02] disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@media (display-mode: standalone) {
+  body {
+    overscroll-behavior-y: contain;
+  }
+}
+
+@keyframes goal-overlay-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes goal-overlay-pop {
+  from { opacity: 0; transform: scale(0.82) translateY(24px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes goal-letter-pop {
+  from { opacity: 0; transform: translateY(18px) scale(0.6); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes goal-crest-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0)); }
+  50% { transform: scale(1.06); filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.35)); }
+}
+
+@keyframes goal-confetti-fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes goal-admin-pulse {
+  0%, 100% { box-shadow: 0 10px 30px rgba(200, 16, 46, 0.35); }
+  50% { box-shadow: 0 10px 40px rgba(200, 16, 46, 0.55); }
+}
+
+.live-match-badge {
+  @apply inline-flex animate-pulse items-center rounded-full bg-lfc-red px-3 py-1 text-xs font-extrabold uppercase tracking-widest text-white;
+}
+
+.live-score-board {
+  @apply grid grid-cols-[1fr_auto_1fr] items-center gap-4 rounded-2xl border border-black/5 bg-surface/95 p-6 text-center shadow-[0_8px_30px_rgba(16,20,24,0.06)] backdrop-blur-sm;
+}
+
+.live-score-team {
+  @apply text-sm font-bold uppercase tracking-wide text-black/60 md:text-base;
+}
+
+.live-score-numbers {
+  @apply text-5xl font-extrabold tabular-nums text-lfc-red md:text-6xl;
+}
+
+.live-score-sep {
+  @apply mx-2 text-black/30;
+}
+
+@keyframes goal-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes goal-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(200, 16, 46, 0);
+  }
+}
+
+.kop-btn-primary.w-full,
+.kop-btn-secondary.w-full {
+  @apply w-full;
+}
+
+
+/* Scrollbar subtle */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 20, 24, 0.15);
+  border-radius: 999px;
+}
+
+/* CMS inline edit (admin) */
+.editable-text {
+  cursor: text;
+  border-radius: 0.375rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.15s ease, background-color 0.15s ease;
+}
+
+.editable-text:hover,
+.editable-text:focus-visible {
+  outline-color: rgba(200, 16, 46, 0.45);
+  background-color: rgba(200, 16, 46, 0.06);
+}
+
+.editable-input {
+  @apply w-full rounded-lg border-2 border-lfc-red/40 bg-surface-raised px-2 py-1 text-inherit shadow-sm outline-none ring-0;
+}
+
+.editable-input-multiline {
+  @apply min-h-[6rem] resize-y;
+}
+
+.inline-edit-toolbar {
+  @apply fixed bottom-0 left-0 right-0 z-50 border-t border-black/10 bg-surface/95 px-4 py-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur-md;
+}
+
+.inline-edit-toolbar-inner {
+  @apply mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 sm:flex-row sm:items-center;
+}
+
+.inline-edit-toolbar-label {
+  @apply text-sm font-semibold text-black/70;
+}

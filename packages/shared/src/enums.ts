@@ -1,0 +1,90 @@
+export enum RoleCode {
+  MEMBER = 'MEMBER',
+  CONTENT_MANAGER = 'CONTENT_MANAGER',
+  GAME_MANAGER = 'GAME_MANAGER',
+  EVENT_MANAGER = 'EVENT_MANAGER',
+  COMMITTEE_ADMIN = 'COMMITTEE_ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  LFC_OBSERVER = 'LFC_OBSERVER',
+}
+
+export enum PermissionCode {
+  MANAGE_USERS = 'MANAGE_USERS',
+  MANAGE_MEMBERSHIPS = 'MANAGE_MEMBERSHIPS',
+  MANAGE_ROLES = 'MANAGE_ROLES',
+  MANAGE_CONTENT = 'MANAGE_CONTENT',
+  MANAGE_NEWS = 'MANAGE_NEWS',
+  MANAGE_EVENTS = 'MANAGE_EVENTS',
+  MANAGE_MATCHES = 'MANAGE_MATCHES',
+  MANAGE_PREDICTIONS = 'MANAGE_PREDICTIONS',
+  MANAGE_SCORING = 'MANAGE_SCORING',
+  VIEW_ANALYTICS = 'VIEW_ANALYTICS',
+  MANAGE_SETTINGS = 'MANAGE_SETTINGS',
+  VERIFY_MEMBERSHIP_CARDS = 'VERIFY_MEMBERSHIP_CARDS',
+}
+
+export enum PlatformAccountStatus {
+  INVITED = 'INVITED',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  BLOCKED = 'BLOCKED',
+}
+
+export enum MembershipStatus {
+  ACTIVE = 'ACTIVE',
+  EXPIRED = 'EXPIRED',
+  SUSPENDED = 'SUSPENDED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum MembershipSource {
+  MANUAL = 'MANUAL',
+  CSV_IMPORT = 'CSV_IMPORT',
+  EXCEL_IMPORT = 'EXCEL_IMPORT',
+  FUTURE_SELF_REGISTRATION = 'FUTURE_SELF_REGISTRATION',
+}
+
+export enum InvitationStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  EXPIRED = 'EXPIRED',
+  REVOKED = 'REVOKED',
+}
+
+export enum MembershipCardStatus {
+  ACTIVE = 'ACTIVE',
+  EXPIRED = 'EXPIRED',
+  REVOKED = 'REVOKED',
+  REPLACED = 'REPLACED',
+}
+
+export const ROLE_PERMISSION_MAP: Record<RoleCode, PermissionCode[]> = {
+  [RoleCode.MEMBER]: [],
+  [RoleCode.CONTENT_MANAGER]: [
+    PermissionCode.MANAGE_CONTENT,
+    PermissionCode.MANAGE_NEWS,
+  ],
+  [RoleCode.GAME_MANAGER]: [
+    PermissionCode.MANAGE_MATCHES,
+    PermissionCode.MANAGE_PREDICTIONS,
+    PermissionCode.MANAGE_SCORING,
+  ],
+  [RoleCode.EVENT_MANAGER]: [
+    PermissionCode.MANAGE_EVENTS,
+    PermissionCode.VERIFY_MEMBERSHIP_CARDS,
+  ],
+  [RoleCode.COMMITTEE_ADMIN]: [
+    PermissionCode.MANAGE_USERS,
+    PermissionCode.MANAGE_MEMBERSHIPS,
+    PermissionCode.MANAGE_CONTENT,
+    PermissionCode.MANAGE_NEWS,
+    PermissionCode.MANAGE_EVENTS,
+    PermissionCode.MANAGE_MATCHES,
+    PermissionCode.MANAGE_PREDICTIONS,
+    PermissionCode.MANAGE_SCORING,
+    PermissionCode.VIEW_ANALYTICS,
+    PermissionCode.VERIFY_MEMBERSHIP_CARDS,
+  ],
+  [RoleCode.SUPER_ADMIN]: Object.values(PermissionCode),
+  [RoleCode.LFC_OBSERVER]: [PermissionCode.VIEW_ANALYTICS],
+};

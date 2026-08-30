@@ -1,0 +1,720 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlatformAccountStatus {
+  INVITED
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum MembershipStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  CANCELLED
+}
+
+enum MembershipSource {
+  MANUAL
+  CSV_IMPORT
+  EXCEL_IMPORT
+  FUTURE_SELF_REGISTRATION
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+enum RoleCode {
+  MEMBER
+  CONTENT_MANAGER
+  GAME_MANAGER
+  EVENT_MANAGER
+  COMMITTEE_ADMIN
+  SUPER_ADMIN
+  LFC_OBSERVER
+}
+
+enum PermissionCode {
+  MANAGE_USERS
+  MANAGE_MEMBERSHIPS
+  MANAGE_ROLES
+  MANAGE_CONTENT
+  MANAGE_NEWS
+  MANAGE_EVENTS
+  MANAGE_MATCHES
+  MANAGE_PREDICTIONS
+  MANAGE_SCORING
+  VIEW_ANALYTICS
+  MANAGE_SETTINGS
+  VERIFY_MEMBERSHIP_CARDS
+}
+
+enum MatchStatus {
+  UPCOMING
+  LIVE
+  FINISHED
+  CANCELED
+}
+
+enum WinnerPrediction {
+  HOME_WIN
+  DRAW
+  AWAY_WIN
+}
+
+enum RegistrationStatus {
+  REGISTERED
+  WAITLISTED
+  CANCELED
+  ATTENDED
+  ABSENT
+}
+
+enum NewsStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum CmsPageCode {
+  HOME
+  ABOUT
+  COMMITTEE
+  EVENTS
+  GALLERY
+  MEMBERSHIP
+  CONTACT
+}
+
+enum CmsSectionType {
+  HERO
+  RICH_TEXT
+  IMAGE_BANNER
+  FEATURED_NEWS
+  FEATURED_EVENTS
+  COMMITTEE_LIST
+  GALLERY_PREVIEW
+  CTA
+}
+
+enum MembershipCardStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+  REPLACED
+}
+
+enum AchievementType {
+  KING_OF_THE_KOP
+  PREDICTION_MASTER
+}
+
+enum TransactionType {
+  EARN
+  ADJUSTMENT
+}
+
+enum EmailOtpPurpose {
+  SIGNUP
+}
+
+model User {
+  id                    String                 @id @default(cuid())
+  username              String?                @unique
+  firstName             String                 @default("")
+  lastName              String                 @default("")
+  email                 String                 @unique
+  passwordHash          String?
+  avatarUrl             String?
+  membershipCardImageUrl String?
+  membershipCardUploadedAt DateTime?
+  phoneNumber           String?
+  favoritePlayer        String?
+  olscId                String?                @unique
+  lfcId                 String?                @unique
+  platformAccountStatus PlatformAccountStatus  @default(INVITED)
+  level                 Int                    @default(1)
+  xp                    Int                    @default(0)
+  coins                 Int                    @default(0)
+  currentWinningStreak  Int                    @default(0)
+  longestWinningStreak  Int                    @default(0)
+  lastLoginAt           DateTime?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  roles                 UserRole[]
+  invitations           MemberInvitation[]     @relation("InvitedUser")
+  sentInvitations       MemberInvitation[]     @relation("InvitationSender")
+  memberships           Membership[]
+  membershipCards       MembershipCard[]
+  predictions           Prediction[]
+  eventRegistrations    EventRegistration[]
+  newsArticles          NewsArticle[]
+  newsletterIssues      NewsletterIssue[]
+  comments              Comment[]
+  reactions             Reaction[]
+  auditLogs             AuditLog[]
+  leaderboardSnapshots  LeaderboardSnapshot[]
+  verifiedCards         MembershipCardVerification[] @relation("CardVerifier")
+  passwordResetTokens   PasswordResetToken[]
+  achievements          UserAchievement[]
+  xpTransactions        XpTransaction[]
+  coinTransactions      CoinTransaction[]
+
+  @@index([platformAccountStatus])
+  @@index([lastName, firstName])
+  @@index([phoneNumber])
+}
+
+model EmailVerificationCode {
+  id         String          @id @default(cuid())
+  email      String
+  codeHash   String
+  purpose    EmailOtpPurpose @default(SIGNUP)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  attempts   Int             @default(0)
+  createdAt  DateTime        @default(now())
+
+  @@index([email, purpose, createdAt])
+}
+
+model OfficialMemberRoster {
+  id          String   @id @default(cuid())
+  olscId      String   @unique
+  lfcId       String?
+  fullName    String
+  phoneNumber String?
+  rawStatus   String?
+  importBatch String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([lfcId])
+  @@index([phoneNumber])
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  code        RoleCode         @unique
+  name        String
+  description String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  code        PermissionCode   @unique
+  name        String
+  description String?
+  createdAt   DateTime         @default(now())
+
+  roles       RolePermission[]
+}
+
+model UserRole {
+  id           String   @id @default(cuid())
+  userId       String
+  roleId       String
+  assignedAt   DateTime @default(now())
+  assignedById String?
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role         Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model Membership {
+  id               String           @id @default(cuid())
+  userId           String
+  officialMemberId String           @unique
+  seasonLabel      String
+  seasonStartDate  DateTime?
+  seasonEndDate    DateTime?
+  status           MembershipStatus @default(ACTIVE)
+  source           MembershipSource @default(MANUAL)
+  notes            String?
+  createdById      String?
+  activatedAt      DateTime?
+  expiredAt        DateTime?
+  suspendedAt      DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards            MembershipCard[]
+
+  @@index([userId, status])
+  @@index([seasonLabel])
+  @@index([status])
+}
+
+model MembershipCard {
+  id               String               @id @default(cuid())
+  membershipId     String
+  userId           String
+  cardNumber       String               @unique
+  seasonLabel      String
+  displayName      String
+  officialMemberId String
+  avatarUrl        String?
+  cardImageUrl     String?
+  physicalCardUploadedAt DateTime?
+  qrCodeValue      String               @unique
+  qrSecureToken    String               @unique
+  cardVersion      Int                  @default(1)
+  status           MembershipCardStatus @default(ACTIVE)
+  issuedAt         DateTime             @default(now())
+  expiresAt        DateTime?
+  revokedAt        DateTime?
+  replacedByCardId String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  membership       Membership           @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verifications    MembershipCardVerification[]
+
+  @@index([userId, status])
+  @@index([membershipId])
+  @@index([seasonLabel])
+}
+
+model MembershipCardVerification {
+  id               String         @id @default(cuid())
+  membershipCardId String
+  verifiedById     String?
+  eventId          String?
+  result           String
+  notes            String?
+  verifiedAt       DateTime       @default(now())
+
+  membershipCard   MembershipCard @relation(fields: [membershipCardId], references: [id], onDelete: Cascade)
+  verifiedBy       User?          @relation("CardVerifier", fields: [verifiedById], references: [id])
+
+  @@index([membershipCardId, verifiedAt])
+  @@index([eventId])
+}
+
+model MemberInvitation {
+  id          String           @id @default(cuid())
+  userId      String
+  email       String
+  token       String           @unique
+  status      InvitationStatus @default(PENDING)
+  invitedById String?
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user        User             @relation("InvitedUser", fields: [userId], references: [id], onDelete: Cascade)
+  invitedBy   User?            @relation("InvitationSender", fields: [invitedById], references: [id])
+
+  @@index([email, status])
+  @@index([userId, status])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Match {
+  id                     String            @id @default(cuid())
+  opponent               String
+  competition            String
+  stadium                String?
+  matchDate              DateTime
+  status                 MatchStatus       @default(UPCOMING)
+  predictionOpensAt      DateTime?
+  predictionClosesAt     DateTime
+  homeTeamName           String            @default("Liverpool")
+  awayTeamName           String
+  finalHomeScore         Int?
+  finalAwayScore         Int?
+  liveHomeScore          Int?
+  liveAwayScore          Int?
+  winningOutcome         WinnerPrediction?
+  firstLiverpoolScorer   String?
+  manOfTheMatch          String?
+  cleanSheetResult       Boolean?
+  bothTeamsToScoreResult Boolean?
+  createdById            String?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+
+  predictions            Prediction[]
+  goals                  MatchGoal[]
+
+  @@index([matchDate])
+  @@index([status])
+}
+
+model MatchGoal {
+  id              String   @id @default(cuid())
+  matchId         String
+  minute          Int?
+  scorerName      String?
+  homeScoreAfter  Int
+  awayScoreAfter  Int
+  isLiverpoolGoal Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  match           Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@index([matchId, createdAt])
+}
+
+model ScoringRule {
+  id                            String   @id @default(cuid())
+  correctWinnerPoints           Int      @default(1)
+  correctFinalScorePoints       Int      @default(3)
+  correctFirstScorerPoints      Int      @default(1)
+  correctManOfTheMatchPoints    Int      @default(0)
+  correctCleanSheetPoints       Int      @default(1)
+  correctBothTeamsToScorePoints Int      @default(0)
+  streakBonusEnabled            Boolean  @default(false)
+  streakBonusPoints             Int      @default(0)
+  isActive                      Boolean  @default(true)
+  effectiveFrom                 DateTime @default(now())
+  createdById                   String?
+  createdAt                     DateTime @default(now())
+}
+
+model Prediction {
+  id                         String            @id @default(cuid())
+  userId                     String
+  matchId                    String
+  predictedHomeScore         Int
+  predictedAwayScore         Int
+  winnerPrediction           WinnerPrediction
+  firstLiverpoolGoalscorer   String?
+  manOfTheMatchPrediction    String?
+  cleanSheetPrediction       Boolean?
+  bothTeamsToScorePrediction Boolean?
+  scorePoints                Int               @default(0)
+  winnerPoints               Int               @default(0)
+  scorerPoints               Int               @default(0)
+  manOfTheMatchPoints        Int               @default(0)
+  bonusPoints                Int               @default(0)
+  streakBonusPoints          Int               @default(0)
+  totalPoints                Int               @default(0)
+  calculatedAt               DateTime?
+  submittedAt                DateTime          @default(now())
+  updatedAt                  DateTime          @updatedAt
+
+  user                       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  match                      Match             @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, matchId])
+  @@index([matchId])
+  @@index([userId])
+}
+
+model LeaderboardSnapshot {
+  id              String   @id @default(cuid())
+  type            String
+  label           String
+  periodStart     DateTime
+  periodEnd       DateTime
+  userId          String
+  rank            Int
+  totalPoints     Int
+  predictionCount Int
+  exactScoreCount Int
+  accuracyRate    Float?
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([type, periodStart, periodEnd])
+  @@index([userId, type])
+}
+
+model LevelDefinition {
+  id        String   @id @default(cuid())
+  level     Int      @unique
+  title     String
+  minXp     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AchievementDefinition {
+  id          String          @id @default(cuid())
+  code        AchievementType @unique
+  name        String
+  description String
+  icon        String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String                @id @default(cuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime              @default(now())
+
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   AchievementDefinition @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([achievementId, unlockedAt])
+}
+
+model XpTransaction {
+  id          String          @id @default(cuid())
+  userId      String
+  amount      Int
+  type        TransactionType @default(EARN)
+  reason      String
+  referenceId String?
+  createdAt   DateTime        @default(now())
+
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model CoinTransaction {
+  id          String          @id @default(cuid())
+  userId      String
+  amount      Int
+  type        TransactionType @default(EARN)
+  reason      String
+  referenceId String?
+  createdAt   DateTime        @default(now())
+
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Event {
+  id               String              @id @default(cuid())
+  title            String
+  description      String
+  location         String
+  startDateTime    DateTime
+  endDateTime      DateTime?
+  coverImageUrl    String?
+  capacity         Int?
+  registrationOpen Boolean             @default(true)
+  createdById      String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  registrations    EventRegistration[]
+
+  @@index([startDateTime])
+}
+
+model EventRegistration {
+  id                 String             @id @default(cuid())
+  userId             String
+  eventId            String
+  status             RegistrationStatus @default(REGISTERED)
+  registeredAt       DateTime           @default(now())
+  canceledAt         DateTime?
+  attendanceMarkedAt DateTime?
+
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event              Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@index([eventId, status])
+}
+
+model NewsArticle {
+  id            String     @id @default(cuid())
+  title         String
+  slug          String     @unique
+  excerpt       String?
+  content       String
+  coverImageUrl String?
+  status        NewsStatus @default(DRAFT)
+  publishedAt   DateTime?
+  authorId      String
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  author        User       @relation(fields: [authorId], references: [id])
+  comments      Comment[]
+  reactions     Reaction[]
+
+  @@index([status, publishedAt])
+}
+
+model MediaAlbum {
+  id            String       @id @default(cuid())
+  title         String
+  description   String?
+  coverImageUrl String?
+  createdById   String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  assets        MediaAsset[]
+}
+
+model MediaAsset {
+  id        String      @id @default(cuid())
+  albumId   String?
+  type      MediaType
+  url       String
+  title     String?
+  createdAt DateTime    @default(now())
+
+  album     MediaAlbum? @relation(fields: [albumId], references: [id])
+}
+
+model CmsPage {
+  id          String      @id @default(cuid())
+  code        CmsPageCode @unique
+  title       String
+  slug        String      @unique
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  sections    CmsSection[]
+}
+
+model CmsSection {
+  id        String         @id @default(cuid())
+  pageId    String
+  type      CmsSectionType
+  title     String?
+  subtitle  String?
+  content   Json?
+  imageUrl  String?
+  sortOrder Int            @default(0)
+  isEnabled Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  page      CmsPage        @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId, sortOrder])
+}
+
+model Comment {
+  id            String        @id @default(cuid())
+  userId        String
+  newsArticleId String?
+  content       String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  newsArticle   NewsArticle?  @relation(fields: [newsArticleId], references: [id])
+}
+
+model Reaction {
+  id            String        @id @default(cuid())
+  userId        String
+  newsArticleId String?
+  type          String
+  createdAt     DateTime      @default(now())
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  newsArticle   NewsArticle?  @relation(fields: [newsArticleId], references: [id])
+
+  @@unique([userId, newsArticleId, type])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String
+  metadata  Json?
+  isRead    Boolean   @default(false)
+  actionUrl String?
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([userId, isRead, createdAt])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  action      String
+  entityType  String
+  entityId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  actor       User?    @relation(fields: [actorUserId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([actorUserId, createdAt])
+}
+
+model NewsletterIssue {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  issueNumber   Int
+  monthLabel    String
+  excerpt       String?
+  pdfUrl        String
+  isPublished   Boolean   @default(true)
+  publishedAt   DateTime?
+  createdById   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  createdBy     User?     @relation(fields: [createdById], references: [id])
+
+  @@index([isPublished, publishedAt])
+}

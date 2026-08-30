@@ -1,0 +1,679 @@
+================================================================================
+                    KOP PLATFORM — COMPLETE ADMIN GUIDE (A to Z)
+                         OLSC Lebanon · Official Digital Hub
+================================================================================
+
+Document purpose:
+This guide explains everything about the Kop Platform — what it is, what it
+does, and how to use it day to day. It is written for the OLSC Lebanon
+committee admin who will manage the platform.
+
+Last updated: July 2026
+
+
+================================================================================
+1. WHAT IS THE KOP PLATFORM?
+================================================================================
+
+The Kop Platform is the official digital home of OLSC Lebanon (Official
+Liverpool Supporters Club — Lebanon branch).
+
+It is NOT a replacement for official OLSC membership. Official membership
+is still managed by the committee. The platform gives approved members a
+modern digital experience:
+
+  • Match Hub — predict scores, compete on the leaderboard
+  • Live GOOOOAAAAAL alerts during matches
+  • Digital membership card with QR code
+  • Upload photo of existing physical OLSC card
+  • Community feed, news, events, gallery
+  • Hall of Fame and gamification (XP, levels, achievements)
+
+The public website (olsclebanon.com or localhost in development) is open
+to everyone. The Member App and Admin Panel require login.
+
+
+================================================================================
+2. THE THREE PARTS OF THE SYSTEM
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  PART 1 — PUBLIC WEBSITE (no login required)                                │
+│  URL: https://yoursite.com/  (dev: http://localhost:5173)                   │
+│                                                                             │
+│  Pages: Home, About, Committee, Events, News, Gallery, Membership, Contact  │
+│  Anyone can browse. Logged-in members see extra links (Member App, Admin).   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  PART 2 — MEMBER APP (login required)                                       │
+│  URL: https://yoursite.com/app  (dev: http://localhost:5173/app)            │
+│                                                                             │
+│  For official OLSC members who have activated their account.                │
+│  Predictions, digital card, community, notifications, leaderboard.          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  PART 3 — ADMIN PANEL (login + admin role required)                         │
+│  URL: https://yoursite.com/admin  (dev: http://localhost:5173/admin)        │
+│                                                                             │
+│  Committee control center: members, matches, news, events, CMS.             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+3. USER ROLES — WHO CAN DO WHAT
+================================================================================
+
+ROLE                  WHAT THEY CAN DO
+────────────────────  ────────────────────────────────────────────────────────
+MEMBER                Use the Member App only (predictions, card, feed, etc.)
+                      No admin access.
+
+CONTENT_MANAGER       Edit website content (CMS, news). Inline editing on
+                      About, Committee, Membership, Contact pages.
+
+GAME_MANAGER          Create matches, go LIVE, record goals, enter final
+                      results, calculate prediction points.
+
+EVENT_MANAGER         Manage events. Verify membership cards at events (QR).
+
+COMMITTEE_ADMIN       Full committee access: members, content, news, events,
+                      matches, scoring, analytics, card verification.
+
+SUPER_ADMIN           Everything — full platform control.
+
+LFC_OBSERVER          Read-only analytics (no admin panel UI access).
+
+Note: In practice, the main admin account (created at setup) is SUPER_ADMIN
+and can do everything.
+
+
+================================================================================
+4. MEMBERSHIP — HOW IT WORKS (STEP BY STEP)
+================================================================================
+
+IMPORTANT: Official OLSC membership is managed by the committee outside the
+platform. The platform does NOT sell or approve membership on its own.
+
+─── STEP 1: Committee approves a member offline ───
+The person becomes an official OLSC member through the normal committee
+process and receives an Official Member ID.
+
+─── STEP 2: Admin creates the member on the platform ───
+Go to: Admin Panel → Members → Create member
+
+Fill in:
+  • First name, last name, email
+  • Official Member ID (from the committee — must be unique)
+  • Season label (e.g. "2026-27")
+  • Phone (optional)
+
+Click "Create & send invitation".
+
+─── STEP 3: Member receives invitation ───
+If email (SMTP) is configured: member gets an email with activation link.
+If email is NOT configured (development): the invitation link/token appears
+in the admin response — copy it and send manually to the member.
+
+Invitation link format:
+  https://yoursite.com/accept-invitation?token=XXXXX
+
+Invitation expires after 72 hours (default).
+
+─── STEP 4: Member activates account ───
+Member opens the link, sets a password, and account becomes ACTIVE.
+
+─── STEP 5: Digital membership card is auto-generated ───
+Card number format: OLSC-{season}-{officialMemberId}
+Example: OLSC-2026-27-12345
+
+Member can view card at: Member App → Digital Membership Card
+  • QR code for event check-in
+  • Name, official ID, season
+
+─── STEP 6 (optional): Upload physical card photo ───
+Members who already have a printed OLSC card can upload a photo:
+  Member App → Digital Membership Card → Upload card photo
+Supported: JPEG, PNG, WebP (max 5 MB)
+
+─── STEP 7: Event verification ───
+At watch parties, committee staff with EVENT_MANAGER role can scan the
+member's QR code to verify: VALID, EXPIRED, REVOKED, or NOT FOUND.
+
+
+================================================================================
+5. PUBLIC WEBSITE — PAGE BY PAGE
+================================================================================
+
+HOME (/)
+  • Hero banner (editable via CMS)
+  • Latest news articles
+  • Upcoming events
+  • Links to Membership and Login
+
+ABOUT (/about)
+  • Full story of OLSC Lebanon
+  • Stats strip, Kop values (4 pillars), YNWA quote
+  • Kop Platform section, call-to-action
+  • Admins with MANAGE_CONTENT can click any text to edit inline
+
+COMMITTEE (/committee)
+  • List of committee members (name, role, bio, email)
+  • Editable inline by admin
+
+MEMBERSHIP (/membership)
+  • Explains official membership vs digital platform
+  • Two paths: new members / existing card holders
+  • How it works steps, committee notes
+  • Editable inline by admin
+
+CONTACT (/contact)
+  • Intro text + contact channels (Email, WhatsApp, Instagram, Location)
+  • Editable inline by admin
+
+EVENTS (/events)
+  • List of upcoming and recent events
+  • Members can register from event detail page
+
+NEWS (/news)
+  • Published articles only
+  • Members can comment and react when logged in
+
+GALLERY (/gallery)
+  • Photo/video albums from OLSC events
+
+LOGIN (/login)
+  • Member and admin login
+
+
+================================================================================
+6. MEMBER APP — PAGE BY PAGE
+================================================================================
+
+HOME (/app)
+  Quick links to all member features.
+
+MATCH HUB (/app/matches)
+  • List of all Liverpool matches
+  • Open a match to submit or view your prediction
+
+MATCH DETAIL (/app/matches/:id)
+  • Submit prediction (before predictions close)
+  • See community prediction stats (% picking win/draw/loss)
+  • Live score and goals during LIVE matches
+  • Your points after match is scored
+
+LEADERBOARD (/app/leaderboard)
+  • Overall ranking of all members by prediction points
+  • Shows rank, total points, accuracy rate
+
+COMMUNITY FEED (/app/community)
+  • Aggregated feed: news, events, goals, achievements
+
+NOTIFICATIONS (/app/notifications)
+  • Personal alerts: match goals, kick-off, event updates
+
+HALL OF FAME (/app/hall-of-fame)
+  • Current King of the Kop (#1 on leaderboard)
+  • Top 10 predictors
+  • Recent achievements unlocked
+
+PROFILE (/app/profile)
+  • Avatar, XP, level, coins, winning streak
+  • Achievements earned
+
+DIGITAL MEMBERSHIP CARD (/app/membership-card)
+  • QR code, card details
+  • Upload physical card photo
+
+
+================================================================================
+7. ADMIN PANEL — SECTION BY SECTION
+================================================================================
+
+DASHBOARD (/admin)
+  Overview stats:
+    • Total members, active members, invited (pending activation)
+    • Total predictions submitted
+    • Upcoming matches and events
+  Quick links to main admin tasks.
+
+MEMBERS (/admin/members)
+  • Create new member + send invitation
+  • View all members: name, email, official ID, season, account status
+  Statuses: INVITED (not activated yet), ACTIVE, SUSPENDED
+
+MATCHES (/admin/matches)
+  Full match lifecycle — see Section 8 below.
+
+NEWS (/admin/news)
+  • Publish news articles (title, slug, excerpt, content, status)
+  • Status: DRAFT, SCHEDULED, PUBLISHED, ARCHIVED
+  • Published articles appear on public /news
+
+EVENTS (/admin/events)
+  • Create events: title, description, location, date/time, capacity
+  • Members register from public event page
+  • Waitlist when capacity is full
+
+CMS PAGES (/admin/cms)
+  • Edit all CMS pages: HOME, ABOUT, COMMITTEE, EVENTS, GALLERY,
+    MEMBERSHIP, CONTACT
+  • Set page title, published status, section titles/subtitles
+
+  TIP: For About, Committee, Membership, Contact — it is faster to edit
+  directly on the public page while logged in as admin (inline edit mode).
+
+
+================================================================================
+8. MATCH HUB — COMPLETE WORKFLOW
+================================================================================
+
+This is one of the most important admin workflows.
+
+─── PHASE 1: CREATE THE MATCH ───
+Admin → Matches → Create match
+
+Fill in:
+  • Opponent (e.g. "Arsenal")
+  • Competition (e.g. "Premier League")
+  • Stadium (default: Anfield)
+  • Match date/time
+  • Predictions close at (deadline — members cannot predict after this)
+
+After creation, note the Match ID (also available in the match dropdown).
+
+─── PHASE 2: MEMBERS SUBMIT PREDICTIONS ───
+Before "Predictions close at", active members go to:
+  Member App → Match Hub → [match] → Submit prediction
+
+Each member submits ONCE per match (can update before deadline).
+
+Prediction fields:
+  • Predicted score (Liverpool vs opponent)
+  • Winner (Liverpool win / Draw / Away win)
+  • First Liverpool goalscorer (text)
+  • Man of the Match (text)
+  • Clean sheet? (yes/no)
+  • Salah to score? (yes/no)
+  • Both teams to score? (yes/no)
+
+─── PHASE 3: GO LIVE (kick-off) ───
+On match day, admin → Matches → Live match control:
+  1. Select the match from dropdown
+  2. Click "Start LIVE (kick-off alert)"
+  3. ALL active members receive a KICK OFF notification + full-screen alert
+
+─── PHASE 4: RECORD GOALS DURING THE MATCH ───
+Still in Live match control:
+  1. Enter scorer name (e.g. "Salah")
+  2. Enter minute (e.g. 23)
+  3. Click the big red "GOOOOAAAAAL!" button for Liverpool goals
+     OR "Opponent scores" for away goals
+
+What happens:
+  • Score auto-increments
+  • ALL connected members see a full-screen GOOOOAAAAAL overlay
+    (with scorer name, minute, score) — on ANY page they are on
+  • Notification saved in their alerts list
+
+─── PHASE 5: ENTER FINAL RESULT ───
+After the match ends, admin → Matches → Final result:
+  • Liverpool score, Away score
+  • Winner (HOME_WIN / DRAW / AWAY_WIN)
+  • First Liverpool scorer (official result)
+  • Man of the Match
+  • Clean sheet result, Salah scored, both teams scored (yes/no)
+  • Click "Save final result" → match status becomes FINISHED
+
+─── PHASE 6: CALCULATE PREDICTION POINTS ───
+Admin → Matches → Final result section:
+  Click "Calculate prediction points"
+
+This compares every member's prediction against the official result and
+awards points (see Section 9). Also updates leaderboard, XP, coins,
+achievements, and Hall of Fame.
+
+
+================================================================================
+9. POINTS CALCULATION — DETAILED RULES
+================================================================================
+
+When you click "Calculate prediction points", the system checks each
+member's prediction against the official final result.
+
+DEFAULT POINTS (per match, per member):
+─────────────────────────────────────────────────────────────────────────────
+  Correct prediction type              Points
+─────────────────────────────────────────────────────────────────────────────
+  Correct winner (Liverpool/Draw/Away)   5 pts
+  Exact final score                     10 pts
+  Correct first Liverpool goalscorer     5 pts
+  Correct Man of the Match               3 pts
+  Correct clean sheet (yes/no)           2 pts
+  Correct Salah to score (yes/no)        2 pts
+  Correct both teams to score (yes/no)   2 pts
+─────────────────────────────────────────────────────────────────────────────
+  MAXIMUM possible per match            29 pts
+─────────────────────────────────────────────────────────────────────────────
+
+EXAMPLE:
+  Official result: Liverpool 2–1 Arsenal
+  First scorer: Salah | MOTM: Salah | Clean sheet: No | Salah scored: Yes
+  Both teams scored: Yes
+
+  Member predicted: Liverpool 2–1, Salah scorer, Salah MOTM, no clean sheet,
+  Salah yes, BTTS yes
+  → Winner ✓ (5) + Exact score ✓ (10) + Scorer ✓ (5) + MOTM ✓ (3)
+    + Clean sheet ✓ (2) + Salah ✓ (2) + BTTS ✓ (2) = 29 points
+
+  Member predicted: Liverpool 1–0, wrong scorer, wrong MOTM
+  → Winner ✓ (5) + Exact score ✗ + Scorer ✗ + MOTM ✗ + bonuses = 5–9 pts
+
+Text fields (scorer, MOTM) are compared case-insensitively.
+
+ACCURACY RATE (shown on leaderboard):
+  accuracy = (total points earned) / (number of predictions × 10) × 100
+
+STREAK:
+  If a member gets the winner correct, their winning streak +1.
+  If wrong, streak resets to 0.
+  (Streak bonus points in scoring rules exist but are not active yet.)
+
+
+================================================================================
+10. GAMIFICATION — XP, COINS, LEVELS, ACHIEVEMENTS
+================================================================================
+
+Applied automatically when prediction points are calculated.
+
+XP (Experience Points):
+  • Base: 10 XP per scored prediction
+  • Bonus: floor(total points / 2)
+  • Extra +10 if exact score correct
+  • Extra +5 if winner correct
+
+Coins:
+  • Base: 5 coins per scored prediction
+  • Bonus: floor(total points / 3)
+  • Extra +3 if exact score correct
+
+LEVELS:
+  Level 1 — Rookie Red         (0 XP)
+  Level 2 — Kop Contender      (100 XP)
+  Level 3 — Anfield Analyst    (250 XP)
+  Level 4 — Matchday Maestro   (500 XP)
+  Level 5 — Kop Legend         (900 XP)
+
+ACHIEVEMENTS:
+  • KING OF THE KOP — #1 on overall leaderboard (only one holder at a time)
+  • PREDICTION MASTER — submitted 10 or more predictions
+
+Hall of Fame (/app/hall-of-fame) displays King of the Kop, top 10, and
+recent achievements.
+
+
+================================================================================
+11. LIVE GOOOOAAAAAL ALERTS — HOW THEY WORK
+================================================================================
+
+When admin records a goal during a LIVE match:
+
+FOR LIVERPOOL GOALS:
+  • Full-screen red overlay: "GOOOOAAAAAL!"
+  • Scorer name, minute, live score
+  • LFC crest, confetti animation, YNWA message
+  • Appears on ALL pages (public site, member app, admin) if member is logged in
+  • Auto-dismisses after 12 seconds or tap to close
+
+FOR OPPONENT GOALS:
+  • Subdued overlay: "They scored…"
+  • Still shows score update
+
+FOR KICK-OFF:
+  • "KICK OFF!" overlay when admin clicks Start LIVE
+
+Members must be LOGGED IN and have an ACTIVE account to receive alerts.
+Polling checks for new notifications every 3 seconds.
+
+
+================================================================================
+12. CMS & INLINE EDITING
+================================================================================
+
+CONTENT MANAGEMENT (two ways):
+
+WAY 1 — Inline editing (recommended for text):
+  1. Log in as admin (account with MANAGE_CONTENT permission)
+  2. Visit: /about, /committee, /membership, or /contact
+  3. A bar appears at bottom: "Edit mode — click any highlighted text"
+  4. Click any text to edit it
+  5. Click "Save changes" when done
+
+WAY 2 — Admin CMS panel:
+  Admin → CMS Pages → select page → edit title, sections → Save
+
+CMS PAGES:
+  HOME, ABOUT, COMMITTEE, EVENTS, GALLERY, MEMBERSHIP, CONTACT
+
+SECTION TYPES (technical):
+  HERO, RICH_TEXT, COMMITTEE_LIST, CTA, FEATURED_NEWS, FEATURED_EVENTS,
+  GALLERY_PREVIEW, IMAGE_BANNER
+
+
+================================================================================
+13. EVENTS — HOW THEY WORK
+================================================================================
+
+ADMIN creates event:
+  Admin → Events → title, description, location, date, capacity
+
+PUBLIC sees event at /events → clicks for detail → Register button
+
+MEMBER registration:
+  • REGISTERED — spot confirmed
+  • WAITLISTED — event full, on waitlist
+  • Member receives notification on register/cancel
+
+Events appear in Community Feed and on public Events page.
+
+
+================================================================================
+14. NEWS — HOW IT WORKS
+================================================================================
+
+ADMIN publishes article:
+  Admin → News → title, slug, excerpt, content, status = PUBLISHED
+
+PUBLIC sees at /news. Members can comment and react on articles.
+
+Only PUBLISHED articles are visible to the public.
+
+
+================================================================================
+15. GALLERY — HOW IT WORKS
+================================================================================
+
+Photo/video albums from OLSC events.
+Public: /gallery and /gallery/[album-id]
+
+Note: Gallery upload is via API (no dedicated admin UI page yet).
+Contact developer to add albums if needed.
+
+
+================================================================================
+16. COMMUNITY FEED & NOTIFICATIONS
+================================================================================
+
+COMMUNITY FEED (/app/community):
+  Shows latest activity mixed together:
+    • New news articles
+    • New events
+    • Match goals (GOOOOAAAAAL)
+    • Achievements unlocked
+
+NOTIFICATIONS (/app/notifications):
+  Personal inbox for each member:
+    • MATCH_LIVE — kick-off alert
+    • MATCH_GOAL — Liverpool goal
+    • MATCH_GOAL_OPPONENT — opponent goal
+    • EVENT_UPDATE — event registration confirmations
+
+
+================================================================================
+17. COMMITTEE & CONTACT PAGES
+================================================================================
+
+COMMITTEE (/committee):
+  Displays committee members in cards:
+    Name, role, initials avatar, bio, email
+  Default seed has 6 placeholder members — REPLACE with real committee info
+  Edit inline as admin or via Admin → CMS
+
+CONTACT (/contact):
+  Intro paragraph + 4 contact channels:
+    Email, WhatsApp, Instagram, Location (Beirut)
+  Update with real OLSC Lebanon contact details via inline edit.
+
+
+================================================================================
+18. TYPICAL ADMIN TASKS — CHEAT SHEET
+================================================================================
+
+WHEN A NEW MEMBER JOINS (offline):
+  → Admin → Members → Create member → Send invitation
+
+WHEN A MATCH IS COMING UP:
+  → Admin → Matches → Create match (set prediction deadline before kick-off)
+
+BEFORE KICK-OFF:
+  → Tell members to submit predictions in Match Hub
+
+ON MATCH DAY:
+  → Admin → Matches → Start LIVE
+  → Record each goal with GOOOOAAAAAL button
+  → After full time: enter final result → Calculate prediction points
+
+WHEN YOU HAVE NEWS:
+  → Admin → News → Publish article
+
+WHEN YOU HAVE AN EVENT:
+  → Admin → Events → Create event
+
+WHEN WEBSITE TEXT NEEDS UPDATING:
+  → Visit the page as admin → click text → edit → Save changes
+
+WHEN COMMITTEE MEMBERS CHANGE:
+  → /committee → edit inline each member card
+
+
+================================================================================
+19. TECHNICAL SETUP (FOR REFERENCE)
+================================================================================
+
+WHAT RUNS WHERE:
+  • Frontend (website): React app — port 5173 (dev) or 8080 (production)
+  • Backend (API): NestJS — port 3000 (dev) or behind api.domain (production)
+  • Database: PostgreSQL
+
+LOCAL DEVELOPMENT (Windows):
+  1. Copy .env.example to .env (root) and apps/web/.env.example to apps/web/.env
+  2. npm install
+  3. npm run build:shared
+  4. npm run prisma:generate
+  5. npm run prisma:migrate
+  6. npm run prisma:seed
+  7. npm run dev:api   (terminal 1)
+  8. npm run dev:web   (terminal 2)
+  9. Open http://localhost:5173
+
+DEFAULT ADMIN ACCOUNT (created by seed):
+  Email:    admin@olsclebanon.com
+  Password: ChangeMeNow123!  (or value of SEED_SUPER_ADMIN_PASSWORD in .env)
+
+  ⚠ CHANGE THIS PASSWORD before going live!
+
+IMPORTANT ENV VARIABLES:
+  DATABASE_URL          — PostgreSQL connection
+  JWT_ACCESS_SECRET     — Auth security (min 32 characters)
+  JWT_REFRESH_SECRET    — Auth security (min 32 characters)
+  APP_URL               — Frontend URL (used in invitation emails)
+  SMTP_*                — Email server (required for production invitations)
+  CLOUDINARY_*          — Cloud image storage (optional; local disk if empty)
+
+PRODUCTION:
+  See LAUNCH-CHECKLIST.md and SETUP-AT-HOME.md in the project folder.
+  Docker deployment: npm run docker:prod:up
+
+
+================================================================================
+20. IMPORTANT NOTES & LIMITATIONS
+================================================================================
+
+• Official membership is ALWAYS managed by the committee — not self-service
+  on the platform.
+
+• Members must activate their account before they can log in or predict.
+
+• Predictions lock at "Predictions close at" — no late submissions.
+
+• Points are only calculated AFTER you enter the final result AND click
+  "Calculate prediction points". They are NOT automatic at full time.
+
+• GOOOOAAAAAL alerts only reach logged-in ACTIVE members.
+
+• Gallery admin upload has no UI yet — use API or ask developer.
+
+• Scoring rules (point values) can be changed via API but not yet in admin UI.
+  Current defaults are listed in Section 9.
+
+• Streak bonus points are defined but not applied in calculations yet.
+
+• Leaderboard in Member App shows OVERALL ranking only (weekly/monthly exist
+  in API but not shown in UI yet).
+
+• Email invitations require SMTP configuration. Without SMTP, invitation links
+  are shown in the admin API response (development mode only).
+
+
+================================================================================
+21. QUICK URL REFERENCE
+================================================================================
+
+PUBLIC:
+  /                  Home
+  /about             About OLSC Lebanon
+  /committee         Committee members
+  /membership        Membership info
+  /contact           Contact us
+  /events            Events list
+  /news              News list
+  /gallery           Photo gallery
+  /login             Login
+  /accept-invitation Activate account (from email link)
+
+MEMBER APP (login required):
+  /app                      Member home
+  /app/matches              Match Hub list
+  /app/matches/[id]         Match detail + prediction
+  /app/leaderboard          Leaderboard
+  /app/community            Community feed
+  /app/notifications        Notifications
+  /app/hall-of-fame         Hall of Fame
+  /app/profile              Profile
+  /app/membership-card      Digital card
+
+ADMIN (admin login required):
+  /admin              Dashboard
+  /admin/members      Manage members
+  /admin/matches      Matches & live control
+  /admin/news         Publish news
+  /admin/events       Create events
+  /admin/cms          Edit CMS pages
+
+
+================================================================================
+                              END OF GUIDE
+         Questions? Contact the platform developer or OLSC committee lead.
+================================================================================

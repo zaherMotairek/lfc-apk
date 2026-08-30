@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+coverage
+.turbo
+.vite
+uploads
+apps/api/uploads
+_dir_listing.txt
+S47ED004P1.PAG.txt
+
