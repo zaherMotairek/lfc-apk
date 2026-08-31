@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import type { NavItem } from './nav-config';
 
 type SidebarNavProps = {
