@@ -5,6 +5,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { resolveMediaUrl } from '../../lib/media-url';
 
 type MembershipCard = {
   fullName: string;
@@ -184,7 +185,7 @@ export function MembershipCardPage() {
         >
           {card?.cardImageUrl ? (
             <img
-              src={card.cardImageUrl}
+              src={resolveMediaUrl(card.cardImageUrl)}
               alt="Your membership card"
               className="max-h-80 w-full bg-black/[0.03] object-contain"
             />
@@ -281,7 +282,7 @@ export function MembershipCardPage() {
               <div className="mt-6 flex items-center gap-3">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/15 text-sm font-extrabold ring-1 ring-white/20">
                   {card.avatarUrl ? (
-                    <img src={card.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    <img src={resolveMediaUrl(card.avatarUrl)} alt="" className="h-full w-full object-cover" />
                   ) : (
                     getInitials(card.fullName)
                   )}
