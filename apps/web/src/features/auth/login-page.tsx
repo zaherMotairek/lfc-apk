@@ -77,7 +77,10 @@ export function LoginPage() {
         {/* Form panel */}
         <div className="bg-surface p-8 md:p-10">
           <h2 className="text-2xl font-extrabold text-ink">Member Login</h2>
-          <p className="mt-2 text-sm text-black/55">Enter your username and password to continue.</p>
+          <p className="mt-2 text-sm text-black/55">
+            Sign in with your username (e.g. <span className="font-semibold">test</span>) — not the full
+            email.
+          </p>
 
           <form onSubmit={onSubmit} className="mt-8 space-y-5">
             <label className="block text-sm font-medium">
@@ -86,7 +89,7 @@ export function LoginPage() {
                 className="kop-input"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Your username"
+                placeholder="e.g. test"
                 required
                 autoComplete="username"
               />

@@ -22,6 +22,7 @@ type ProfileResponse = {
   coins: number;
   currentWinningStreak: number;
   longestWinningStreak: number;
+  roles: string[];
   achievements: Array<{
     code: string;
     name: string;
@@ -43,6 +44,34 @@ const ACHIEVEMENT_ICONS: Record<string, string> = {
   PREDICTION_MASTER: '🎯',
 };
 
+function resolveLoginUsername(profile: ProfileResponse): string {
+  if (profile.username?.trim()) {
+    return profile.username.trim();
+  }
+  if (profile.email.endsWith('@users.olsc.local')) {
+    return profile.email.replace('@users.olsc.local', '');
+  }
+  const local = profile.email.split('@')[0];
+  return local || profile.email;
+}
+
+function displayName(profile: ProfileResponse | null, fallbackUsername?: string | null) {
+  if (profile?.firstName.trim() || profile?.lastName.trim()) {
+    return `${profile.firstName} ${profile.lastName}`.trim();
+  }
+  if (profile) {
+    return resolveLoginUsername(profile);
+  }
+  return fallbackUsername ?? 'Member';
+}
+
+function formatRoleLabel(role: string) {
+  return role
+    .replace(/_/g, ' ')
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 export function ProfilePage() {
   const { accessToken, user } = useAuth();
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
@@ -57,6 +86,14 @@ export function ProfilePage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [passwordMessage, setPasswordMessage] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -117,6 +154,42 @@ export function ProfilePage() {
     }
   }
 
+  async function onPasswordSubmit(event: FormEvent) {
+    event.preventDefault();
+    setPasswordLoading(true);
+    setPasswordError(null);
+    setPasswordMessage(null);
+
+    if (passwordForm.newPassword.length < 8) {
+      setPasswordError('New password must be at least 8 characters.');
+      setPasswordLoading(false);
+      return;
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError('New password and confirmation do not match.');
+      setPasswordLoading(false);
+      return;
+    }
+
+    try {
+      const result = await apiRequest<{ message: string }>('/users/me/password', {
+        method: 'PUT',
+        token: accessToken,
+        body: {
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        },
+      });
+      setPasswordMessage(result.message);
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err) {
+      setPasswordError(err instanceof Error ? err.message : 'Password change failed');
+    } finally {
+      setPasswordLoading(false);
+    }
+  }
+
   async function onAvatarChange(file: File | null) {
     if (!file || !accessToken) return;
 
@@ -149,14 +222,17 @@ export function ProfilePage() {
   const activeMembership =
     profile?.memberships.find((item) => item.status === 'ACTIVE') ?? profile?.memberships[0];
 
-  const initials = `${profile?.firstName?.charAt(0) ?? user?.firstName?.charAt(0) ?? ''}${profile?.lastName?.charAt(0) ?? user?.lastName?.charAt(0) ?? ''}`;
+  const loginUsername = profile ? resolveLoginUsername(profile) : user?.username ?? '';
+  const memberRoles = profile?.roles?.filter((role) => role !== 'MEMBER') ?? [];
+
+  const initials = `${profile?.firstName?.charAt(0) ?? user?.firstName?.charAt(0) ?? loginUsername.charAt(0) ?? ''}${profile?.lastName?.charAt(0) ?? user?.lastName?.charAt(0) ?? ''}`;
 
   return (
-    <section className="max-w-2xl space-y-6">
+    <section className="max-w-3xl space-y-6">
       <PageHeader
         eyebrow="Account"
         title="My Profile"
-        description="Manage your platform profile and track your Kop stats."
+        description="Your Kop identity, login details, stats, and membership info."
       />
 
       {profile && (!profile.firstName.trim() || !profile.lastName.trim()) ? (
@@ -176,40 +252,64 @@ export function ProfilePage() {
             <div className="relative">
               <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border-2 border-white/30 bg-white/15 text-2xl font-bold">
                 {profile?.avatarUrl ? (
-<img
-  src={resolveMediaUrl(profile.avatarUrl)}
-  alt=""
-  className="h-full w-full object-cover"
-/>                ) : (
+                  <img
+                    src={resolveMediaUrl(profile.avatarUrl)}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
                   initials || '?'
                 )}
               </div>
             </div>
-            <div>
-              <h2 className="text-xl font-extrabold">
-                {profile?.firstName || profile?.lastName
-                  ? `${profile.firstName} ${profile.lastName}`.trim()
-                  : profile?.username ?? 'New member'}
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Signed in as</p>
+              <h2 className="mt-1 text-2xl font-extrabold tracking-tight">
+                {displayName(profile, user?.username)}
               </h2>
-              <p className="text-sm text-white/70">
-                {profile?.username
-                  ? `@${profile.username}`
-                  : profile?.email?.endsWith('@users.olsc.local')
-                    ? 'Username account'
-                    : profile?.email}
-              </p>
+              <div className="mt-3 inline-flex items-center gap-2 rounded-xl bg-white/15 px-3 py-2 ring-1 ring-white/20">
+                <span className="text-xs font-semibold uppercase tracking-wider text-white/60">Username</span>
+                <span className="font-mono text-base font-bold text-white">@{loginUsername}</span>
+              </div>
+              {memberRoles.length > 0 ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {memberRoles.map((role) => (
+                    <span
+                      key={role}
+                      className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white/85"
+                    >
+                      {formatRoleLabel(role)}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
               {activeMembership ? (
-                <p className="mt-1 text-xs text-white/55">
-                  {activeMembership.officialMemberId} · {activeMembership.seasonLabel}
+                <p className="mt-3 text-sm text-white/70">
+                  Official member · {activeMembership.officialMemberId} · {activeMembership.seasonLabel}
                 </p>
               ) : (
-                <p className="mt-1 text-xs text-white/55">
+                <p className="mt-3 text-sm text-white/70">
                   {[profile?.olscId ? `OLSC ${profile.olscId}` : null, profile?.lfcId ? `LFC ${profile.lfcId}` : null]
                     .filter(Boolean)
-                    .join(' · ') || 'Add your OLSC / LFC IDs below to match the official roster'}
+                    .join(' · ') || 'Complete your profile and add OLSC / LFC IDs to match the roster'}
                 </p>
               )}
             </div>
+          </div>
+        </div>
+
+        <div className="grid gap-px bg-black/5 sm:grid-cols-2">
+          <div className="bg-surface px-6 py-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-black/40">Login username</p>
+            <p className="mt-1 font-mono text-lg font-bold text-ink">@{loginUsername}</p>
+            <p className="mt-1 text-xs text-black/45">Use this on the sign-in page — not your email address.</p>
+          </div>
+          <div className="bg-surface px-6 py-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-black/40">Account status</p>
+            <p className="mt-1 text-lg font-bold capitalize text-ink">
+              {profile?.platformAccountStatus?.toLowerCase() ?? 'active'}
+            </p>
+            <p className="mt-1 text-xs text-black/45">Keep your password updated in the section below.</p>
           </div>
         </div>
 
@@ -326,6 +426,72 @@ export function ProfilePage() {
         {message ? (
           <div className="mt-4 rounded-xl border border-pitch/20 bg-pitch/5 px-4 py-3 text-sm text-pitch">
             {message}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="kop-card p-6">
+        <h3 className="mb-1 font-bold text-ink">Change password</h3>
+        <p className="mb-4 text-sm text-black/50">
+          Update your login password. Works for members and admin accounts.
+        </p>
+        <form onSubmit={onPasswordSubmit} className="grid max-w-md gap-4">
+          <label className="block text-sm font-medium">
+            Current password
+            <input
+              className="kop-input"
+              type="password"
+              value={passwordForm.currentPassword}
+              onChange={(e) =>
+                setPasswordForm((prev) => ({ ...prev, currentPassword: e.target.value }))
+              }
+              required
+              autoComplete="current-password"
+            />
+          </label>
+          <label className="block text-sm font-medium">
+            New password
+            <input
+              className="kop-input"
+              type="password"
+              minLength={8}
+              value={passwordForm.newPassword}
+              onChange={(e) =>
+                setPasswordForm((prev) => ({ ...prev, newPassword: e.target.value }))
+              }
+              required
+              autoComplete="new-password"
+            />
+          </label>
+          <label className="block text-sm font-medium">
+            Confirm new password
+            <input
+              className="kop-input"
+              type="password"
+              minLength={8}
+              value={passwordForm.confirmPassword}
+              onChange={(e) =>
+                setPasswordForm((prev) => ({ ...prev, confirmPassword: e.target.value }))
+              }
+              required
+              autoComplete="new-password"
+            />
+          </label>
+          <div>
+            <button type="submit" disabled={passwordLoading} className="kop-btn-primary">
+              {passwordLoading ? 'Updating...' : 'Update password'}
+            </button>
+          </div>
+        </form>
+
+        {passwordError ? (
+          <div className="mt-4 rounded-xl border border-lfc-red/20 bg-lfc-red/5 px-4 py-3 text-sm text-lfc-red">
+            {passwordError}
+          </div>
+        ) : null}
+        {passwordMessage ? (
+          <div className="mt-4 rounded-xl border border-pitch/20 bg-pitch/5 px-4 py-3 text-sm text-pitch">
+            {passwordMessage}
           </div>
         ) : null}
       </div>

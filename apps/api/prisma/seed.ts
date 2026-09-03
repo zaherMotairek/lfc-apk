@@ -249,9 +249,11 @@ async function seedSuperAdmin() {
       lastName,
       passwordHash,
       platformAccountStatus: 'ACTIVE',
+      username: 'admin',
     },
     create: {
       email,
+      username: 'admin',
       firstName,
       lastName,
       passwordHash,

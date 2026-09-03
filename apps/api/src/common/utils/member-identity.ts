@@ -38,3 +38,12 @@ export function splitFullName(fullName: string) {
     lastName: parts.slice(1).join(' '),
   };
 }
+
+/** Local part of an email — used as default login username (min 3 chars). */
+export function emailLocalPart(email: string): string | null {
+  const local = email.split('@')[0]?.trim().toLowerCase();
+  if (!local || local.length < 3) {
+    return null;
+  }
+  return local;
+}

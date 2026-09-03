@@ -13,6 +13,7 @@ type AuthUser = {
   firstName: string;
   lastName: string;
   email: string;
+  username?: string | null;
   roles: string[];
   permissions: string[];
 };

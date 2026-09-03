@@ -331,7 +331,7 @@ select {
 }
 
 .winner-pick-btn {
-  @apply rounded-2xl border border-black/10 bg-surface-raised px-2 py-4 text-center text-xs font-bold text-black/65 transition active:scale-[0.98] sm:text-sm;
+  @apply flex min-h-[3.5rem] items-center justify-center rounded-2xl border border-black/10 bg-surface-raised px-1.5 py-3 text-center text-[11px] font-bold leading-tight text-black/65 transition active:scale-[0.98] sm:min-h-[3.75rem] sm:px-2 sm:py-4 sm:text-sm;
 }
 
 .winner-pick-btn-active {

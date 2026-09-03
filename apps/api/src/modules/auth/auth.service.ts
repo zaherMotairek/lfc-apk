@@ -39,6 +39,58 @@ export class AuthService {
     return raw.trim().toLowerCase();
   }
 
+  private async findUserByLoginIdentifier(raw: string) {
+    const identifier = this.normalizeUsername(raw);
+    if (!identifier) {
+      return null;
+    }
+
+    const directMatch = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ username: identifier }, { email: identifier }],
+      },
+    });
+    if (directMatch) {
+      return directMatch;
+    }
+
+    // Allow "test" to match test@olsclebanon.com when username was never set
+    if (!identifier.includes('@')) {
+      const emailPrefixMatches = await this.prisma.user.findMany({
+        where: {
+          email: { startsWith: `${identifier}@`, mode: 'insensitive' },
+        },
+      });
+      if (emailPrefixMatches.length === 1) {
+        return emailPrefixMatches[0];
+      }
+    }
+
+    return null;
+  }
+
+  private async maybeBackfillUsername(userId: string, preferredUsername: string) {
+    const username = this.normalizeUsername(preferredUsername);
+    if (username.length < 3) {
+      return;
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user || user.username) {
+      return;
+    }
+
+    const taken = await this.prisma.user.findUnique({ where: { username } });
+    if (taken) {
+      return;
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { username },
+    });
+  }
+
   async signup(dto: SignupDto) {
     const username = this.normalizeUsername(dto.username);
     if (username.length < 3) {
@@ -108,11 +160,7 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const identifier = dto.username.trim().toLowerCase();
-    const user = await this.prisma.user.findFirst({
-      where: {
-        OR: [{ username: identifier }, { email: identifier }],
-      },
-    });
+    const user = await this.findUserByLoginIdentifier(dto.username);
 
     if (!user || !user.passwordHash) {
       throw new UnauthorizedException('Invalid credentials');
@@ -126,6 +174,14 @@ export class AuthService {
     if (!isValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    const preferredUsername = identifier.includes('@')
+      ? identifier.split('@')[0]
+      : identifier;
+    await this.maybeBackfillUsername(user.id, preferredUsername);
+
+    const refreshedUser =
+      (await this.prisma.user.findUnique({ where: { id: user.id } })) ?? user;
 
     await this.prisma.user.update({
       where: { id: user.id },
@@ -142,7 +198,7 @@ export class AuthService {
         firstName: authUser.firstName,
         lastName: authUser.lastName,
         email: authUser.email,
-        username: user.username,
+        username: refreshedUser.username,
         roles: authUser.roles,
         permissions: authUser.permissions,
       },

@@ -4,10 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { PermissionCode, RoleCode } from '@kop/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuthenticatedUser } from '../../common/types/authenticated-user';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuditService } from '../../common/services/audit.service';
 import { MediaStorageService } from '../../common/services/media-storage.service';
@@ -182,6 +184,41 @@ export class UsersService {
         olscId: updated.olscId,
         lfcId: updated.lfcId,
       },
+    };
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user?.passwordHash) {
+      throw new BadRequestException('This account has no password set yet');
+    }
+
+    const currentValid = await bcrypt.compare(dto.currentPassword, user.passwordHash);
+    if (!currentValid) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    if (dto.currentPassword === dto.newPassword) {
+      throw new BadRequestException('New password must be different from the current password');
+    }
+
+    const passwordHash = await bcrypt.hash(dto.newPassword, 12);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
+    });
+
+    await this.auditService.log({
+      actorUserId: userId,
+      action: 'CHANGE_PASSWORD',
+      entityType: 'USER',
+      entityId: userId,
+    });
+
+    return {
+      message: 'Password changed successfully.',
     };
   }
 

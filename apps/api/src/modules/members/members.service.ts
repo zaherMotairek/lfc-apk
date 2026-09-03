@@ -26,6 +26,7 @@ import { parseOfficialMembersCsv } from './roster-import.util';
 import {
   normalizeMemberId,
   normalizePhoneNumber,
+  emailLocalPart,
 } from '../../common/utils/member-identity';
 import { MembershipCardsService } from './membership-cards.service';
 
@@ -350,12 +351,15 @@ export class MembersService {
       throw new BadRequestException('MEMBER role is missing. Run database seed first.');
     }
 
+    const username = await this.resolveAvailableUsername(email);
+
     const result = await this.prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
           firstName: dto.firstName,
           lastName: dto.lastName,
           email,
+          ...(username ? { username } : {}),
           phoneNumber: dto.phoneNumber,
           platformAccountStatus: PlatformAccountStatus.INVITED,
           roles: {
@@ -600,6 +604,16 @@ export class MembersService {
     }
 
     return response;
+  }
+
+  private async resolveAvailableUsername(email: string): Promise<string | null> {
+    const local = emailLocalPart(email);
+    if (!local) {
+      return null;
+    }
+
+    const taken = await this.prisma.user.findUnique({ where: { username: local } });
+    return taken ? null : local;
   }
 
   private async createInvitation(

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
+import { teamCrestLabel } from '../../lib/team-labels';
 import { PageHeader } from '../../components/ui/page-header';
 
 type MatchItem = {
@@ -114,7 +115,7 @@ export function MatchesListPage() {
 
               <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                 <div className="min-w-0 text-left">
-                  <div className="match-pick-crest">{match.homeTeamName.slice(0, 3).toUpperCase()}</div>
+                  <div className="match-pick-crest">{teamCrestLabel(match.homeTeamName)}</div>
                   <div className="mt-2 truncate text-sm font-extrabold text-ink">{match.homeTeamName}</div>
                 </div>
                 <div className="text-center">
@@ -122,7 +123,7 @@ export function MatchesListPage() {
                   <div className="mt-2 text-[11px] font-semibold text-black/45">{formatKickoff(match.matchDate)}</div>
                 </div>
                 <div className="min-w-0 text-right">
-                  <div className="match-pick-crest ml-auto">{match.awayTeamName.slice(0, 3).toUpperCase()}</div>
+                  <div className="match-pick-crest ml-auto">{teamCrestLabel(match.awayTeamName)}</div>
                   <div className="mt-2 truncate text-sm font-extrabold text-ink">{match.awayTeamName}</div>
                 </div>
               </div>

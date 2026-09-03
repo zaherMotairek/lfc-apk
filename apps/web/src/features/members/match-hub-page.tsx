@@ -3,16 +3,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
+import { compactTeamLabel, isLiverpoolTeamName, teamCrestLabel } from '../../lib/team-labels';
 
 function formatWinnerLabel(value: string, homeTeamName: string, awayTeamName: string) {
   if (value === 'HOME_WIN') return `${homeTeamName} win`;
   if (value === 'AWAY_WIN') return `${awayTeamName} win`;
   if (value === 'DRAW') return 'Draw';
   return value;
-}
-
-function isLiverpoolTeamName(name: string) {
-  return name.trim().toLowerCase().includes('liverpool');
 }
 
 function winnerFromScores(home: number, away: number) {
@@ -290,7 +287,7 @@ export function MatchHubPage() {
     : scoring?.winnerPoints ?? 1;
 
   return (
-    <section className="space-y-5 pb-24 md:pb-0">
+    <section className="space-y-5 pb-8 md:pb-0">
 
       <div className="match-hub-hero !px-4 !py-5 md:!px-8 md:!py-8">
         <div className="match-hub-hero-top">
@@ -301,8 +298,10 @@ export function MatchHubPage() {
 
         <div className="mt-5 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
           <div className="text-center">
-            <div className="match-hub-crest mx-auto">{match.homeTeamName.slice(0, 3).toUpperCase()}</div>
-            <p className="mt-2 text-sm font-bold leading-tight text-white">{match.homeTeamName}</p>
+            <div className="match-hub-crest mx-auto">{teamCrestLabel(match.homeTeamName)}</div>
+            <p className="mt-2 line-clamp-2 text-xs font-bold leading-tight text-white sm:text-sm">
+              {match.homeTeamName}
+            </p>
           </div>
           <div className="text-center">
             <div className="text-3xl font-black tracking-tight text-white md:text-5xl">
@@ -315,8 +314,10 @@ export function MatchHubPage() {
             </p>
           </div>
           <div className="text-center">
-            <div className="match-hub-crest mx-auto">{match.awayTeamName.slice(0, 3).toUpperCase()}</div>
-            <p className="mt-2 text-sm font-bold leading-tight text-white">{match.awayTeamName}</p>
+            <div className="match-hub-crest mx-auto">{teamCrestLabel(match.awayTeamName)}</div>
+            <p className="mt-2 line-clamp-2 text-xs font-bold leading-tight text-white sm:text-sm">
+              {match.awayTeamName}
+            </p>
           </div>
         </div>
 
@@ -468,10 +469,11 @@ export function MatchHubPage() {
                   <button
                     key={value}
                     type="button"
+                    title={label}
                     className={`winner-pick-btn ${form.winnerPrediction === value ? 'winner-pick-btn-active' : ''}`}
                     onClick={() => setForm((prev) => ({ ...prev, winnerPrediction: value }))}
                   >
-                    {label}
+                    {value === 'DRAW' ? label : compactTeamLabel(label)}
                   </button>
                 ))}
               </div>
@@ -479,58 +481,59 @@ export function MatchHubPage() {
             </div>
 
             {isLfc ? (
-              <div>
+              <div className="space-y-4">
                 <div className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-black/40">
                   Step 3 · Liverpool bonus (+1 pt each)
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <label className="block text-sm font-medium">
-                    First Liverpool goalscorer
-                    <select
-                      className="kop-input"
-                      value={form.firstLiverpoolGoalscorer}
-                      onChange={(e) =>
-                        setForm((prev) => ({ ...prev, firstLiverpoolGoalscorer: e.target.value }))
-                      }
-                    >
-                      <option value="">Select a player…</option>
-                      {(match.liverpoolPlayers ?? []).map((player) => (
-                        <option key={player.name} value={player.name}>
-                          {player.number} — {player.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <div>
-                    <div className="text-sm font-medium">Liverpool clean sheet?</div>
-                    <p className="mt-1 text-xs text-black/45">+1 pt if you pick the correct answer.</p>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                      {(
-                        [
-                          [true, 'Yes'],
-                          [false, 'No'],
-                        ] as const
-                      ).map(([value, label]) => (
-                        <button
-                          key={label}
-                          type="button"
-                          className={`winner-pick-btn ${
-                            form.cleanSheetPrediction === value ? 'winner-pick-btn-active' : ''
-                          }`}
-                          onClick={() =>
-                            setForm((prev) => ({ ...prev, cleanSheetPrediction: value }))
-                          }
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
+                <label className="block text-sm font-medium">
+                  First Liverpool goalscorer
+                  <select
+                    className="kop-input mt-1"
+                    value={form.firstLiverpoolGoalscorer}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, firstLiverpoolGoalscorer: e.target.value }))
+                    }
+                  >
+                    <option value="">Select a player…</option>
+                    {(match.liverpoolPlayers ?? []).map((player) => (
+                      <option key={player.name} value={player.name}>
+                        {player.number} — {player.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div>
+                  <div className="text-sm font-medium">Liverpool clean sheet?</div>
+                  <p className="mt-1 text-xs text-black/45">+1 pt if you pick the correct answer.</p>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {(
+                      [
+                        [true, 'Yes'],
+                        [false, 'No'],
+                      ] as const
+                    ).map(([value, label]) => (
+                      <button
+                        key={label}
+                        type="button"
+                        className={`winner-pick-btn ${
+                          form.cleanSheetPrediction === value ? 'winner-pick-btn-active' : ''
+                        }`}
+                        onClick={() =>
+                          setForm((prev) => ({ ...prev, cleanSheetPrediction: value }))
+                        }
+                      >
+                        {label}
+                      </button>
+                    ))}
                   </div>
+                  {message?.includes('clean sheet') ? (
+                    <p className="mt-2 text-sm font-medium text-lfc-red">{message}</p>
+                  ) : null}
                 </div>
               </div>
             ) : null}
 
-            <div className="hidden md:block">
+            <div className="border-t border-black/5 pt-6">
               <button
                 type="submit"
                 disabled={submitMutation.isPending}
@@ -539,20 +542,8 @@ export function MatchHubPage() {
                 {submitMutation.isPending
                   ? 'Saving...'
                   : match.myPrediction
-                    ? 'Update prediction'
-                    : 'Submit prediction'}
-              </button>
-            </div>
-
-            <div className="fixed bottom-16 left-0 right-0 z-40 border-t border-black/10 bg-surface/95 p-3 backdrop-blur md:hidden">
-              <button
-                type="submit"
-                disabled={submitMutation.isPending}
-                className="kop-btn-primary w-full"
-              >
-                {submitMutation.isPending
-                  ? 'Saving...'
-                  : `${match.myPrediction ? 'Update' : 'Submit'} ${form.predictedHomeScore}-${form.predictedAwayScore}`}
+                    ? `Update ${form.predictedHomeScore}-${form.predictedAwayScore}`
+                    : `Submit ${form.predictedHomeScore}-${form.predictedAwayScore}`}
               </button>
             </div>
           </form>
@@ -562,7 +553,9 @@ export function MatchHubPage() {
           </p>
         )}
 
-        {message ? <p className="mt-3 text-sm text-black/70">{message}</p> : null}
+        {message && !message.includes('clean sheet') ? (
+          <p className="mt-3 text-sm text-black/70">{message}</p>
+        ) : null}
       </div>
 
       <div className="kop-card p-4">
