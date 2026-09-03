@@ -69,7 +69,7 @@ export function PublicLayout() {
                     Admin Panel
                   </Link>
                 ) : null}
-                <Link to={loginTarget} state={loginState} className="kop-btn-primary ml-2 !py-2.5 !text-sm">
+                <Link to="/app/profile" className="kop-btn-primary ml-2 !py-2.5 !text-sm">
                   Account
                 </Link>
               </>
@@ -195,17 +195,14 @@ export function PublicLayout() {
           </div>
           <div>
             <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">Members</div>
-            <div className="flex flex-col gap-2 text-sm text-white/70">
-              <Link to="/signup" className="hover:text-white">
-                Sign up
-              </Link>
-              <Link to={loginTarget} state={loginState} className="hover:text-white">
-                Member Login
-              </Link>
+                        <div className="flex flex-col gap-2 text-sm text-white/70">
               {isAuthenticated ? (
                 <>
                   <Link to="/app" className="hover:text-white">
                     Member App
+                  </Link>
+                  <Link to="/app/profile" className="hover:text-white">
+                    My Account
                   </Link>
                   {isAdmin ? (
                     <Link to="/admin" className="hover:text-white">
@@ -213,7 +210,16 @@ export function PublicLayout() {
                     </Link>
                   ) : null}
                 </>
-              ) : null}
+              ) : (
+                <>
+                  <Link to="/signup" className="hover:text-white">
+                    Sign up
+                  </Link>
+                  <Link to={loginTarget} state={loginState} className="hover:text-white">
+                    Member Login
+                  </Link>
+                </>
+              )}
             </div>
             <p className="mt-6 text-xs text-white/35">
               Respect LFC / OLSC content and branding guidelines.
