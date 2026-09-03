@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
+import { useAuth } from '../auth/auth-context';
 
 type CmsPage = {
   title: string;
@@ -34,6 +35,7 @@ type EventItem = {
 
 export function HomePage() {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const cmsQuery = useQuery({
     queryKey: ['cms-page', 'HOME'],
     queryFn: () => apiRequest<CmsPage>('/cms/pages/HOME'),
@@ -71,11 +73,15 @@ export function HomePage() {
                 {hero?.content?.primaryButtonLabel ?? 'Membership Info'}
               </Link>
               <Link
-                to="/login"
-                state={{ from: { pathname: location.pathname, search: location.search } }}
+                to={isAuthenticated ? '/app' : '/login'}
+                state={
+                  isAuthenticated
+                    ? undefined
+                    : { from: { pathname: location.pathname, search: location.search } }
+                }
                 className="kop-btn-secondary"
               >
-                Member Login
+                {isAuthenticated ? 'Open Member App' : 'Member Login'}
               </Link>
             </div>
           </div>
@@ -236,12 +242,16 @@ export function HomePage() {
             <Link to="/membership" className="kop-btn-primary">
               Learn about membership
             </Link>
-            <Link
-              to="/login"
-              state={{ from: { pathname: location.pathname, search: location.search } }}
+                        <Link
+              to={isAuthenticated ? '/app' : '/login'}
+              state={
+                isAuthenticated
+                  ? undefined
+                  : { from: { pathname: location.pathname, search: location.search } }
+              }
               className="kop-btn bg-white/10 text-white hover:bg-white/15"
             >
-              Member Login
+              {isAuthenticated ? 'Open Member App' : 'Member Login'}
             </Link>
           </div>
         </div>
