@@ -76,7 +76,7 @@ export function AdminApplicationsPage() {
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'ALL'>('PENDING');
+  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'ALL'>('ALL');
   const [packageFilter, setPackageFilter] = useState<PackageType | 'ALL'>('ALL');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingNotes, setEditingNotes] = useState<MembershipApplication | null>(null);
@@ -449,55 +449,39 @@ export function AdminApplicationsPage() {
         }
       />
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-        {(
-          [
-            ['ALL', 'All', counts.total],
-            ['PENDING', 'Pending', counts.pending],
-            ['PAYMENT_CONFIRMED', 'Paid', counts.paid],
-            ['APPROVED', 'Approved', counts.approved],
-            ['FULL', 'Full', counts.full],
-            ['LIGHT', 'Light', counts.light],
-          ] as const
-        ).map(([key, label, count]) => {
-          const isPackage = key === 'FULL' || key === 'LIGHT';
-          const active = isPackage
-            ? packageFilter === key && statusFilter === 'ALL'
-            : statusFilter === key && packageFilter === 'ALL';
-          return (
-            <button
-              key={key}
-              type="button"
-              onClick={() => {
-                if (isPackage) {
-                  setPackageFilter(key);
-                  setStatusFilter('ALL');
-                } else {
-                  setStatusFilter(key);
-                  setPackageFilter('ALL');
-                }
-              }}
-              className={`stat-pill text-left transition ${
-                active ? 'ring-2 ring-lfc-red/30 bg-lfc-red/5' : 'hover:bg-black/[0.03]'
-              }`}
-            >
-              <div className="stat-pill-value">{count}</div>
-              <div className="stat-pill-label">{label}</div>
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="kop-card flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-        <input
-          className="kop-input flex-1 !mt-0"
-          placeholder="Search name, phone, email, OLSC/LFC ID…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <div className="text-sm text-black/45">
-          {filtered.length} shown · {counts.pending} waiting for payment
+      <div className="kop-card p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input
+            className="kop-input flex-1 !mt-0"
+            placeholder="Search name, phone, email, OLSC/LFC ID…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select
+            className="kop-input !mt-0 sm:w-44"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as ApplicationStatus | 'ALL')}
+          >
+            <option value="ALL">All statuses ({counts.total})</option>
+            <option value="PENDING">Pending ({counts.pending})</option>
+            <option value="PAYMENT_CONFIRMED">Paid ({counts.paid})</option>
+            <option value="APPROVED">Approved ({counts.approved})</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+          <select
+            className="kop-input !mt-0 sm:w-40"
+            value={packageFilter}
+            onChange={(e) => setPackageFilter(e.target.value as PackageType | 'ALL')}
+          >
+            <option value="ALL">All packages</option>
+            <option value="FULL">Full — $25 ({counts.full})</option>
+            <option value="LIGHT">Light — $10 ({counts.light})</option>
+          </select>
         </div>
+        <p className="mt-3 text-sm text-black/45">
+          {filtered.length} application{filtered.length === 1 ? '' : 's'}
+          {counts.pending > 0 ? ` · ${counts.pending} waiting for payment` : ''}
+        </p>
       </div>
 
       {feedback ? (
