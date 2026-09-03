@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { resolveMediaUrl } from '../../lib/media-url';
 
 type ProfileResponse = {
   id: string;
@@ -175,8 +176,11 @@ export function ProfilePage() {
             <div className="relative">
               <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border-2 border-white/30 bg-white/15 text-2xl font-bold">
                 {profile?.avatarUrl ? (
-                  <img src={profile.avatarUrl} alt="" className="h-full w-full object-cover" />
-                ) : (
+<img
+  src={resolveMediaUrl(profile.avatarUrl)}
+  alt=""
+  className="h-full w-full object-cover"
+/>                ) : (
                   initials || '?'
                 )}
               </div>
