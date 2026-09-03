@@ -1,16 +1,39 @@
-/** Same-origin path for uploaded files (works with Vite proxy in dev). */
-export function resolveMediaUrl(url: string): string {
-  if (!url) return url;
-  if (url.startsWith('/')) return url;
+/** Resolve uploaded media URLs to the API host (required on Render Static Sites). */
+export function resolveMediaUrl(url: string | null | undefined): string {
+  if (!url) return '';
 
-  try {
-    const parsed = new URL(url);
-    if (parsed.pathname.startsWith('/uploads/')) {
-      return parsed.pathname;
+  let pathname = url;
+
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    try {
+      const parsed = new URL(url);
+      // External hosts (Cloudinary, etc.) — keep as-is
+      if (!parsed.pathname.startsWith('/uploads/')) {
+        return url;
+      }
+      pathname = parsed.pathname;
+    } catch {
+      return url;
     }
-  } catch {
-    /* keep original url */
   }
 
-  return url;
+  if (!pathname.startsWith('/uploads/')) {
+    return url;
+  }
+
+  const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+
+  try {
+    const origin = new URL(apiUrl).origin;
+    // Local Vite proxies /uploads → API, so relative path is fine in dev
+    if (
+      import.meta.env.DEV &&
+      (origin.includes('localhost') || origin.includes('127.0.0.1'))
+    ) {
+      return pathname;
+    }
+    return `${origin}${pathname}`;
+  } catch {
+    return pathname;
+  }
 }
