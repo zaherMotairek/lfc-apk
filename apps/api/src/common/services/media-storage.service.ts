@@ -140,7 +140,10 @@ export class MediaStorageService {
     const filename = `${userId}-${Date.now()}.${extension}`;
     writeFileSync(join(uploadsDir, filename), file.buffer);
 
-    const apiUrl = this.configService.get<string>('API_URL') ?? 'http://localhost:3000';
+        const rawApiUrl =
+      this.configService.get<string>('API_URL')?.trim() || 'http://localhost:3000';
+    // Strip trailing /api so uploads stay at {host}/uploads/... (not /api/uploads)
+    const apiUrl = rawApiUrl.replace(/\/api\/?$/, '').replace(/\/$/, '');
     this.logger.log(`Image stored locally for user ${userId}`);
     return `${apiUrl}/uploads/${folder}/${filename}`;
   }
