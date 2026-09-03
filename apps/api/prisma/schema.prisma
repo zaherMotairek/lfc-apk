@@ -28,6 +28,18 @@ enum MembershipSource {
   FUTURE_SELF_REGISTRATION
 }
 
+enum MembershipPackageType {
+  LIGHT
+  FULL
+}
+
+enum MembershipApplicationStatus {
+  PENDING
+  PAYMENT_CONFIRMED
+  APPROVED
+  REJECTED
+}
+
 enum InvitationStatus {
   PENDING
   ACCEPTED
@@ -177,6 +189,7 @@ model User {
   achievements          UserAchievement[]
   xpTransactions        XpTransaction[]
   coinTransactions      CoinTransaction[]
+  reviewedMembershipApplications MembershipApplication[] @relation("MembershipApplicationReviewer")
 
   @@index([platformAccountStatus])
   @@index([lastName, firstName])
@@ -209,6 +222,33 @@ model OfficialMemberRoster {
 
   @@index([lfcId])
   @@index([phoneNumber])
+}
+
+model MembershipApplication {
+  id                 String                      @id @default(cuid())
+  seasonLabel        String                      @default("2026/27")
+  fullName           String
+  email              String
+  address            String
+  phoneNumber        String
+  packageType        MembershipPackageType
+  previousOlscId     String?
+  isOfficialLfcMember Boolean
+  lfcId              String?
+  paymentAgreed      Boolean                     @default(true)
+  status             MembershipApplicationStatus @default(PENDING)
+  assignedOlscId     String?
+  adminNotes         String?
+  reviewedById       String?
+  reviewedAt         DateTime?
+  createdAt          DateTime                    @default(now())
+  updatedAt          DateTime                    @updatedAt
+
+  reviewedBy User? @relation("MembershipApplicationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@index([seasonLabel])
 }
 
 model Role {

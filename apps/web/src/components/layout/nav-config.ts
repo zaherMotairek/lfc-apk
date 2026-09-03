@@ -37,6 +37,7 @@ export const MEMBER_EXTRA_NAV: NavItem[] = [
 
 export const ADMIN_NAV: NavItem[] = [
   { to: '/admin', label: 'Dashboard', icon: '📊', end: true },
+  { to: '/admin/applications', label: 'Applications', icon: '📋' },
   { to: '/admin/members', label: 'Users', icon: '👥' },
   { to: '/admin/matches', label: 'Matches', icon: '⚽' },
   { to: '/admin/newsletter', label: 'Newsletter', icon: '🗞️' },
@@ -55,6 +56,7 @@ export const ADMIN_MOBILE_TABS: NavItem[] = [
 ];
 
 export const ADMIN_QUICK_LINKS = [
+  { to: '/admin/applications', label: 'Membership applications', desc: 'Review 2026/27 form submissions' },
   { to: '/admin/members', label: 'Manage users', desc: 'Search, edit and invite members' },
   { to: '/admin/matches', label: 'Manage matches', desc: 'Create Liverpool matches & scores' },
   { to: '/admin/news', label: 'Publish news', desc: 'Write club announcements' },

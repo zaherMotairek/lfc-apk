@@ -140,12 +140,12 @@ function MembershipPublicPageContent() {
         <ol className="grid gap-4 md:grid-cols-3">
           <li className="kop-card p-5">
             <div className="text-xs font-bold uppercase tracking-wider text-lfc-red">Step 1</div>
-            <h3 className="mt-2 font-bold">Join OLSC Lebanon</h3>
+            <h3 className="mt-2 font-bold">Apply for 2026/27 membership</h3>
             <p className="mt-2 text-sm leading-relaxed text-black/55">
-              Official membership is handled by the committee. Contact them if you are not a member yet.
+              Complete the online form and transfer the fee via Whish Money or OMT Pay.
             </p>
-            <Link to="/contact" className="kop-btn-secondary mt-4 w-full !py-2 !text-sm">
-              Contact committee
+            <Link to="/membership/apply" className="kop-btn-primary mt-4 w-full !py-2 !text-sm">
+              Apply now
             </Link>
           </li>
           <li className="kop-card p-5">
@@ -263,16 +263,16 @@ function MembershipPublicPageContent() {
           />
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              to={isAuthenticated ? '/app/membership-card' : '/login'}
+              to="/membership/apply"
               className="kop-btn-primary !bg-white !text-ink hover:!bg-white/90"
             >
-              {isAuthenticated ? 'Go to my card' : 'Member login'}
+              Apply for membership
             </Link>
             <Link
-              to="/contact"
+              to={isAuthenticated ? '/app/membership-card' : '/login'}
               className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
             >
-              Ask the committee
+              {isAuthenticated ? 'Go to my card' : 'Member login'}
             </Link>
           </div>
         </div>

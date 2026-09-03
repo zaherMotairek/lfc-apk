@@ -8,6 +8,7 @@ import { CommitteePublicPage } from '../features/public/committee-public-page';
 import { ContactPublicPage } from '../features/public/contact-public-page';
 import { AboutPublicPage } from '../features/public/about-public-page';
 import { MembershipPublicPage } from '../features/public/membership-public-page';
+import { MembershipApplyPage } from '../features/public/membership-apply-page';
 import { NewsListPage } from '../features/public/news-list-page';
 import { NewsDetailPage } from '../features/public/news-detail-page';
 import { EventsListPage } from '../features/public/events-list-page';
@@ -30,6 +31,7 @@ import { NotificationsPage } from '../features/members/notifications-page';
 import { HallOfFamePage } from '../features/members/hall-of-fame-page';
 import { AdminDashboardPage } from '../features/admin/admin-dashboard-page';
 import { AdminMembersPage } from '../features/admin/admin-members-page';
+import { AdminApplicationsPage } from '../features/admin/admin-applications-page';
 import { AdminCmsPage } from '../features/admin/admin-cms-page';
 import { AdminNewsPage } from '../features/admin/admin-news-page';
 import { AdminEventsPage } from '../features/admin/admin-events-page';
@@ -54,6 +56,7 @@ export function AppRouter() {
         <Route path="newsletter" element={<NewsletterListPage />} />
         <Route path="newsletter/:slug" element={<NewsletterDetailPage />} />
         <Route path="membership" element={<MembershipPublicPage />} />
+        <Route path="membership/apply" element={<MembershipApplyPage />} />
         <Route path="contact" element={<ContactPublicPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
@@ -80,6 +83,7 @@ export function AppRouter() {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboardPage />} />
           <Route path="members" element={<AdminMembersPage />} />
+          <Route path="applications" element={<AdminApplicationsPage />} />
           <Route path="cms" element={<AdminCmsPage />} />
           <Route path="news" element={<AdminNewsPage />} />
           <Route path="events" element={<AdminEventsPage />} />
