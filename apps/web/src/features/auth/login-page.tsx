@@ -1,9 +1,10 @@
 import { FormEvent, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './auth-context';
+import { isAdminRole } from '../../components/layout/nav-config';
 
 export function LoginPage() {
-  const { login } = useAuth();
+  const { login, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [username, setUsername] = useState('');
@@ -21,7 +22,20 @@ export function LoginPage() {
           (location.state as { from: { pathname: string; search?: string } }).from.search ?? ''
         }`
       : null;
-
+  // Already signed in → never show the login form again
+  if (isAuthenticated) {
+    const safeRedirect =
+      redirectPath &&
+      redirectPath !== '/login' &&
+      redirectPath !== '/signup' &&
+      !redirectPath.startsWith('/forgot-password') &&
+      !redirectPath.startsWith('/reset-password')
+        ? redirectPath
+        : isAdminRole(user?.roles)
+          ? '/admin'
+          : '/app';
+    return <Navigate to={safeRedirect} replace />;
+  }
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setLoading(true);
