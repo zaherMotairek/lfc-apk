@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '../../lib/api';
-import { PageHeader } from '../../components/ui/page-header';
+import { CmsEditablePageHeader } from '../cms/cms-editable-page-header';
+import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
+import { CmsInlineEditProvider } from '../cms/use-cms-inline-edit';
 
 export type PublicNewsletter = {
   id: string;
@@ -14,7 +16,7 @@ export type PublicNewsletter = {
   publishedAt?: string | null;
 };
 
-export function NewsletterListPage() {
+function NewsletterListPageContent() {
   const location = useLocation();
   const { data, isLoading, error } = useQuery({
     queryKey: ['public-newsletters'],
@@ -23,10 +25,11 @@ export function NewsletterListPage() {
 
   return (
     <section className="kop-container py-12 md:py-16">
-      <PageHeader
-        eyebrow="RedLeb Dispatch"
-        title="Newsletter"
-        description="Read every OLSC Lebanon issue in your browser. Click an issue to open the PDF."
+      <InlineEditToolbar />
+      <CmsEditablePageHeader
+        fallbackEyebrow="RedLeb Dispatch"
+        fallbackTitle="Newsletter"
+        fallbackDescription="Read every OLSC Lebanon issue in your browser. Click an issue to open the PDF."
       />
 
       {isLoading ? (
@@ -78,5 +81,13 @@ export function NewsletterListPage() {
         <div className="kop-card py-16 text-center text-black/40">No newsletter published yet.</div>
       ) : null}
     </section>
+  );
+}
+
+export function NewsletterListPage() {
+  return (
+    <CmsInlineEditProvider pageCode="NEWSLETTER">
+      <NewsletterListPageContent />
+    </CmsInlineEditProvider>
   );
 }

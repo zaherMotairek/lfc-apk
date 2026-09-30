@@ -42,6 +42,36 @@ function findSection(sections: CmsSection[], type: string, block?: string) {
   return sections.find((section) => section.type === type);
 }
 
+function nextSortOrder(sections: CmsSection[]) {
+  return sections.reduce((max, section) => Math.max(max, section.sortOrder ?? 0), 0) + 1;
+}
+
+function createDraftSection(
+  type: string,
+  block: string | undefined,
+  patch: {
+    title?: string | null;
+    subtitle?: string | null;
+    content?: Record<string, unknown>;
+    imageUrl?: string | null;
+    sortOrder?: number;
+  },
+): CmsSection {
+  return {
+    id: `draft-${type}-${block ?? 'default'}-${Date.now()}`,
+    type,
+    title: patch.title ?? null,
+    subtitle: patch.subtitle ?? null,
+    content: {
+      ...(block ? { block } : {}),
+      ...(patch.content ?? {}),
+    },
+    imageUrl: patch.imageUrl ?? null,
+    sortOrder: patch.sortOrder ?? 1,
+    isEnabled: true,
+  };
+}
+
 export function CmsInlineEditProvider({
   pageCode,
   children,
@@ -121,6 +151,20 @@ export function CmsInlineEditProvider({
         if (!prev) {
           return prev;
         }
+        const existing = findSection(prev.sections, type, block);
+        if (!existing) {
+          const created = createDraftSection(type, block, {
+            title: patch.title,
+            subtitle: patch.subtitle,
+            content:
+              patch.content && typeof patch.content === 'object'
+                ? (patch.content as Record<string, unknown>)
+                : undefined,
+            imageUrl: patch.imageUrl,
+          });
+          created.sortOrder = nextSortOrder(prev.sections);
+          return { ...prev, sections: [...prev.sections, created] };
+        }
         const sections = prev.sections.map((section) => {
           const matchesType = section.type === type;
           const matchesBlock =
@@ -149,6 +193,12 @@ export function CmsInlineEditProvider({
       setDraft((prev) => {
         if (!prev) {
           return prev;
+        }
+        const existing = findSection(prev.sections, type, block);
+        if (!existing) {
+          const created = createDraftSection(type, block, { content: patch });
+          created.sortOrder = nextSortOrder(prev.sections);
+          return { ...prev, sections: [...prev.sections, created] };
         }
         const sections = prev.sections.map((section) => {
           const matchesType = section.type === type;

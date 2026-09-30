@@ -31,6 +31,8 @@ const PAGES = [
   { code: 'GALLERY', label: 'Gallery', path: '/gallery', hint: 'Gallery intro' },
   { code: 'MEMBERSHIP', label: 'Membership', path: '/membership', hint: 'How to join OLSC Lebanon' },
   { code: 'CONTACT', label: 'Contact', path: '/contact', hint: 'Contact details and form intro' },
+  { code: 'NEWS', label: 'News', path: '/news', hint: 'News listing page intro' },
+  { code: 'NEWSLETTER', label: 'Newsletter', path: '/newsletter', hint: 'Newsletter listing intro' },
 ] as const;
 
 const SECTION_TYPES = [

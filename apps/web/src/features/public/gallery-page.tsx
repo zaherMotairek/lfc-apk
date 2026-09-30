@@ -1,6 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
+import { CmsEditablePageHeader } from '../cms/cms-editable-page-header';
+import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
+import { CmsInlineEditProvider, useCmsInlineEdit } from '../cms/use-cms-inline-edit';
 
 type Album = {
   id: string;
@@ -10,19 +13,25 @@ type Album = {
   _count: { assets: number };
 };
 
-export function GalleryPage() {
+function GalleryPageContent() {
   const location = useLocation();
+  const { isLoading: cmsLoading } = useCmsInlineEdit();
   const { data, isLoading, error } = useQuery({
     queryKey: ['public-gallery'],
     queryFn: () => apiRequest<Album[]>('/gallery'),
   });
 
+  if (cmsLoading) {
+    return <div className="kop-container py-20 text-center text-black/50">Loading…</div>;
+  }
+
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16">
-      <h1 className="mb-2 text-4xl font-bold">Gallery</h1>
-      <p className="mb-8 text-black/60">
-        Community memories from OLSC Lebanon events and watch parties.
-      </p>
+    <section className="kop-container py-12 md:py-16">
+      <InlineEditToolbar />
+      <CmsEditablePageHeader
+        fallbackTitle="Gallery"
+        fallbackDescription="Community memories from OLSC Lebanon events and watch parties."
+      />
 
       {isLoading ? <p>Loading...</p> : null}
       {error ? <p className="text-[#c8102e]">Unable to load gallery.</p> : null}
@@ -56,5 +65,13 @@ export function GalleryPage() {
         <p className="text-black/50">No albums yet. Committee can add them from Admin.</p>
       ) : null}
     </section>
+  );
+}
+
+export function GalleryPage() {
+  return (
+    <CmsInlineEditProvider pageCode="GALLERY">
+      <GalleryPageContent />
+    </CmsInlineEditProvider>
   );
 }

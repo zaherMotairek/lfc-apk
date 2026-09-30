@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
-import { PageHeader } from '../../components/ui/page-header';
+import { CmsEditablePageHeader } from '../cms/cms-editable-page-header';
+import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
+import { CmsInlineEditProvider } from '../cms/use-cms-inline-edit';
 
 type NewsItem = {
   id: string;
@@ -12,7 +14,7 @@ type NewsItem = {
   publishedAt?: string | null;
 };
 
-export function NewsListPage() {
+function NewsListPageContent() {
   const location = useLocation();
   const { data, isLoading, error } = useQuery({
     queryKey: ['public-news'],
@@ -21,10 +23,11 @@ export function NewsListPage() {
 
   return (
     <section className="kop-container py-12 md:py-16">
-      <PageHeader
-        eyebrow="News"
-        title="Club Announcements"
-        description="Official OLSC Lebanon news and community updates."
+      <InlineEditToolbar />
+      <CmsEditablePageHeader
+        fallbackEyebrow="News"
+        fallbackTitle="Club Announcements"
+        fallbackDescription="Official OLSC Lebanon news and community updates."
       />
 
       {isLoading ? (
@@ -75,5 +78,13 @@ export function NewsListPage() {
         ) : null}
       </div>
     </section>
+  );
+}
+
+export function NewsListPage() {
+  return (
+    <CmsInlineEditProvider pageCode="NEWS">
+      <NewsListPageContent />
+    </CmsInlineEditProvider>
   );
 }

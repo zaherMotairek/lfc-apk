@@ -113,6 +113,8 @@ enum CmsPageCode {
   GALLERY
   MEMBERSHIP
   CONTACT
+  NEWS
+  NEWSLETTER
 }
 
 enum CmsSectionType {

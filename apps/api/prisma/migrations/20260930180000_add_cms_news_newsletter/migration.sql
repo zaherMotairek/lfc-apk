@@ -1,0 +1,3 @@
+-- AlterEnum
+ALTER TYPE "CmsPageCode" ADD VALUE 'NEWS';
+ALTER TYPE "CmsPageCode" ADD VALUE 'NEWSLETTER';

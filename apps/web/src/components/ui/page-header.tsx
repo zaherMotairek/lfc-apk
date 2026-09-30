@@ -1,9 +1,9 @@
 import { BackButton } from './back-button';
 
 type PageHeaderProps = {
-  eyebrow?: string;
-  title: string;
-  description?: string;
+  eyebrow?: React.ReactNode;
+  title: React.ReactNode;
+  description?: React.ReactNode;
   action?: React.ReactNode;
   /** When set, shows a Back button above the title. */
   backTo?: string;

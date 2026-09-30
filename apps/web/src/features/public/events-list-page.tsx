@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
-import { PageHeader } from '../../components/ui/page-header';
+import { CmsEditablePageHeader } from '../cms/cms-editable-page-header';
+import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
+import { CmsInlineEditProvider } from '../cms/use-cms-inline-edit';
 
 type EventItem = {
   id: string;
@@ -88,7 +90,7 @@ function EventCard({ item, from }: { item: EventItem; from: string }) {
   );
 }
 
-export function EventsListPage() {
+function EventsListPageContent() {
   const location = useLocation();
   const from = `${location.pathname}${location.search}`;
 
@@ -107,10 +109,11 @@ export function EventsListPage() {
 
   return (
     <section className="kop-container py-12 md:py-16">
-      <PageHeader
-        eyebrow="Events"
-        title="Watch Parties & Meetups"
-        description="Community gatherings, Liverpool watch parties, and official OLSC Lebanon activities."
+      <InlineEditToolbar />
+      <CmsEditablePageHeader
+        fallbackEyebrow="Events"
+        fallbackTitle="Watch Parties & Meetups"
+        fallbackDescription="Community gatherings, Liverpool watch parties, and official OLSC Lebanon activities."
       />
 
       {isLoading ? (
@@ -170,5 +173,13 @@ export function EventsListPage() {
         </div>
       ) : null}
     </section>
+  );
+}
+
+export function EventsListPage() {
+  return (
+    <CmsInlineEditProvider pageCode="EVENTS">
+      <EventsListPageContent />
+    </CmsInlineEditProvider>
   );
 }

@@ -177,6 +177,20 @@ const CMS_PAGES: Array<{
     heroTitle: 'Contact',
     heroSubtitle: 'Get in touch with OLSC Lebanon',
   },
+  {
+    code: CmsPageCode.NEWS,
+    title: 'News',
+    slug: '/news',
+    heroTitle: 'Club Announcements',
+    heroSubtitle: 'Official OLSC Lebanon news and community updates.',
+  },
+  {
+    code: CmsPageCode.NEWSLETTER,
+    title: 'Newsletter',
+    slug: '/newsletter',
+    heroTitle: 'Newsletter',
+    heroSubtitle: 'Read every OLSC Lebanon issue in your browser. Click an issue to open the PDF.',
+  },
 ];
 
 async function seedRolesAndPermissions() {
@@ -599,6 +613,47 @@ async function seedCmsPages() {
             block: 'footer',
             title: 'Ready for your digital card?',
             body: 'Log in, open your membership card, and upload a scan of your existing OLSC card in one minute.',
+          },
+        },
+        {
+          block: 'applyPage',
+          sortOrder: 6,
+          content: {
+            block: 'applyPage',
+            badge: '2026/27 Season',
+            title: 'OLSC Lebanon Branch Membership',
+            subtitle:
+              'Official Liverpool Supporters Club — Lebanon. Memberships valid until 30 June 2027.',
+            formTitle: 'Membership application',
+            formIntro: 'Complete this form, then transfer the fee via Whish Money or OMT Pay.',
+            fullTitle: 'Full Membership — $25',
+            fullBody:
+              'Scarf, Anfield ticket access, UCL away tickets (subject to availability), plus all Light benefits.',
+            lightTitle: 'Light Membership — $10',
+            lightBody:
+              'Membership card, branch certificate, competitions eligibility, and voting rights.',
+            paymentAgreement:
+              'I agree to settle the package amount through money transfer (Whish Money or OMT Pay) and understand that my package will not be activated before payment has been made.',
+            successTitle: 'Application received',
+            successBody:
+              'Thank you for applying for OLSC Lebanon membership 2026/27. Your application will only be considered active once payment has been completed and confirmed by the committee.',
+            successNote:
+              "We'll be in touch to arrange collection of your membership package.",
+          },
+        },
+        {
+          block: 'applyPayment',
+          sortOrder: 7,
+          content: {
+            block: 'applyPayment',
+            payTitle: 'How to pay',
+            payIntro: 'Transfer via Whish Money or OMT Pay to:',
+            payName: 'Mohammad Abdallah',
+            payPhone: '+961 70 704 292',
+            payExtra: 'UK bank account details available upon request.',
+            notesTitle: 'Important notes',
+            notesBody:
+              'Applications close on 31 August 2026.\nAll members — including previous ones — must re-apply for 2026/27.\nMembership is active only after payment confirmation.',
           },
         },
       ];
