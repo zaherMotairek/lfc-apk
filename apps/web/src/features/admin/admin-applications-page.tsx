@@ -449,34 +449,43 @@ export function AdminApplicationsPage() {
         }
       />
 
-      <div className="kop-card p-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="kop-card space-y-4 p-5 md:p-6">
+        <label className="block">
+          <span className="text-sm font-bold text-ink">Search applications</span>
           <input
-            className="kop-input flex-1 !mt-0"
-            placeholder="Search name, phone, email, OLSC/LFC ID…"
+            className="kop-input mt-2 w-full !py-3.5 !text-base !leading-normal"
+            placeholder="Name, phone, email, OLSC ID, LFC ID…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <select
-            className="kop-input !mt-0 sm:w-44"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as ApplicationStatus | 'ALL')}
-          >
-            <option value="ALL">All statuses ({counts.total})</option>
-            <option value="PENDING">Pending ({counts.pending})</option>
-            <option value="PAYMENT_CONFIRMED">Paid ({counts.paid})</option>
-            <option value="APPROVED">Approved ({counts.approved})</option>
-            <option value="REJECTED">Rejected</option>
-          </select>
-          <select
-            className="kop-input !mt-0 sm:w-40"
-            value={packageFilter}
-            onChange={(e) => setPackageFilter(e.target.value as PackageType | 'ALL')}
-          >
-            <option value="ALL">All packages</option>
-            <option value="FULL">Full — $25 ({counts.full})</option>
-            <option value="LIGHT">Light — $10 ({counts.light})</option>
-          </select>
+        </label>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="block text-sm font-medium">
+            Status
+            <select
+              className="kop-input mt-1.5 w-full !py-3 !text-base"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as ApplicationStatus | 'ALL')}
+            >
+              <option value="ALL">All statuses ({counts.total})</option>
+              <option value="PENDING">Pending ({counts.pending})</option>
+              <option value="PAYMENT_CONFIRMED">Paid ({counts.paid})</option>
+              <option value="APPROVED">Approved ({counts.approved})</option>
+              <option value="REJECTED">Rejected</option>
+            </select>
+          </label>
+          <label className="block text-sm font-medium">
+            Package
+            <select
+              className="kop-input mt-1.5 w-full !py-3 !text-base"
+              value={packageFilter}
+              onChange={(e) => setPackageFilter(e.target.value as PackageType | 'ALL')}
+            >
+              <option value="ALL">All packages</option>
+              <option value="FULL">Full — $25 ({counts.full})</option>
+              <option value="LIGHT">Light — $10 ({counts.light})</option>
+            </select>
+          </label>
         </div>
         <p className="mt-3 text-sm text-black/45">
           {filtered.length} application{filtered.length === 1 ? '' : 's'}
