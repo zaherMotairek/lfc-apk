@@ -4,7 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './app/router';
 import { AuthProvider } from './features/auth/auth-context';
-import { LiveGoalProvider } from './components/live/live-goal-provider';
+import { ContentProvider } from './features/content/content-provider';
+import { ApiError } from './lib/api';
 import './styles.css';
 
 if ('serviceWorker' in navigator) {
@@ -19,16 +20,27 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        if (error instanceof ApiError && error.status === 401) {
+          return false;
+        }
+        return failureCount < 2;
+      },
+    },
+  },
+});
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <LiveGoalProvider>
+          <ContentProvider>
             <AppRouter />
-          </LiveGoalProvider>
+          </ContentProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

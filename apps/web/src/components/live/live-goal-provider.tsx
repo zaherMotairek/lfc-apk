@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../features/auth/auth-context';
-import { apiRequest } from '../../lib/api';
+import { ApiError, apiRequest } from '../../lib/api';
 import { GoalCelebrationOverlay } from './goal-celebration-overlay';
 
 export type GoalAlertMetadata = {
@@ -74,7 +74,9 @@ export function useLiveGoalAlerts() {
         }>
       >('/notifications', { token: accessToken }),
     enabled: Boolean(accessToken && isAuthenticated),
-    refetchInterval: 3_000,
+    refetchInterval: (query) =>
+      query.state.error instanceof ApiError && query.state.error.status === 401 ? false : 3_000,
+    retry: false,
   });
 
   useEffect(() => {

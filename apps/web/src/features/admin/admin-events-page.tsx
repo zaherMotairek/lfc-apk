@@ -2,6 +2,11 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
+import {
+  isDatetimeLocalInPast,
+  minDatetimeLocal,
+  startUnchangedForMin,
+} from '../../lib/datetime-local';
 import { PageHeader } from '../../components/ui/page-header';
 
 type AdminEventItem = {
@@ -61,6 +66,7 @@ export function AdminEventsPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editOriginalStart, setEditOriginalStart] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -108,24 +114,28 @@ export function AdminEventsPage() {
   function closeForm() {
     setShowForm(false);
     setEditingId(null);
+    setEditOriginalStart(null);
     setForm(EMPTY_FORM);
   }
 
   function startCreate() {
     setEditingId(null);
+    setEditOriginalStart(null);
     setForm(EMPTY_FORM);
     setShowForm(true);
     setMessage(null);
   }
 
   function startEdit(item: AdminEventItem) {
+    const startLocal = toDatetimeLocal(item.startDateTime);
     setEditingId(item.id);
+    setEditOriginalStart(startLocal);
     setSelectedEventId(item.id);
     setForm({
       title: item.title,
       description: item.description,
       location: item.location,
-      startDateTime: toDatetimeLocal(item.startDateTime),
+      startDateTime: startLocal,
       capacity: item.capacity ? String(item.capacity) : '',
       registrationOpen: item.registrationOpen ?? true,
     });
@@ -136,6 +146,11 @@ export function AdminEventsPage() {
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setMessage(null);
+    const startUnchanged = Boolean(editingId && editOriginalStart === form.startDateTime);
+    if (isDatetimeLocalInPast(form.startDateTime) && !startUnchanged) {
+      setMessage('Event date must be today or later.');
+      return;
+    }
     setSaving(true);
     try {
       const baseBody = {
@@ -168,11 +183,13 @@ export function AdminEventsPage() {
 
   function exportCsv() {
     if (!registrationsQuery.data?.length || !selectedEvent) return;
-    const header = ['Full Name', 'Email', 'Status', 'Registered At'];
+    const header = ['Full Name', 'Email', 'Status', 'Guests', 'Guest names', 'Registered At'];
     const rows = registrationsQuery.data.map((r) => [
       `${r.user.firstName} ${r.user.lastName}`,
       r.user.email,
       r.status,
+      String((r as { guestCount?: number }).guestCount ?? 0),
+      (r as { guestNames?: string | null }).guestNames ?? '',
       new Date(r.registeredAt).toLocaleString(),
     ]);
     const csv = [header, ...rows]
@@ -237,7 +254,18 @@ export function AdminEventsPage() {
           </label>
           <label className="block text-sm font-medium">
             Date & time
-            <input type="datetime-local" className="kop-input" value={form.startDateTime} onChange={(e) => setForm((p) => ({ ...p, startDateTime: e.target.value }))} required />
+            <input
+              type="datetime-local"
+              className="kop-input"
+              min={
+                startUnchangedForMin(form.startDateTime, editOriginalStart)
+                  ? undefined
+                  : minDatetimeLocal()
+              }
+              value={form.startDateTime}
+              onChange={(e) => setForm((p) => ({ ...p, startDateTime: e.target.value }))}
+              required
+            />
           </label>
           <label className="block text-sm font-medium">
             Capacity (optional)

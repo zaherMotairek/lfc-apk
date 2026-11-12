@@ -1,9 +1,12 @@
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsInt,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
 
@@ -12,6 +15,18 @@ export class RegisterEventDto {
   @Type(() => Boolean)
   @IsBoolean()
   joinWaitlist?: boolean;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @Max(2)
+  guestCount?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  guestNames?: string;
 }
 
 export class AddNewsCommentDto {

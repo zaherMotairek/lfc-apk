@@ -375,7 +375,7 @@ export function AdminApplicationsPage() {
             </div>
           </div>
           <div>
-            <div className="text-xs font-bold uppercase tracking-wide text-black/35">LFC ID</div>
+            <div className="text-xs font-bold uppercase tracking-wide text-black/35">ALLRED SUPPORT ID</div>
             <div className="font-semibold">{item.lfcId ?? '—'}</div>
           </div>
         </div>
@@ -454,7 +454,7 @@ export function AdminApplicationsPage() {
           <span className="text-sm font-bold text-ink">Search applications</span>
           <input
             className="kop-input mt-2 w-full !py-3.5 !text-base !leading-normal"
-            placeholder="Name, phone, email, OLSC ID, LFC ID…"
+            placeholder="Name, phone, email, OLSC ID, ALLRED SUPPORT ID…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -538,7 +538,7 @@ export function AdminApplicationsPage() {
               <th className="px-3 py-3">Phone</th>
               <th className="px-3 py-3">Package</th>
               <th className="px-3 py-3">OLSC ID</th>
-              <th className="px-3 py-3">LFC ID</th>
+              <th className="px-3 py-3">ALLRED SUPPORT ID</th>
               <th className="px-3 py-3">Status</th>
               <th className="px-3 py-3">Actions</th>
             </tr>

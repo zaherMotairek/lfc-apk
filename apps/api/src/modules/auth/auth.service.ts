@@ -183,10 +183,16 @@ export class AuthService {
     const refreshedUser =
       (await this.prisma.user.findUnique({ where: { id: user.id } })) ?? user;
 
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: { lastLoginAt: new Date() },
-    });
+    const now = new Date();
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: now, lastSeenAt: now },
+      }),
+      this.prisma.loginEvent.create({
+        data: { userId: user.id },
+      }),
+    ]);
 
     const authUser = await this.usersService.getAuthenticatedUser(user.id);
     const tokens = await this.issueTokens(authUser.id, authUser.email);

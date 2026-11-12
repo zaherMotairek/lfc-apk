@@ -328,10 +328,8 @@ export function ProfilePage() {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 p-6 sm:grid-cols-4">
           {[
-            { label: 'Level', value: profile?.level ?? 1 },
-            { label: 'XP', value: profile?.xp ?? 0 },
-            { label: 'Coins', value: profile?.coins ?? 0 },
-            { label: 'Streak', value: profile?.currentWinningStreak ?? 0 },
+            { label: 'Prediction streak', value: profile?.currentWinningStreak ?? 0 },
+            { label: 'Best streak', value: profile?.longestWinningStreak ?? 0 },
           ].map((stat) => (
             <div key={stat.label} className="stat-pill">
               <div className="stat-pill-label">{stat.label}</div>
@@ -398,7 +396,7 @@ export function ProfilePage() {
               ['phoneNumber', 'Phone number'],
               ['favoritePlayer', 'Favorite Liverpool player'],
               ['olscId', 'OLSC ID'],
-              ['lfcId', 'LFC ID'],
+              ['lfcId', 'ALLRED SUPPORT ID'],
             ] as const
           ).map(([key, label]) => (
             <label key={key} className="block text-sm font-medium">

@@ -49,7 +49,7 @@ export function MemberLayout() {
       <MobileDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        title="Kop Platform"
+        title="RedLeb Hub"
         subtitle="OLSC Lebanon · Member App"
         items={mobileNavItems}
         footer={
@@ -67,7 +67,7 @@ export function MemberLayout() {
       />
       <div className="hidden md:block">
         <SidebarNav
-          title="Kop Platform"
+          title="RedLeb Hub"
           subtitle="OLSC Lebanon · Member App"
           items={sidebarItems}
           footer={
@@ -103,7 +103,7 @@ export function MemberLayout() {
               </svg>
             </button>
             <div>
-              <div className="text-sm font-extrabold">Kop Platform</div>
+              <div className="text-sm font-extrabold">RedLeb Hub</div>
               <div className="text-[11px] text-white/65">
                 {user?.firstName} {user?.lastName}
               </div>

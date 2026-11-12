@@ -289,7 +289,7 @@ async function seedSuperAdmin() {
     },
   });
 
-  return { email, password };
+  return { id: user.id, email, password };
 }
 
 async function seedCmsPages() {
@@ -649,7 +649,7 @@ async function seedCmsPages() {
             payTitle: 'How to pay',
             payIntro: 'Transfer via Whish Money or OMT Pay to:',
             payName: 'Mohammad Abdallah',
-            payPhone: '+961 70 704 292',
+            payPhone: '+961 3 000 000',
             payExtra: 'UK bank account details available upon request.',
             notesTitle: 'Important notes',
             notesBody:
@@ -925,13 +925,148 @@ async function seedGamificationDefinitions() {
   }
 }
 
+const E2E_SITE_SETTINGS: Array<{ key: string; value: string; description: string }> = [
+  {
+    key: 'payment.payPhone',
+    value: '+961 3 000 000',
+    description: 'Whish/OMT payment phone on the membership apply page.',
+  },
+  {
+    key: 'payment.payName',
+    value: 'OLSC Lebanon Treasurer',
+    description: 'Payment recipient name on the membership apply page.',
+  },
+  {
+    key: 'contact.phonePlaceholder',
+    value: 'e.g. 70 000 000 or +961 70 000 000',
+    description: 'Placeholder for phone fields on public forms.',
+  },
+  {
+    key: 'contact.whatsappDisplay',
+    value: '+961 3 000 000',
+    description: 'WhatsApp number on the contact page.',
+  },
+  { key: 'brand.siteName', value: 'RedLeb Hub', description: 'Public site name.' },
+  { key: 'brand.shortName', value: 'RedLeb', description: 'PWA short name.' },
+  { key: 'brand.tagline', value: 'OLSC Lebanon', description: 'Tagline under logo.' },
+  { key: 'brand.themeColor', value: '#c8102e', description: 'Theme colour.' },
+  { key: 'brand.red', value: '#c8102e', description: 'Brand red.' },
+  { key: 'brand.version', value: '1', description: 'Brand asset version.' },
+];
+
+async function seedSiteSettings() {
+  for (const row of E2E_SITE_SETTINGS) {
+    await prisma.siteSetting.upsert({
+      where: { key: row.key },
+      create: {
+        key: row.key,
+        value: row.value,
+        description: row.description,
+      },
+      update: {
+        description: row.description,
+      },
+    });
+  }
+}
+
+async function seedE2eFixtures(adminUserId: string) {
+  const memberRole = await prisma.role.findUniqueOrThrow({ where: { code: RoleCode.MEMBER } });
+  const passwordHash = await bcrypt.hash('E2eMember123!', 12);
+  const member = await prisma.user.upsert({
+    where: { email: 'e2e.member@example.local' },
+    update: {
+      username: 'e2e.member',
+      passwordHash,
+      platformAccountStatus: 'ACTIVE',
+      firstName: 'E2E',
+      lastName: 'Member',
+    },
+    create: {
+      email: 'e2e.member@example.local',
+      username: 'e2e.member',
+      passwordHash,
+      platformAccountStatus: 'ACTIVE',
+      firstName: 'E2E',
+      lastName: 'Member',
+    },
+  });
+
+  await prisma.userRole.upsert({
+    where: { userId_roleId: { userId: member.id, roleId: memberRole.id } },
+    update: {},
+    create: { userId: member.id, roleId: memberRole.id },
+  });
+
+  await prisma.membership.upsert({
+    where: { officialMemberId: 'E2E-001' },
+    update: { status: 'ACTIVE', userId: member.id },
+    create: {
+      userId: member.id,
+      officialMemberId: 'E2E-001',
+      seasonLabel: '2026/27',
+      status: 'ACTIVE',
+      source: 'MANUAL',
+      createdById: adminUserId,
+      activatedAt: new Date(),
+    },
+  });
+
+  const inTwoWeeks = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+  const existingEvent = await prisma.event.findFirst({
+    where: { title: 'E2E Demo Watch Party' },
+  });
+  if (!existingEvent) {
+    await prisma.event.create({
+      data: {
+        title: 'E2E Demo Watch Party',
+        description: 'Demo event for local Playwright smoke tests.',
+        location: 'Beirut',
+        startDateTime: inTwoWeeks,
+        registrationOpen: true,
+        createdById: adminUserId,
+      },
+    });
+  }
+
+  const existingNews = await prisma.newsArticle.findUnique({
+    where: { slug: 'e2e-demo-news' },
+  });
+  if (!existingNews) {
+    await prisma.newsArticle.create({
+      data: {
+        title: 'E2E Demo News',
+        slug: 'e2e-demo-news',
+        excerpt: 'Demo article for Playwright.',
+        content: 'This article exists for local end-to-end smoke tests only.',
+        status: 'PUBLISHED',
+        publishedAt: new Date(),
+        authorId: adminUserId,
+      },
+    });
+  }
+
+  console.log('E2E fixtures: member e2e.member / E2eMember123!');
+}
+
 async function main() {
-  console.log('Seeding Kop Platform database...');
+  if (process.env.NODE_ENV === 'production') {
+    const pwd = configService.get<string>('SEED_SUPER_ADMIN_PASSWORD') ?? '';
+    if (pwd === 'ChangeMeNow123!' || pwd.length < 16) {
+      throw new Error('Refusing to seed production with default or weak SEED_SUPER_ADMIN_PASSWORD');
+    }
+  }
+
+  console.log('Seeding RedLeb Hub database...');
   await seedRolesAndPermissions();
   const admin = await seedSuperAdmin();
+  await seedSiteSettings();
   await seedCmsPages();
   await seedScoringRule();
   await seedGamificationDefinitions();
+  if (process.env.SEED_E2E_FIXTURES === 'true') {
+    await seedE2eFixtures(admin.id);
+  }
   console.log('Seed completed.');
   console.log(`Super admin email: ${admin.email}`);
   console.log('Super admin password: (from SEED_SUPER_ADMIN_PASSWORD)');

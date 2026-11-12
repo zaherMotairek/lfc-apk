@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -70,6 +71,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAccessToken(null);
     setUser(null);
   }, []);
+
+  useEffect(() => {
+    const onUnauthorized = () => logout();
+    window.addEventListener('kop:unauthorized', onUnauthorized);
+    return () => window.removeEventListener('kop:unauthorized', onUnauthorized);
+  }, [logout]);
+
+  useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
+    let cancelled = false;
+
+    apiRequest<AuthUser>('/auth/profile', { token: accessToken })
+      .then((profile) => {
+        if (cancelled) {
+          return;
+        }
+        localStorage.setItem(USER_KEY, JSON.stringify(profile));
+        setUser(profile);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          logout();
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [accessToken, logout]);
 
   const value = useMemo(
     () => ({

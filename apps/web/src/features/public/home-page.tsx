@@ -9,12 +9,12 @@ import {
   DEFAULT_HOME_BOTTOM_CTA,
   DEFAULT_HOME_FEED_SECTION,
   DEFAULT_HOME_HERO_BADGE,
-  DEFAULT_HOME_PLATFORM_CARD,
   DEFAULT_HOME_QUICK_LINKS,
-  type HomePlatformStat,
   type HomeQuickLink,
 } from '../cms/home-cms-defaults';
 import { CmsInlineEditProvider, useCmsInlineEdit } from '../cms/use-cms-inline-edit';
+import { useContent } from '../content/content-provider';
+import { HomeHighlightPanel } from './home-highlight-panel';
 
 type NewsItem = {
   id: string;
@@ -38,6 +38,12 @@ function HomePageContent() {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
   const { isLoading, getSection, updateSection, updateContent } = useCmsInlineEdit();
+  const heroTitle = useContent('home.hero.title', 'Welcome to OLSC Lebanon – RedLeb Hub');
+  const heroSubtitle = useContent(
+    'home.hero.subtitle',
+    'Your community hub for match predictions, events, news, and official digital membership.',
+  );
+  const heroPrimaryCta = useContent('home.hero.primaryCta', 'Become a member');
 
   const newsQuery = useQuery({
     queryKey: ['public-news'],
@@ -52,7 +58,6 @@ function HomePageContent() {
   const hero = getSection('HERO');
   const heroContent = (hero?.content ?? {}) as { primaryButtonLabel?: string; heroBadge?: string };
 
-  const platformCard = getCtaContent(getSection, 'platformCard', DEFAULT_HOME_PLATFORM_CARD);
   const quickLinks = getCtaContent(getSection, 'quickLinks', {
     items: DEFAULT_HOME_QUICK_LINKS,
   });
@@ -60,18 +65,11 @@ function HomePageContent() {
   const bottomCta = getCtaContent(getSection, 'bottomCta', DEFAULT_HOME_BOTTOM_CTA);
 
   const quickLinkItems = (quickLinks.items as HomeQuickLink[]) ?? DEFAULT_HOME_QUICK_LINKS;
-  const platformStats = (platformCard.stats as HomePlatformStat[]) ?? DEFAULT_HOME_PLATFORM_CARD.stats;
 
   function updateQuickLink(index: number, patch: Partial<HomeQuickLink>) {
     const items = [...quickLinkItems];
     items[index] = { ...items[index], ...patch };
     updateContent('CTA', { items }, 'quickLinks');
-  }
-
-  function updatePlatformStat(index: number, patch: Partial<HomePlatformStat>) {
-    const stats = [...platformStats];
-    stats[index] = { ...stats[index], ...patch };
-    updateContent('CTA', { stats }, 'platformCard');
   }
 
   if (isLoading) {
@@ -95,91 +93,33 @@ function HomePageContent() {
             <EditableText
               as="h1"
               className="mb-5 block text-5xl font-extrabold leading-[1.05] tracking-tight text-ink md:text-6xl"
-              value={hero?.title ?? 'OLSC Lebanon'}
+              value={hero?.title ?? heroTitle}
               onSave={(value) => updateSection('HERO', { title: value })}
             />
             <EditableText
               as="p"
               multiline
               className="mb-8 block max-w-xl text-lg leading-relaxed text-black/60"
-              value={
-                hero?.subtitle ??
-                'Your community hub for match predictions, events, news, and official digital membership.'
-              }
+              value={hero?.subtitle ?? heroSubtitle}
               onSave={(value) => updateSection('HERO', { subtitle: value })}
             />
             <div className="flex flex-wrap gap-3">
-              <Link to="/membership" className="kop-btn-primary">
+              <Link to="/membership/apply" className="kop-btn-primary !bg-lfc-red">
                 <EditableText
                   as="span"
-                  value={heroContent.primaryButtonLabel ?? 'Membership Info'}
+                  value={heroContent.primaryButtonLabel ?? heroPrimaryCta}
                   onSave={(value) => updateContent('HERO', { primaryButtonLabel: value })}
                 />
               </Link>
-              <Link
-                to={isAuthenticated ? '/app' : '/login'}
-                state={
-                  isAuthenticated
-                    ? undefined
-                    : { from: { pathname: location.pathname, search: location.search } }
-                }
-                className="kop-btn-secondary"
-              >
-                {isAuthenticated ? 'Open Member App' : 'Member Login'}
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/app" className="kop-btn-secondary">
+                  Open member app
+                </Link>
+              ) : null}
             </div>
           </div>
 
-          <div className="relative">
-            <div className="kop-gradient-hero rounded-3xl p-8 text-white shadow-2xl shadow-lfc-red/25 md:p-10">
-              <div className="mb-6 flex items-center gap-2">
-                <EditableText
-                  as="span"
-                  className="kop-badge inline-block bg-white/15 !text-white/90"
-                  value={platformCard.badge as string}
-                  onSave={(value) => updateContent('CTA', { badge: value }, 'platformCard')}
-                />
-                <EditableText
-                  as="span"
-                  className="text-xs text-white/50"
-                  value={platformCard.badgeHint as string}
-                  onSave={(value) => updateContent('CTA', { badgeHint: value }, 'platformCard')}
-                />
-              </div>
-              <EditableText
-                as="h2"
-                className="block text-2xl font-extrabold leading-snug md:text-3xl"
-                value={platformCard.title as string}
-                onSave={(value) => updateContent('CTA', { title: value }, 'platformCard')}
-              />
-              <EditableText
-                as="p"
-                multiline
-                className="mt-4 block text-sm leading-relaxed text-white/75"
-                value={platformCard.body as string}
-                onSave={(value) => updateContent('CTA', { body: value }, 'platformCard')}
-              />
-              <div className="mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-6">
-                {platformStats.map((item, index) => (
-                  <div key={`${item.label}-${index}`} className="text-center">
-                    <EditableText
-                      as="div"
-                      className="text-2xl"
-                      value={item.icon}
-                      onSave={(value) => updatePlatformStat(index, { icon: value })}
-                    />
-                    <EditableText
-                      as="div"
-                      className="mt-1 block text-[11px] font-semibold text-white/60"
-                      value={item.label}
-                      onSave={(value) => updatePlatformStat(index, { label: value })}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-3xl bg-lfc-red/20" />
-          </div>
+          <HomeHighlightPanel />
         </div>
       </section>
 
@@ -344,23 +284,12 @@ function HomePageContent() {
             onSave={(value) => updateContent('CTA', { body: value }, 'bottomCta')}
           />
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link to="/membership" className="kop-btn-primary">
+            <Link to="/membership/apply" className="kop-btn-primary !bg-lfc-red">
               <EditableText
                 as="span"
                 value={bottomCta.primaryLabel as string}
                 onSave={(value) => updateContent('CTA', { primaryLabel: value }, 'bottomCta')}
               />
-            </Link>
-            <Link
-              to={isAuthenticated ? '/app' : '/login'}
-              state={
-                isAuthenticated
-                  ? undefined
-                  : { from: { pathname: location.pathname, search: location.search } }
-              }
-              className="kop-btn bg-white/10 text-white hover:bg-white/15"
-            >
-              {isAuthenticated ? 'Open Member App' : 'Member Login'}
             </Link>
           </div>
         </div>

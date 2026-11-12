@@ -11,6 +11,10 @@ import {
   isRegistrationOpen,
 } from '../../common/utils/event.utils';
 import {
+  validateEventEnd,
+  validateEventStart,
+} from '../../common/utils/schedule-dates';
+import {
   CreateEventDto,
   CreateMediaAlbumDto,
   CreateMediaAssetDto,
@@ -263,6 +267,11 @@ export class ContentService {
   }
 
   async createEvent(dto: CreateEventDto, actorUserId: string) {
+    validateEventStart(dto.startDateTime);
+    if (dto.endDateTime) {
+      validateEventEnd(dto.startDateTime, dto.endDateTime);
+    }
+
     const event = await this.prisma.event.create({
       data: {
         title: dto.title,
@@ -293,6 +302,18 @@ export class ContentService {
     const existing = await this.prisma.event.findUnique({ where: { id } });
     if (!existing) {
       throw new NotFoundException('Event not found');
+    }
+
+    if (dto.startDateTime) {
+      const startChanged =
+        dto.startDateTime.getTime() !== existing.startDateTime.getTime();
+      if (startChanged) {
+        validateEventStart(dto.startDateTime);
+      }
+    }
+    const effectiveStart = dto.startDateTime ?? existing.startDateTime;
+    if (dto.endDateTime) {
+      validateEventEnd(effectiveStart, dto.endDateTime);
     }
 
     const event = await this.prisma.event.update({

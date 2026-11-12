@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
@@ -27,6 +28,7 @@ type EventItem = {
 export function CommunityPage() {
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
+  const [guestCount, setGuestCount] = useState(0);
 
   const feedQuery = useQuery({
     queryKey: ['community-feed'],
@@ -44,7 +46,7 @@ export function CommunityPage() {
       apiRequest<{ message: string }>(`/events/${eventId}/register`, {
         method: 'POST',
         token: accessToken,
-        body: { joinWaitlist: true },
+        body: { joinWaitlist: true, guestCount },
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['public-events'] });
@@ -58,7 +60,7 @@ export function CommunityPage() {
       <PageHeader
         eyebrow="Community"
         title="Your Kop Feed"
-        description="Live updates from matches, events, achievements, and club activity — your personal supporters club timeline."
+        description="News, events, and achievements from your supporters club — without live score spam."
       />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
@@ -106,6 +108,18 @@ export function CommunityPage() {
               <h2 className="font-bold">Upcoming Events</h2>
               <p className="mt-1 text-xs text-white/70">Register for watch parties & meetups</p>
             </div>
+            <label className="block border-b border-black/5 px-4 py-3 text-sm font-medium">
+              Guests (optional)
+              <select
+                className="kop-input mt-1"
+                value={guestCount}
+                onChange={(e) => setGuestCount(Number(e.target.value))}
+              >
+                <option value={0}>Just me</option>
+                <option value={1}>Me + 1 guest</option>
+                <option value={2}>Me + 2 guests</option>
+              </select>
+            </label>
             <div className="space-y-0 divide-y divide-black/5 p-4">
               {eventsQuery.isLoading ? (
                 <p className="py-4 text-center text-sm text-black/40">Loading events...</p>

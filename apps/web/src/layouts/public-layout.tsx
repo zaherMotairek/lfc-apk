@@ -41,13 +41,13 @@ export function PublicLayout() {
       <header className="sticky top-0 z-50 border-b border-white/10 kop-gradient-dark text-white shadow-xl">
         <div className="flex items-center justify-end gap-2 border-b border-white/10 bg-lfc-red px-4 py-1.5">
           <span className="mr-auto hidden text-[10px] font-semibold uppercase tracking-widest text-white/80 sm:inline">
-            OLSC Lebanon · Digital Platform
+            OLSC Lebanon · RedLeb Hub
           </span>
           <InstallAppBanner variant="compact" />
         </div>
 
         <div className="kop-container flex items-center justify-between gap-4 py-4">
-          <BrandLogo subtitle="Kop Platform" />
+          <BrandLogo />
 
           <nav className="hidden items-center gap-1 lg:flex">
             {PUBLIC_NAV.map((link) => (
@@ -75,11 +75,11 @@ export function PublicLayout() {
               </>
             ) : (
               <>
-                <Link to="/signup" className="kop-btn-ghost !text-sm">
-                  Sign up
+                <Link to="/membership/apply" className="kop-btn-ghost !text-sm">
+                  Become a member
                 </Link>
-                <Link to={loginTarget} state={loginState} className="kop-btn-primary ml-2 !py-2.5 !text-sm">
-                  Member Login
+                <Link to={loginTarget} state={loginState} className="kop-btn-ghost ml-2 !py-2.5 !text-sm">
+                  Sign in
                 </Link>
               </>
             )}
@@ -143,11 +143,11 @@ export function PublicLayout() {
               ) : (
                 <>
                   <Link
-                    to="/signup"
+                    to="/membership/apply"
                     className="kop-btn-primary mt-2 text-center"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Sign up
+                    Become a member
                   </Link>
                   <Link
                     to={loginTarget}
@@ -155,7 +155,7 @@ export function PublicLayout() {
                     className="kop-btn-secondary mt-2 text-center !border-white/20 !bg-white/10 !text-white"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Member Login
+                    Sign in
                   </Link>
                 </>
               )}
@@ -184,7 +184,7 @@ export function PublicLayout() {
             </p>
           </div>
           <div>
-            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">Explore</div>
+            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">Site</div>
             <div className="flex flex-col gap-2 text-sm text-white/70">
               {PUBLIC_NAV.map((link) => (
                 <Link key={link.to} to={link.to} className="hover:text-white">
@@ -212,11 +212,11 @@ export function PublicLayout() {
                 </>
               ) : (
                 <>
-                  <Link to="/signup" className="hover:text-white">
-                    Sign up
+                  <Link to="/membership/apply" className="hover:text-white">
+                    Become a member
                   </Link>
                   <Link to={loginTarget} state={loginState} className="hover:text-white">
-                    Member Login
+                    Sign in
                   </Link>
                 </>
               )}

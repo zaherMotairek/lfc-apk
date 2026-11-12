@@ -11,7 +11,9 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "node ../../scripts/assert-local-db.mjs && tsx prisma/seed.ts",
+    "test": "node ../../scripts/assert-local-db.mjs && jest",
+    "test:e2e": "node ../../scripts/assert-local-db.mjs && jest --config ./test/jest-e2e.json --runInBand"
   },
   "dependencies": {
     "@kop/shared": "*",
@@ -45,6 +47,12 @@
     "@types/nodemailer": "^6.4.17",
     "@types/passport-jwt": "^4.0.1",
     "prisma": "^6.5.0",
+    "@nestjs/testing": "^11.0.12",
+    "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.6",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   },

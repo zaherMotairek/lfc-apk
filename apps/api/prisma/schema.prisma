@@ -170,6 +170,7 @@ model User {
   currentWinningStreak  Int                    @default(0)
   longestWinningStreak  Int                    @default(0)
   lastLoginAt           DateTime?
+  lastSeenAt            DateTime?
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
 
@@ -185,6 +186,7 @@ model User {
   comments              Comment[]
   reactions             Reaction[]
   auditLogs             AuditLog[]
+  siteSettingUpdates    SiteSetting[]
   leaderboardSnapshots  LeaderboardSnapshot[]
   verifiedCards         MembershipCardVerification[] @relation("CardVerifier")
   passwordResetTokens   PasswordResetToken[]
@@ -192,8 +194,11 @@ model User {
   xpTransactions        XpTransaction[]
   coinTransactions      CoinTransaction[]
   reviewedMembershipApplications MembershipApplication[] @relation("MembershipApplicationReviewer")
+  loginEvents           LoginEvent[]
+  contentOverrides      ContentOverride[]
 
   @@index([platformAccountStatus])
+  @@index([lastSeenAt])
   @@index([lastName, firstName])
   @@index([phoneNumber])
 }
@@ -603,6 +608,8 @@ model EventRegistration {
   userId             String
   eventId            String
   status             RegistrationStatus @default(REGISTERED)
+  guestCount         Int                @default(0)
+  guestNames         String?
   registeredAt       DateTime           @default(now())
   canceledAt         DateTime?
   attendanceMarkedAt DateTime?
@@ -612,6 +619,42 @@ model EventRegistration {
 
   @@unique([userId, eventId])
   @@index([eventId, status])
+}
+
+model LoginEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model ContentOverride {
+  key          String
+  language     String   @default("en")
+  value        String   @db.Text
+  updatedById  String?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  updatedBy    User?    @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@id([key, language])
+  @@index([language])
+}
+
+model ContentRevision {
+  id          String   @id @default(cuid())
+  key         String
+  language    String   @default("en")
+  valueBefore String?  @db.Text
+  valueAfter  String   @db.Text
+  actorUserId String?
+  createdAt   DateTime @default(now())
+
+  @@index([key, language, createdAt])
 }
 
 model NewsArticle {
@@ -740,6 +783,17 @@ model AuditLog {
 
   @@index([entityType, entityId])
   @@index([actorUserId, createdAt])
+}
+
+model SiteSetting {
+  key           String   @id
+  value         String   @db.Text
+  description   String?
+  updatedById   String?
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+
+  updatedBy     User?    @relation(fields: [updatedById], references: [id])
 }
 
 model NewsletterIssue {

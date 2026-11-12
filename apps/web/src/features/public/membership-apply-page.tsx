@@ -1,6 +1,8 @@
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '../../lib/api';
+import { fetchPublicSiteSettings, SITE_SETTING_KEYS } from '../../lib/site-settings';
 import { EditableText } from '../cms/editable-text';
 import { getCtaContent } from '../cms/get-cta-content';
 import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
@@ -31,7 +33,7 @@ const DEFAULT_APPLY_PAYMENT = {
   payTitle: 'How to pay',
   payIntro: 'Transfer via Whish Money or OMT Pay to:',
   payName: 'Mohammad Abdallah',
-  payPhone: '+961 70 704 292',
+  payPhone: '+961 3 000 000',
   payExtra: 'UK bank account details available upon request.',
   notesTitle: 'Important notes',
   notesBody:
@@ -42,6 +44,18 @@ function MembershipApplyPageContent() {
   const { getSection, updateContent } = useCmsInlineEdit();
   const applyPage = getCtaContent(getSection, 'applyPage', DEFAULT_APPLY_PAGE);
   const applyPayment = getCtaContent(getSection, 'applyPayment', DEFAULT_APPLY_PAYMENT);
+  const siteSettingsQuery = useQuery({
+    queryKey: ['site-settings-public'],
+    queryFn: fetchPublicSiteSettings,
+    staleTime: 60_000,
+  });
+  const payPhone =
+    siteSettingsQuery.data?.[SITE_SETTING_KEYS.paymentPayPhone] ?? (applyPayment.payPhone as string);
+  const payName =
+    siteSettingsQuery.data?.[SITE_SETTING_KEYS.paymentPayName] ?? (applyPayment.payName as string);
+  const phonePlaceholder =
+    siteSettingsQuery.data?.[SITE_SETTING_KEYS.contactPhonePlaceholder] ??
+    'e.g. 70 000 000 or +961 70 000 000';
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
@@ -210,7 +224,7 @@ function MembershipApplyPageContent() {
                 className="kop-input mt-1"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="e.g. 70 704 292 or +961 70 704 292"
+                placeholder={phonePlaceholder}
                 required
               />
             </label>
@@ -309,7 +323,7 @@ function MembershipApplyPageContent() {
 
             {isOfficialLfcMember === 'yes' ? (
               <label className="block text-sm font-medium">
-                LFC Supporter ID number *
+                ALLRED SUPPORT ID number *
                 <input
                   className="kop-input mt-1"
                   value={lfcId}
@@ -364,15 +378,10 @@ function MembershipApplyPageContent() {
               <EditableText
                 as="p"
                 className="mt-2 block text-sm font-bold text-ink"
-                value={applyPayment.payName as string}
+                value={payName}
                 onSave={(value) => updateContent('CTA', { payName: value }, 'applyPayment')}
               />
-              <EditableText
-                as="p"
-                className="block text-sm text-black/60"
-                value={applyPayment.payPhone as string}
-                onSave={(value) => updateContent('CTA', { payPhone: value }, 'applyPayment')}
-              />
+              <p className="block text-sm text-black/60">{payPhone}</p>
               <EditableText
                 as="p"
                 multiline

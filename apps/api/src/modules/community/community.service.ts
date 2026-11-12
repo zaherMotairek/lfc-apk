@@ -21,7 +21,7 @@ export class CommunityService {
   ) {}
 
   async getCommunityFeed(limit = 30) {
-    const [latestNews, latestEvents, latestAchievements, latestGoals] = await Promise.all([
+    const [latestNews, latestEvents, latestAchievements] = await Promise.all([
       this.prisma.newsArticle.findMany({
         where: { status: NewsStatus.PUBLISHED },
         orderBy: { publishedAt: 'desc' },
@@ -54,20 +54,7 @@ export class CommunityService {
           achievement: { select: { code: true, name: true } },
         },
       }),
-      this.prisma.matchGoal.findMany({
-        orderBy: { createdAt: 'desc' },
-        take: 10,
-        include: {
-          match: {
-            select: {
-              id: true,
-              homeTeamName: true,
-              awayTeamName: true,
-              status: true,
-            },
-          },
-        },
-      }),
+      Promise.resolve([]),
     ]);
 
     return [
@@ -95,27 +82,36 @@ export class CommunityService {
         subtitle: item.achievement.code,
         link: '/app/hall-of-fame',
       })),
-      ...latestGoals
-        .filter((item) => item.match.status === MatchStatus.LIVE || item.match.status === MatchStatus.FINISHED)
-        .map((item) => ({
-          id: `goal-${item.id}`,
-          type: item.isLiverpoolGoal ? 'MATCH_GOAL' : 'MATCH_GOAL_OPPONENT',
-          createdAt: item.createdAt,
-          title: item.isLiverpoolGoal
-            ? `GOOOOAAAAAL! ${item.scorerName ?? 'Liverpool'}`
-            : `${item.match.awayTeamName} score`,
-          subtitle: `${item.match.homeTeamName} ${item.homeScoreAfter}–${item.awayScoreAfter} ${item.match.awayTeamName}${item.minute != null ? ` · ${item.minute}'` : ''}`,
-          link: `/app/matches/${item.match.id}`,
-        })),
     ]
       .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
       .slice(0, limit);
   }
 
+  private async countEventAttendeeSeats(eventId: string) {
+    const registrations = await this.prisma.eventRegistration.findMany({
+      where: {
+        eventId,
+        status: {
+          in: [
+            RegistrationStatus.REGISTERED,
+            RegistrationStatus.WAITLISTED,
+            RegistrationStatus.ATTENDED,
+          ],
+        },
+      },
+      select: { guestCount: true },
+    });
+    return registrations.reduce((sum, row) => sum + 1 + (row.guestCount ?? 0), 0);
+  }
+
   async registerToEvent(eventId: string, userId: string, dto: RegisterEventDto) {
+    const guestCount = dto.guestCount ?? 0;
+    if (guestCount < 0 || guestCount > 2) {
+      throw new BadRequestException('guestCount must be between 0 and 2');
+    }
+
     const event = await this.prisma.event.findUnique({
       where: { id: eventId },
-      include: { _count: { select: { registrations: true } } },
     });
     if (!event) {
       throw new NotFoundException('Event not found');
@@ -134,8 +130,10 @@ export class CommunityService {
       throw new BadRequestException('You are already registered to this event');
     }
 
+    const seatsUsed = await this.countEventAttendeeSeats(eventId);
+    const seatsRequested = 1 + guestCount;
     const capacityReached =
-      typeof event.capacity === 'number' && event._count.registrations >= event.capacity;
+      typeof event.capacity === 'number' && seatsUsed + seatsRequested > event.capacity;
     const status =
       capacityReached && dto.joinWaitlist
         ? RegistrationStatus.WAITLISTED
@@ -151,8 +149,20 @@ export class CommunityService {
 
     await this.prisma.eventRegistration.upsert({
       where: { userId_eventId: { userId, eventId } },
-      update: { status, registeredAt: new Date() },
-      create: { userId, eventId, status, registeredAt: new Date() },
+      update: {
+        status,
+        guestCount,
+        guestNames: dto.guestNames?.trim() || null,
+        registeredAt: new Date(),
+      },
+      create: {
+        userId,
+        eventId,
+        status,
+        guestCount,
+        guestNames: dto.guestNames?.trim() || null,
+        registeredAt: new Date(),
+      },
     });
 
     await this.prisma.notification.create({

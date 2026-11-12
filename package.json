@@ -18,7 +18,15 @@
     "prisma:seed": "npm run prisma:seed -w @kop/api",
     "docker:prod:up": "docker compose -f docker-compose.prod.yml up -d --build",
     "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
-    "lint": "npm run lint -w @kop/api && npm run lint -w @kop/web"
+    "lint": "npm run lint -w @kop/api && npm run lint -w @kop/web",
+    "test": "npm run test -w @kop/api",
+    "test:api:e2e": "npm run test:e2e -w @kop/api",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "check": "npm run build && npm run test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.0"
   },
   "engines": {
     "node": ">=20"

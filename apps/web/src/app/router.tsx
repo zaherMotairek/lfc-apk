@@ -37,6 +37,7 @@ import { AdminNewsPage } from '../features/admin/admin-news-page';
 import { AdminEventsPage } from '../features/admin/admin-events-page';
 import { AdminMatchesPage } from '../features/admin/admin-matches-page';
 import { AdminNewsletterPage } from '../features/admin/admin-newsletter-page';
+import { AdminTextsPage } from '../features/admin/admin-texts-page';
 import { NewsletterListPage } from '../features/public/newsletter-list-page';
 import { NewsletterDetailPage } from '../features/public/newsletter-detail-page';
 
@@ -85,6 +86,7 @@ export function AppRouter() {
           <Route path="members" element={<AdminMembersPage />} />
           <Route path="applications" element={<AdminApplicationsPage />} />
           <Route path="cms" element={<AdminCmsPage />} />
+          <Route path="texts" element={<AdminTextsPage />} />
           <Route path="news" element={<AdminNewsPage />} />
           <Route path="events" element={<AdminEventsPage />} />
           <Route path="matches" element={<AdminMatchesPage />} />

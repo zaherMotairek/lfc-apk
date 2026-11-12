@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
+import { isDatetimeLocalInPast, minDatetimeLocal } from '../../lib/datetime-local';
 import { PageHeader } from '../../components/ui/page-header';
 
 type LiverpoolSquadPlayer = {
@@ -249,6 +250,19 @@ export function AdminMatchesPage() {
     event.preventDefault();
     if (!createKind) return;
     setMessage(null);
+    if (
+      isDatetimeLocalInPast(createForm.matchDate) ||
+      isDatetimeLocalInPast(createForm.predictionClosesAt)
+    ) {
+      setMessage('Kick-off and predictions close must be today or later.');
+      return;
+    }
+    const kickoffMs = new Date(createForm.matchDate).getTime();
+    const closesMs = new Date(createForm.predictionClosesAt).getTime();
+    if (closesMs > kickoffMs) {
+      setMessage('Predictions must close at or before kick-off.');
+      return;
+    }
     try {
       const isLfcCreate = createKind === 'liverpool';
       const homeTeam = isLfcCreate ? 'Liverpool' : createForm.homeTeamName.trim();
@@ -564,6 +578,7 @@ export function AdminMatchesPage() {
             <input
               type="datetime-local"
               className="kop-input"
+              min={minDatetimeLocal()}
               value={createForm.matchDate}
               onChange={(e) => setCreateForm((prev) => ({ ...prev, matchDate: e.target.value }))}
               required
@@ -574,6 +589,7 @@ export function AdminMatchesPage() {
             <input
               type="datetime-local"
               className="kop-input"
+              min={minDatetimeLocal()}
               value={createForm.predictionClosesAt}
               onChange={(e) =>
                 setCreateForm((prev) => ({ ...prev, predictionClosesAt: e.target.value }))

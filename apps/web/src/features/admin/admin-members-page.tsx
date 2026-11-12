@@ -535,7 +535,7 @@ export function AdminMembersPage() {
                   ['email', 'Email'],
                   ['phoneNumber', 'Phone number'],
                   ['olscId', 'OLSC ID'],
-                  ['lfcId', 'LFC ID'],
+                  ['lfcId', 'ALLRED SUPPORT ID'],
                   ['officialMemberId', 'Official Member ID'],
                   ['seasonLabel', 'Season label'],
                   ['favoritePlayer', 'Favorite player'],
