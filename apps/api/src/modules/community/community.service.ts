@@ -466,6 +466,39 @@ export class CommunityService {
     return { message: 'Push subscription removed.' };
   }
 
+  async adminBroadcastPush(actorUserId: string, dto: { title: string; body: string; url?: string }) {
+    const pushOn = await this.siteSettingsService.getPublicSettings();
+    if (pushOn['features.pushEnabled'] === 'false') {
+      throw new BadRequestException('Push notifications are disabled in site settings.');
+    }
+
+    const title = dto.title.trim();
+    const body = dto.body.trim();
+    if (!title || !body) {
+      throw new BadRequestException('Title and body are required.');
+    }
+
+    const result = await this.pushDispatch.broadcast({
+      title,
+      body,
+      url: dto.url?.trim() || undefined,
+    });
+
+    await this.auditService.log({
+      actorUserId,
+      action: 'ADMIN_PUSH_BROADCAST',
+      entityType: 'PUSH_BROADCAST',
+      metadata: { title, ...result },
+    });
+
+    return {
+      message: result.skipped
+        ? `Push skipped: ${result.reason ?? 'not configured'}`
+        : `Push delivered to ${result.sent} device(s).`,
+      ...result,
+    };
+  }
+
   async staffEventCheckIn(eventId: string, qrToken: string, staffUserId: string) {
     const event = await this.prisma.event.findUnique({ where: { id: eventId } });
     if (!event) {

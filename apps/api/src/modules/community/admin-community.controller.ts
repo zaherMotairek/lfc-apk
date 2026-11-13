@@ -5,6 +5,7 @@ import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { CommunityService } from './community.service';
+import { AdminPushBroadcastDto } from './dto/community.dto';
 
 @Controller()
 export class AdminCommunityController {
@@ -43,5 +44,12 @@ export class AdminCommunityController {
     @CurrentUser() user: { id: string },
   ) {
     return this.communityService.staffEventCheckIn(eventId, body.token ?? '', user.id);
+  }
+
+  @Post('admin/push/broadcast')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionCode.MANAGE_CONTENT)
+  broadcastPush(@Body() dto: AdminPushBroadcastDto, @CurrentUser() user: { id: string }) {
+    return this.communityService.adminBroadcastPush(user.id, dto);
   }
 }

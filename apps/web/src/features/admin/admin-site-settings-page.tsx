@@ -6,6 +6,7 @@ import { PageHeader } from '../../components/ui/page-header';
 import { SITE_SETTING_KEYS } from '../../lib/site-settings';
 import { useToast } from '../../components/ui/toast-provider';
 import { resolveMediaUrl } from '../../lib/media-url';
+import { AdminPushBroadcastPanel } from './admin-push-broadcast-panel';
 
 type SettingRow = {
   key: string;
@@ -193,6 +194,8 @@ export function AdminSiteSettingsPage() {
           Save {activeTab.label}
         </button>
       </form>
+
+      {tab === 'features' ? <AdminPushBroadcastPanel /> : null}
     </section>
   );
 }

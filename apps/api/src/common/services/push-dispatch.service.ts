@@ -55,4 +55,41 @@ export class PushDispatchService {
     }
     return { sent, skipped: false };
   }
+
+  async broadcast(payload: { title: string; body: string; url?: string }) {
+    const wp = await this.getWebPush();
+    if (!wp) {
+      return { sent: 0, failed: 0, skipped: true, reason: 'VAPID not configured' };
+    }
+
+    const subs = await this.prisma.pushSubscription.findMany();
+    let sent = 0;
+    let failed = 0;
+    const body = JSON.stringify({
+      title: payload.title,
+      body: payload.body,
+      url: payload.url ?? '/app/notifications',
+    });
+
+    for (const sub of subs) {
+      try {
+        await wp.sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: { p256dh: sub.p256dh, auth: sub.auth },
+          },
+          body,
+        );
+        sent += 1;
+      } catch (err) {
+        failed += 1;
+        this.logger.warn(`Broadcast push failed for ${sub.id}: ${err instanceof Error ? err.message : err}`);
+        if (String(err).includes('410') || String(err).includes('404')) {
+          await this.prisma.pushSubscription.delete({ where: { id: sub.id } }).catch(() => undefined);
+        }
+      }
+    }
+
+    return { sent, failed, skipped: false, targeted: subs.length };
+  }
 }

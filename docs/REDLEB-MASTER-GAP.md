@@ -52,7 +52,7 @@ See **`docs/REDLEB-PHASE-TRACKER.md`** for detail. Summary:
 | 2 | 🟡 | Digital card polish, Lighthouse, offline page |
 | 3 | 🟡 | Audit log UI, settings tabs, moderation |
 | 4 | 🟡 | .ics calendar, invitation cards, QR check-in |
-| 5 | 🟡 | Web push, member directory opt-in |
+| 5 | 🟡 | Web push + admin broadcast ✅; directory opt-in ✅ |
 | 6 | 🟡 | Newsletter schedule/publish workflow |
 | 7 | 🟡 | Throttler ✅; storage doc; CI ✅ |
 | 8 | 🟡 | RTL ar + staging/go-live docs |

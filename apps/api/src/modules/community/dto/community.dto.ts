@@ -36,6 +36,23 @@ export class AddNewsCommentDto {
   content!: string;
 }
 
+export class AdminPushBroadcastDto {
+  @IsString()
+  @MinLength(1)
+  @MaxLength(120)
+  title!: string;
+
+  @IsString()
+  @MinLength(1)
+  @MaxLength(500)
+  body!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  url?: string;
+}
+
 export class SetNewsReactionDto {
   @IsString()
   @MinLength(2)
