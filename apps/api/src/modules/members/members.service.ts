@@ -11,6 +11,7 @@ import {
   MembershipStatus,
   PlatformAccountStatus,
   Prisma,
+  RegistrationStatus,
   RoleCode,
 } from '@prisma/client';
 import { randomBytes } from 'crypto';
@@ -112,6 +113,7 @@ export class MembersService {
         coins: user.coins,
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
+        lastSeenAt: user.lastSeenAt,
         roles: user.roles.map((item) => item.role.code),
         memberships: user.memberships.map((membership) => ({
           id: membership.id,
@@ -637,5 +639,43 @@ export class MembersService {
     });
 
     return token;
+  }
+
+  async getMemberActivity(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        lfcId: true,
+        olscId: true,
+        platformAccountStatus: true,
+        lastLoginAt: true,
+        lastSeenAt: true,
+        createdAt: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const [loginCount, predictionCount, eventRegistrations, commentCount] = await Promise.all([
+      this.prisma.loginEvent.count({ where: { userId } }),
+      this.prisma.prediction.count({ where: { userId } }),
+      this.prisma.eventRegistration.count({
+        where: { userId, status: { not: RegistrationStatus.CANCELED } },
+      }),
+      this.prisma.comment.count({ where: { userId } }),
+    ]);
+
+    return {
+      user,
+      loginCount,
+      predictionCount,
+      eventRegistrations,
+      commentCount,
+    };
   }
 }

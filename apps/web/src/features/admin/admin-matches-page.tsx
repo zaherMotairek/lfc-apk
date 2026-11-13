@@ -78,15 +78,17 @@ type AdminMatchItem = {
 
 type MatchPanel = 'live' | 'result';
 
+/** Live score UI disabled for RedLeb Hub (predictions + results only). */
+const SHOW_LIVE_ADMIN_CONTROLS = false;
+
 const STATUS_GROUPS = [
-  { key: 'LIVE', label: 'Live now' },
   { key: 'UPCOMING', label: 'Upcoming' },
   { key: 'FINISHED', label: 'Finished' },
   { key: 'CANCELED', label: 'Canceled' },
 ] as const;
 
 function statusBadge(status: string) {
-  if (status === 'LIVE') return 'live-match-badge';
+  if (status === 'LIVE') return 'kop-badge';
   if (status === 'UPCOMING') return 'kop-badge-green';
   if (status === 'FINISHED') return 'kop-badge';
   return 'kop-badge-red';
@@ -705,7 +707,7 @@ export function AdminMatchesPage() {
                 </div>
 
                 <div className="mt-4 flex gap-2">
-                  {selectedIsLfc ? (
+                  {selectedIsLfc && SHOW_LIVE_ADMIN_CONTROLS ? (
                     <button
                       type="button"
                       className={panel === 'live' ? 'kop-btn-primary !px-4 !py-2 !text-xs' : 'kop-btn-secondary !px-4 !py-2 !text-xs'}
@@ -731,7 +733,7 @@ export function AdminMatchesPage() {
                 </div>
               </div>
 
-              {panel === 'live' && selectedIsLfc ? (
+              {SHOW_LIVE_ADMIN_CONTROLS && panel === 'live' && selectedIsLfc ? (
                 <div className="space-y-5 p-5">
                   {selected.status === 'FINISHED' ? (
                     <p className="text-sm text-black/55">

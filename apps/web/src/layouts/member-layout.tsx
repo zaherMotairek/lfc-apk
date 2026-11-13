@@ -15,8 +15,8 @@ import {
 const mobileTabs = [
   { to: '/app', label: 'Home', icon: '🏠', end: true },
   { to: '/app/matches', label: 'Matches', icon: '⚽' },
-  { to: '/app/community', label: 'Feed', icon: '📣' },
-  { to: '/app/notifications', label: 'Alerts', icon: '🔔' },
+  { to: '/app/community', label: 'Community', icon: '📣' },
+  { to: '/app/membership-card', label: 'Card', icon: '🎫' },
   { to: '/app/profile', label: 'Profile', icon: '👤' },
 ];
 

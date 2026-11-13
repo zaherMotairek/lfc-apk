@@ -41,6 +41,12 @@ export class MembersController {
     return this.membersService.listMembers();
   }
 
+  @Get('admin/members/:id/activity')
+  @Permissions(PermissionCode.MANAGE_MEMBERSHIPS)
+  getMemberActivity(@Param('id') id: string) {
+    return this.membersService.getMemberActivity(id);
+  }
+
   @Get('admin/members/roster/summary')
   @Permissions(PermissionCode.MANAGE_MEMBERSHIPS)
   getRosterSummary() {

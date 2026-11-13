@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { useAuth } from '../auth/auth-context';
@@ -38,7 +39,24 @@ function capacityPercent(registered: number, capacity?: number | null) {
 export function EventDetailPage() {
   const { id = '' } = useParams();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, accessToken } = useAuth();
+  const queryClient = useQueryClient();
+  const [guestCount, setGuestCount] = useState(0);
+  const [registerMessage, setRegisterMessage] = useState<string | null>(null);
+
+  const registerMutation = useMutation({
+    mutationFn: () =>
+      apiRequest<{ message: string }>(`/events/${id}/register`, {
+        method: 'POST',
+        token: accessToken,
+        body: { guestCount },
+      }),
+    onSuccess: (res) => {
+      setRegisterMessage(res.message);
+      void queryClient.invalidateQueries({ queryKey: ['public-event', id] });
+    },
+    onError: (err) => setRegisterMessage(err instanceof Error ? err.message : 'Registration failed'),
+  });
   const { data, isLoading, error } = useQuery({
     queryKey: ['public-event', id],
     queryFn: () => apiRequest<EventDetail>(`/events/${id}`),
@@ -219,24 +237,48 @@ export function EventDetailPage() {
                   )}
                 </div>
 
-                {!isPast && (isAuthenticated ? (
-                  <Link to="/app/community" className="kop-btn-primary w-full">
-                    Register in member app
-                  </Link>
-                ) : (
-                  <div className="space-y-2">
-                    <Link
-                      to="/login"
-                      state={{ from: { pathname: location.pathname, search: location.search } }}
-                      className="kop-btn-primary w-full"
-                    >
-                      Member login
-                    </Link>
-                    <Link to="/signup" className="kop-btn-secondary w-full">
-                      Create account
-                    </Link>
-                  </div>
-                ))}
+                {!isPast && canRegister ? (
+                  isAuthenticated ? (
+                    <div className="space-y-3">
+                      <label className="block text-sm font-medium">
+                        Guests
+                        <select
+                          className="kop-input mt-1"
+                          value={guestCount}
+                          onChange={(e) => setGuestCount(Number(e.target.value))}
+                        >
+                          <option value={0}>Just me</option>
+                          <option value={1}>Me + 1 guest</option>
+                          <option value={2}>Me + 2 guests</option>
+                        </select>
+                      </label>
+                      <button
+                        type="button"
+                        className="kop-btn-primary w-full"
+                        disabled={registerMutation.isPending}
+                        onClick={() => registerMutation.mutate()}
+                      >
+                        {registerMutation.isPending ? 'Registering…' : 'Register for this event'}
+                      </button>
+                      {registerMessage ? (
+                        <p className="text-center text-xs text-pitch">{registerMessage}</p>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Link
+                        to="/login"
+                        state={{ from: { pathname: location.pathname, search: location.search } }}
+                        className="kop-btn-ghost w-full !text-sm"
+                      >
+                        Sign in to register
+                      </Link>
+                      <Link to="/membership/apply" className="kop-btn-primary w-full">
+                        Become a member
+                      </Link>
+                    </div>
+                  )
+                ) : null}
               </div>
             </div>
 

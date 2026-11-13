@@ -1,7 +1,7 @@
 import type { ContactChannel } from './cms-types';
 
 export const DEFAULT_CONTACT_INTRO =
-  'Have a question about membership, events, or the Kop Platform? The OLSC Lebanon committee is here to help. Reach out through any channel below — we aim to respond within a few business days.';
+  'Have a question about membership, events, or RedLeb Hub? The OLSC Lebanon committee is here to help. Reach out through any channel below — we aim to respond within a few business days.';
 
 export const DEFAULT_CONTACT_CHANNELS: ContactChannel[] = [
   {

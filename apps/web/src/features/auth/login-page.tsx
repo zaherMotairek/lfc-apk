@@ -76,7 +76,7 @@ export function LoginPage() {
 
         {/* Form panel */}
         <div className="bg-surface p-8 md:p-10">
-          <h2 className="text-2xl font-extrabold text-ink">Member Login</h2>
+          <h2 className="text-2xl font-extrabold text-ink">Sign in</h2>
           <p className="mt-2 text-sm text-black/55">
             Sign in with your username (e.g. <span className="font-semibold">test</span>) — not the full
             email.

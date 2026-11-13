@@ -17,9 +17,11 @@ This branch implements **Phase 0** fully and a **pragmatic slice of Phases 1A–
 
 ## Partial / next sprints
 
+See **`docs/REDLEB-PHASE-TRACKER.md`** for live status.
+
 - **Phase 1A**: Registry has ~12 keys; most UI strings still in CMS/components — extend registry + codemod
-- **Phase 1 branding admin**: No upload UI yet — use `PUT /api/admin/site-settings` or Phase 3.10 screen
-- **Phase 3–8**: Draft docs under `docs/` (design, privacy, operations); full permissions matrix, moderation, Arabic RTL, Wallet passes — not built
+- **Phase 3**: `/admin/settings` (branding/contact/payment text fields); logo upload + sharp sizes still TODO
+- **Phases 4–8**: Incremental — not complete per master prompt
 
 ## Local commands
 

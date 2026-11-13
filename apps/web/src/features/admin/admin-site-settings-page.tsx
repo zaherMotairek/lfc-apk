@@ -1,0 +1,134 @@
+import { FormEvent, useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../auth/auth-context';
+import { apiRequest } from '../../lib/api';
+import { PageHeader } from '../../components/ui/page-header';
+import { SITE_SETTING_KEYS } from '../../lib/site-settings';
+
+type SettingRow = {
+  key: string;
+  value: string;
+  defaultValue: string;
+  description?: string | null;
+  isOverridden: boolean;
+};
+
+const TABS: Array<{ id: string; label: string; keys: string[] }> = [
+  {
+    id: 'branding',
+    label: 'Branding',
+    keys: [
+      'brand.siteName',
+      'brand.shortName',
+      'brand.tagline',
+      'brand.red',
+      'brand.themeColor',
+      'brand.logoUrlLight',
+      'brand.logoUrlDark',
+      'brand.iconUrl',
+    ],
+  },
+  {
+    id: 'contact',
+    label: 'Contact',
+    keys: [SITE_SETTING_KEYS.contactWhatsappDisplay, SITE_SETTING_KEYS.contactPhonePlaceholder],
+  },
+  {
+    id: 'payment',
+    label: 'Payment',
+    keys: [SITE_SETTING_KEYS.paymentPayPhone, SITE_SETTING_KEYS.paymentPayName],
+  },
+];
+
+export function AdminSiteSettingsPage() {
+  const { accessToken } = useAuth();
+  const queryClient = useQueryClient();
+  const [tab, setTab] = useState('branding');
+  const [draft, setDraft] = useState<Record<string, string>>({});
+  const [message, setMessage] = useState<string | null>(null);
+
+  const settingsQuery = useQuery({
+    queryKey: ['admin-site-settings'],
+    queryFn: () => apiRequest<SettingRow[]>('/admin/site-settings', { token: accessToken }),
+    enabled: Boolean(accessToken),
+  });
+
+  const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0];
+  const rows = useMemo(() => {
+    const all = settingsQuery.data ?? [];
+    return all.filter((row) => activeTab.keys.includes(row.key));
+  }, [settingsQuery.data, activeTab.keys]);
+
+  const saveMutation = useMutation({
+    mutationFn: (settings: Array<{ key: string; value: string }>) =>
+      apiRequest<{ message: string }>('/admin/site-settings', {
+        method: 'PUT',
+        token: accessToken,
+        body: { settings },
+      }),
+    onSuccess: (res) => {
+      setMessage(res.message);
+      setDraft({});
+      void queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
+      void queryClient.invalidateQueries({ queryKey: ['brand'] });
+      void queryClient.invalidateQueries({ queryKey: ['site-settings-public'] });
+    },
+    onError: (err) => setMessage(err instanceof Error ? err.message : 'Save failed'),
+  });
+
+  function onSubmit(event: FormEvent) {
+    event.preventDefault();
+    const settings = rows.map((row) => ({
+      key: row.key,
+      value: draft[row.key] ?? row.value,
+    }));
+    saveMutation.mutate(settings);
+  }
+
+  return (
+    <section className="space-y-6">
+      <PageHeader
+        eyebrow="Settings"
+        title="Site settings"
+        description="Branding, contact details, and payment instructions — no code changes needed."
+      />
+
+      {message ? (
+        <div className="rounded-xl border border-pitch/20 bg-pitch/5 px-4 py-3 text-sm text-pitch">{message}</div>
+      ) : null}
+
+      <div className="flex flex-wrap gap-2">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className={tab === t.id ? 'kop-btn-primary !text-sm' : 'kop-btn-secondary !text-sm'}
+            onClick={() => setTab(t.id)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <form onSubmit={onSubmit} className="kop-card space-y-4 p-5">
+        {rows.map((row) => (
+          <label key={row.key} className="block text-sm font-medium">
+            {row.description ?? row.key}
+            <input
+              className="kop-input mt-1 font-mono text-xs"
+              value={draft[row.key] ?? row.value}
+              onChange={(e) => setDraft((p) => ({ ...p, [row.key]: e.target.value }))}
+            />
+            {row.isOverridden ? (
+              <span className="mt-1 block text-xs text-black/45">Default: {row.defaultValue}</span>
+            ) : null}
+          </label>
+        ))}
+        {settingsQuery.isLoading ? <p className="text-sm text-black/45">Loading…</p> : null}
+        <button type="submit" className="kop-btn-primary" disabled={saveMutation.isPending || !rows.length}>
+          Save {activeTab.label}
+        </button>
+      </form>
+    </section>
+  );
+}

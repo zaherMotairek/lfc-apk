@@ -83,6 +83,19 @@ export function AdminMembersPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [editingMember, setEditingMember] = useState<MemberListItem | null>(null);
+
+  const activityQuery = useQuery({
+    queryKey: ['admin-member-activity', editingMember?.id],
+    queryFn: () =>
+      apiRequest<{
+        loginCount: number;
+        predictionCount: number;
+        eventRegistrations: number;
+        commentCount: number;
+        user: { lastSeenAt?: string | null; lastLoginAt?: string | null };
+      }>(`/admin/members/${editingMember!.id}/activity`, { token: accessToken }),
+    enabled: Boolean(accessToken && editingMember?.id),
+  });
   const [editForm, setEditForm] = useState<EditForm | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
@@ -397,7 +410,7 @@ export function AdminMembersPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="font-semibold uppercase tracking-wide text-black/35">LFC ID</div>
+                    <div className="font-semibold uppercase tracking-wide text-black/35">ALLRED SUPPORT ID</div>
                     <div className="mt-1 font-semibold text-ink">{member.lfcId ?? '-'}</div>
                   </div>
                 </div>
@@ -456,7 +469,7 @@ export function AdminMembersPage() {
                       <div className="font-semibold">
                         {member.olscId ?? membership?.officialMemberId ?? '-'}
                       </div>
-                      <div className="mt-2 text-xs text-black/45">LFC</div>
+                      <div className="mt-2 text-xs text-black/45">ALLRED</div>
                       <div className="font-semibold">{member.lfcId ?? '-'}</div>
                     </td>
                     <td className="px-4 py-3">
@@ -526,6 +539,31 @@ export function AdminMembersPage() {
                 Close
               </button>
             </div>
+
+            {activityQuery.data ? (
+              <div className="mb-5 grid grid-cols-2 gap-2 rounded-2xl border border-black/5 bg-black/[0.02] p-4 text-sm sm:grid-cols-4">
+                <div>
+                  <div className="text-xs text-black/45">Last seen</div>
+                  <div className="font-semibold">
+                    {activityQuery.data.user.lastSeenAt
+                      ? new Date(activityQuery.data.user.lastSeenAt).toLocaleString()
+                      : '—'}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-black/45">Logins</div>
+                  <div className="font-semibold">{activityQuery.data.loginCount}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-black/45">Predictions</div>
+                  <div className="font-semibold">{activityQuery.data.predictionCount}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-black/45">Event sign-ups</div>
+                  <div className="font-semibold">{activityQuery.data.eventRegistrations}</div>
+                </div>
+              </div>
+            ) : null}
 
             <div className="grid gap-4 md:grid-cols-2">
               {(

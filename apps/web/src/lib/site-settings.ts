@@ -11,4 +11,12 @@ export const SITE_SETTING_KEYS = {
   paymentPayName: 'payment.payName',
   contactPhonePlaceholder: 'contact.phonePlaceholder',
   contactWhatsappDisplay: 'contact.whatsappDisplay',
+  brandSiteName: 'brand.siteName',
+  brandShortName: 'brand.shortName',
+  brandTagline: 'brand.tagline',
+  brandRed: 'brand.red',
+  brandThemeColor: 'brand.themeColor',
+  brandLogoLight: 'brand.logoUrlLight',
+  brandLogoDark: 'brand.logoUrlDark',
+  brandIcon: 'brand.iconUrl',
 } as const;

@@ -31,7 +31,7 @@ function displayStatus(match: MatchItem) {
 }
 
 function statusTone(status: string) {
-  if (status === 'LIVE') return 'live-match-badge';
+  if (status === 'LIVE') return 'kop-badge';
   if (status === 'UPCOMING') return 'kop-badge-green';
   if (status === 'CLOSED') return 'kop-badge-red';
   if (status === 'FINISHED') return 'kop-badge';
