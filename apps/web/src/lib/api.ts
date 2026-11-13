@@ -1,11 +1,37 @@
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
 const REQUEST_TIMEOUT_MS = 15_000;
 
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
+function notifyUnauthorized() {
+  window.dispatchEvent(new CustomEvent('kop:unauthorized'));
+}
+
 type RequestOptions = {
   method?: string;
   body?: unknown;
   token?: string | null;
 };
+
+function throwForResponse(
+  response: Response,
+  data: { message?: string | string[] },
+  token?: string | null,
+): never {
+  if (response.status === 401 && token) {
+    notifyUnauthorized();
+  }
+  const message = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+  throw new ApiError(message ?? 'Request failed', response.status);
+}
 
 export async function apiUploadForm<T>(
   path: string,
@@ -26,14 +52,14 @@ export async function apiUploadForm<T>(
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      const message = Array.isArray(data.message)
-        ? data.message.join(', ')
-        : data.message;
-      throw new Error(message ?? 'Upload failed');
+      throwForResponse(response, data, token);
     }
 
     return data as T;
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw new Error('Upload timed out. Check that the API is running.');
     }
@@ -75,14 +101,14 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      const message = Array.isArray(data.message)
-        ? data.message.join(', ')
-        : data.message;
-      throw new Error(message ?? 'Request failed');
+      throwForResponse(response, data, options.token);
     }
 
     return data as T;
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw new Error('Request timed out. Check that the API is running.');
     }

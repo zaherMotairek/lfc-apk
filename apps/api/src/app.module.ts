@@ -12,6 +12,13 @@ import { CmsModule } from './modules/cms/cms.module';
 import { ContentModule } from './modules/content/content.module';
 import { PredictionsModule } from './modules/predictions/predictions.module';
 import { CommunityModule } from './modules/community/community.module';
+import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
+import { ContentRegistryModule } from './modules/content-registry/content-registry.module';
+import { BrandModule } from './modules/brand/brand.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { LastSeenInterceptor } from './common/interceptors/last-seen.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ApiRootController } from './api-root.controller';
 import { HealthController } from './health.controller';
 
 @Module({
@@ -36,12 +43,20 @@ import { HealthController } from './health.controller';
     ContentModule,
     PredictionsModule,
     CommunityModule,
+    SiteSettingsModule,
+    ContentRegistryModule,
+    BrandModule,
+    AuditModule,
   ],
-  controllers: [HealthController],
+  controllers: [ApiRootController, HealthController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LastSeenInterceptor,
     },
   ],
 })

@@ -16,10 +16,18 @@ import {
 import { LIVERPOOL_SQUAD_2025_26, PREDICTION_SCORING } from '@kop/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
+import { SiteSettingsService } from '../site-settings/site-settings.service';
 import {
   calculatePredictionPoints,
   isLiverpoolMatch,
 } from '../../common/utils/match-scoring.utils';
+import {
+  assertKickoffEligibleForLive,
+  liveKickoffWindowStart,
+  staleLiveCutoff,
+  staleUpcomingCutoff,
+  validateMatchSchedule,
+} from '../../common/utils/schedule-dates';
 import {
   CalculateScoreDto,
   CreateMatchDto,
@@ -37,12 +45,13 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
+    private readonly siteSettingsService: SiteSettingsService,
   ) {}
 
   onModuleInit() {
-    void this.autoStartDueMatches();
+    void this.autoResolveStaleMatches().then(() => this.autoStartDueMatches());
     this.autoStartTimer = setInterval(() => {
-      void this.autoStartDueMatches();
+      void this.autoResolveStaleMatches().then(() => this.autoStartDueMatches());
     }, 60_000);
   }
 
@@ -53,6 +62,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async listMatches() {
+    await this.autoResolveStaleMatches();
     await this.autoStartDueMatches();
 
     const matches = await this.prisma.match.findMany({
@@ -82,6 +92,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async getMatchHub(matchId: string, userId?: string) {
+    await this.autoResolveStaleMatches();
     await this.autoStartDueMatches();
 
     const match = await this.prisma.match.findUnique({
@@ -201,6 +212,8 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async createMatch(dto: CreateMatchDto, actorUserId: string) {
+    validateMatchSchedule(dto.matchDate, dto.predictionClosesAt, dto.predictionOpensAt);
+
     const match = await this.prisma.match.create({
       data: {
         opponent: dto.opponent,
@@ -263,6 +276,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async setMatchLive(matchId: string, actorUserId: string) {
+    await this.assertMatchLiveAlertsEnabled();
     const match = await this.prisma.match.findUnique({ where: { id: matchId } });
     if (!match) {
       throw new NotFoundException('Match not found');
@@ -273,6 +287,8 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     if (match.status === MatchStatus.FINISHED) {
       throw new BadRequestException('Match is already finished');
     }
+
+    assertKickoffEligibleForLive(match.matchDate);
 
     const updated = await this.startMatchLiveInternal(match, {
       actorUserId,
@@ -286,6 +302,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async recordGoal(matchId: string, dto: RecordGoalDto, actorUserId: string) {
+    await this.assertMatchLiveAlertsEnabled();
     const match = await this.prisma.match.findUnique({ where: { id: matchId } });
     if (!match) {
       throw new NotFoundException('Match not found');
@@ -409,6 +426,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async sendLiveUpdate(matchId: string, dto: LiveMatchUpdateDto, actorUserId: string) {
+    await this.assertMatchLiveAlertsEnabled();
     const match = await this.prisma.match.findUnique({ where: { id: matchId } });
     if (!match) {
       throw new NotFoundException('Match not found');
@@ -491,12 +509,36 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     };
   }
 
-  private async autoStartDueMatches() {
+  private async autoResolveStaleMatches() {
     const now = new Date();
+
+    await this.prisma.match.updateMany({
+      where: {
+        status: MatchStatus.LIVE,
+        matchDate: { lt: staleLiveCutoff(now) },
+      },
+      data: { status: MatchStatus.FINISHED },
+    });
+
+    await this.prisma.match.updateMany({
+      where: {
+        status: MatchStatus.UPCOMING,
+        matchDate: { lt: staleUpcomingCutoff(now) },
+      },
+      data: { status: MatchStatus.CANCELED },
+    });
+  }
+
+  private async autoStartDueMatches() {
+    if (!(await this.siteSettingsService.areMatchLiveAlertsEnabled())) {
+      return;
+    }
+    const now = new Date();
+    const windowStart = liveKickoffWindowStart(now);
     const dueMatches = await this.prisma.match.findMany({
       where: {
         status: MatchStatus.UPCOMING,
-        matchDate: { lte: now },
+        matchDate: { lte: now, gte: windowStart },
       },
     });
 
@@ -573,6 +615,15 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     return liveMatch;
   }
 
+  private async assertMatchLiveAlertsEnabled() {
+    const on = await this.siteSettingsService.areMatchLiveAlertsEnabled();
+    if (!on) {
+      throw new BadRequestException(
+        'Match live alerts are disabled (Site settings → Features → matchLiveEnabled).',
+      );
+    }
+  }
+
   private async broadcastMatchNotification(input: {
     type: string;
     title: string;
@@ -580,6 +631,9 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     actionUrl: string;
     metadata?: Record<string, unknown>;
   }) {
+    if (!(await this.siteSettingsService.areMatchLiveAlertsEnabled())) {
+      return;
+    }
     const activeUsers = await this.prisma.user.findMany({
       where: { platformAccountStatus: PlatformAccountStatus.ACTIVE },
       select: { id: true },
@@ -604,6 +658,11 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async submitPrediction(userId: string, dto: SubmitPredictionDto) {
+    const predictionsOn = await this.siteSettingsService.arePredictionsEnabled();
+    if (!predictionsOn) {
+      throw new BadRequestException('Match predictions are temporarily disabled.');
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -812,6 +871,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
             firstName: true,
             lastName: true,
             avatarUrl: true,
+            hideFromLeaderboard: true,
           },
         },
       },
@@ -819,20 +879,21 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
 
     if (snapshots.length) {
       const latestCreatedAt = snapshots[0].createdAt.getTime();
+      const visible = snapshots
+        .filter((item) => item.createdAt.getTime() === latestCreatedAt)
+        .filter((item) => !item.user.hideFromLeaderboard);
       return {
         type,
-        items: snapshots
-          .filter((item) => item.createdAt.getTime() === latestCreatedAt)
-          .map((item) => ({
-            rank: item.rank,
-            userId: item.userId,
-            fullName: `${item.user.firstName} ${item.user.lastName}`,
-            avatarUrl: item.user.avatarUrl,
-            totalPoints: item.totalPoints,
-            predictionCount: item.predictionCount,
-            exactScoreCount: item.exactScoreCount,
-            accuracyRate: item.accuracyRate,
-          })),
+        items: visible.map((item, index) => ({
+          rank: index + 1,
+          userId: item.userId,
+          fullName: `${item.user.firstName} ${item.user.lastName}`.trim(),
+          avatarUrl: item.user.avatarUrl,
+          totalPoints: item.totalPoints,
+          predictionCount: item.predictionCount,
+          exactScoreCount: item.exactScoreCount,
+          accuracyRate: item.accuracyRate,
+        })),
       };
     }
 
@@ -842,21 +903,41 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async getAdminDashboard() {
-    const [users, activeMembers, pendingInvites, predictions, upcomingMatches, events] =
-      await Promise.all([
-        this.prisma.user.count(),
-        this.prisma.membership.count({ where: { status: MembershipStatus.ACTIVE } }),
-        this.prisma.user.count({ where: { platformAccountStatus: PlatformAccountStatus.INVITED } }),
-        this.prisma.prediction.count(),
-        this.prisma.match.count({ where: { status: MatchStatus.UPCOMING } }),
-        this.prisma.event.count(),
-      ]);
+    const inactiveSince = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const [
+      users,
+      activeMembers,
+      pendingInvites,
+      inactiveMembers,
+      pendingApplications,
+      predictions,
+      upcomingMatches,
+      events,
+    ] = await Promise.all([
+      this.prisma.user.count(),
+      this.prisma.membership.count({ where: { status: MembershipStatus.ACTIVE } }),
+      this.prisma.user.count({ where: { platformAccountStatus: PlatformAccountStatus.INVITED } }),
+      this.prisma.user.count({
+        where: {
+          platformAccountStatus: PlatformAccountStatus.ACTIVE,
+          OR: [{ lastSeenAt: null }, { lastSeenAt: { lt: inactiveSince } }],
+        },
+      }),
+      this.prisma.membershipApplication.count({ where: { status: 'PENDING' } }),
+      this.prisma.prediction.count(),
+      this.prisma.match.count({ where: { status: MatchStatus.UPCOMING } }),
+      this.prisma.event.count(),
+    ]);
 
     return {
       members: {
         total: users,
         activeMemberships: activeMembers,
         pendingInvites,
+        inactive30Days: inactiveMembers,
+      },
+      applications: {
+        pending: pendingApplications,
       },
       predictions: {
         total: predictions,
@@ -929,6 +1010,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
         firstName: true,
         lastName: true,
         avatarUrl: true,
+        hideFromLeaderboard: true,
       },
     });
 
@@ -938,6 +1020,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     return grouped
       .map((item) => {
         const user = userMap.get(item.userId);
+        if (user?.hideFromLeaderboard) return null;
         const predictionCount = item._count._all;
         const exactScoreCount = exactMap.get(item.userId) ?? 0;
         const totalPoints = item._sum.totalPoints ?? 0;
@@ -954,9 +1037,12 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
             : 0,
         };
       })
+      .filter((row): row is NonNullable<typeof row> => row !== null)
       .sort((a, b) => b.totalPoints - a.totalPoints)
       .map((item, index) => ({ ...item, rank: index + 1 }));
   }
+
+  private static readonly AWARD_XP_AND_COINS = false;
 
   private async applyGamificationForPrediction(params: {
     prediction: {
@@ -967,6 +1053,10 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     winnerCorrect: boolean;
     exactScoreCorrect: boolean;
   }) {
+    if (!PredictionsService.AWARD_XP_AND_COINS) {
+      return;
+    }
+
     const baseXp = 10;
     const bonusXp = Math.max(0, Math.floor(params.totalPoints / 2));
     const exactScoreXp = params.exactScoreCorrect ? 10 : 0;

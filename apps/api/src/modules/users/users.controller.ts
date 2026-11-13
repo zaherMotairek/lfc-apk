@@ -28,6 +28,11 @@ export class UsersController {
     return this.usersService.getMe(user.id);
   }
 
+  @Get('me/export')
+  exportMe(@CurrentUser() user: AuthenticatedUser) {
+    return this.usersService.exportPersonalData(user.id);
+  }
+
   @Put('me')
   updateMe(
     @CurrentUser() user: AuthenticatedUser,

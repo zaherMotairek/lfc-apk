@@ -74,7 +74,7 @@ export class EmailService {
     firstName: string,
     invitationLink: string,
   ): Promise<void> {
-    const subject = 'Activate your OLSC Lebanon Kop Platform account';
+    const subject = 'Activate your OLSC Lebanon RedLeb Hub account';
     const html = `
       <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px">
         <h1 style="color:#c8102e">OLSC Lebanon</h1>
@@ -115,12 +115,40 @@ export class EmailService {
     });
   }
 
+  async sendNewsletterIssueEmail(
+    to: string,
+    firstName: string,
+    input: { title: string; monthLabel: string; excerpt?: string | null; readUrl: string },
+  ): Promise<void> {
+    const subject = `New RedLeb Dispatch — ${input.title}`;
+    const excerptBlock = input.excerpt
+      ? `<p style="color:#444">${input.excerpt}</p>`
+      : '';
+    const html = `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h1 style="color:#c8102e">OLSC Lebanon</h1>
+        <p>Hello ${firstName || 'Supporter'},</p>
+        <p>The committee published <strong>${input.title}</strong> (${input.monthLabel}).</p>
+        ${excerptBlock}
+        <p><a href="${input.readUrl}" style="display:inline-block;background:#101418;color:#fff;padding:12px 20px;text-decoration:none;border-radius:8px">Read the dispatch</a></p>
+        <p style="color:#666;font-size:13px">Or open: ${input.readUrl}</p>
+      </div>
+    `;
+
+    await this.sendMail({
+      to,
+      subject,
+      html,
+      text: `New RedLeb Dispatch: ${input.title}. Read: ${input.readUrl}`,
+    });
+  }
+
   async sendSignupCodeEmail(to: string, code: string): Promise<void> {
     const subject = 'Your OLSC Lebanon signup code';
     const html = `
       <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px">
         <h1 style="color:#c8102e">OLSC Lebanon</h1>
-        <p>Use this code to complete your Kop Platform signup:</p>
+        <p>Use this code to complete your RedLeb Hub signup:</p>
         <p style="font-size:32px;font-weight:700;letter-spacing:8px;color:#101418">${code}</p>
         <p style="color:#666;font-size:13px">This code expires in 15 minutes.</p>
       </div>

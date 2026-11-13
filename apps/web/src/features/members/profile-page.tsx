@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useContent } from '../content/content-provider';
 import { resolveMediaUrl } from '../../lib/media-url';
 
 type ProfileResponse = {
@@ -14,6 +15,9 @@ type ProfileResponse = {
   avatarUrl?: string | null;
   phoneNumber?: string | null;
   favoritePlayer?: string | null;
+  city?: string | null;
+  listedInDirectory?: boolean;
+  hideFromLeaderboard?: boolean;
   olscId?: string | null;
   lfcId?: string | null;
   platformAccountStatus: string;
@@ -73,6 +77,12 @@ function formatRoleLabel(role: string) {
 }
 
 export function ProfilePage() {
+  const profileTitle = useContent('member.profile.title', 'My Profile');
+  const profileSubtitle = useContent(
+    'member.profile.subtitle',
+    'Your Kop identity, login details, stats, and membership info.',
+  );
+  const privacyLegend = useContent('member.profile.privacyLegend', 'Privacy');
   const { accessToken, user } = useAuth();
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [form, setForm] = useState({
@@ -80,8 +90,13 @@ export function ProfilePage() {
     lastName: '',
     phoneNumber: '',
     favoritePlayer: '',
+    city: '',
     olscId: '',
     lfcId: '',
+  });
+  const [privacy, setPrivacy] = useState({
+    listedInDirectory: false,
+    hideFromLeaderboard: false,
   });
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -108,8 +123,13 @@ export function ProfilePage() {
             lastName: result.lastName,
             phoneNumber: result.phoneNumber ?? '',
             favoritePlayer: result.favoritePlayer ?? '',
+            city: result.city ?? '',
             olscId: result.olscId ?? '',
             lfcId: result.lfcId ?? '',
+          });
+          setPrivacy({
+            listedInDirectory: Boolean(result.listedInDirectory),
+            hideFromLeaderboard: Boolean(result.hideFromLeaderboard),
           });
         }
       } catch (err) {
@@ -134,7 +154,7 @@ export function ProfilePage() {
       const result = await apiRequest<{ message: string }>('/users/me', {
         method: 'PUT',
         token: accessToken,
-        body: form,
+        body: { ...form, ...privacy },
       });
       setMessage(result.message);
       const refreshed = await apiRequest<ProfileResponse>('/users/me', { token: accessToken });
@@ -144,8 +164,13 @@ export function ProfilePage() {
         lastName: refreshed.lastName,
         phoneNumber: refreshed.phoneNumber ?? '',
         favoritePlayer: refreshed.favoritePlayer ?? '',
+        city: refreshed.city ?? '',
         olscId: refreshed.olscId ?? '',
         lfcId: refreshed.lfcId ?? '',
+      });
+      setPrivacy({
+        listedInDirectory: Boolean(refreshed.listedInDirectory),
+        hideFromLeaderboard: Boolean(refreshed.hideFromLeaderboard),
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Update failed');
@@ -229,11 +254,7 @@ export function ProfilePage() {
 
   return (
     <section className="max-w-3xl space-y-6">
-      <PageHeader
-        eyebrow="Account"
-        title="My Profile"
-        description="Your Kop identity, login details, stats, and membership info."
-      />
+      <PageHeader eyebrow="Account" title={profileTitle} description={profileSubtitle} />
 
       {profile && (!profile.firstName.trim() || !profile.lastName.trim()) ? (
         <div className="rounded-2xl border border-lfc-red/25 bg-lfc-red/[0.06] px-5 py-4 text-sm text-ink">
@@ -289,7 +310,10 @@ export function ProfilePage() {
                 </p>
               ) : (
                 <p className="mt-3 text-sm text-white/70">
-                  {[profile?.olscId ? `OLSC ${profile.olscId}` : null, profile?.lfcId ? `LFC ${profile.lfcId}` : null]
+                  {[
+                    profile?.olscId ? `OLSC ${profile.olscId}` : null,
+                    profile?.lfcId ? `ALLRED ${profile.lfcId}` : null,
+                  ]
                     .filter(Boolean)
                     .join(' · ') || 'Complete your profile and add OLSC / LFC IDs to match the roster'}
                 </p>
@@ -328,10 +352,8 @@ export function ProfilePage() {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 p-6 sm:grid-cols-4">
           {[
-            { label: 'Level', value: profile?.level ?? 1 },
-            { label: 'XP', value: profile?.xp ?? 0 },
-            { label: 'Coins', value: profile?.coins ?? 0 },
-            { label: 'Streak', value: profile?.currentWinningStreak ?? 0 },
+            { label: 'Prediction streak', value: profile?.currentWinningStreak ?? 0 },
+            { label: 'Best streak', value: profile?.longestWinningStreak ?? 0 },
           ].map((stat) => (
             <div key={stat.label} className="stat-pill">
               <div className="stat-pill-label">{stat.label}</div>
@@ -397,8 +419,9 @@ export function ProfilePage() {
               ['lastName', 'Last name'],
               ['phoneNumber', 'Phone number'],
               ['favoritePlayer', 'Favorite Liverpool player'],
+              ['city', 'City / area'],
               ['olscId', 'OLSC ID'],
-              ['lfcId', 'LFC ID'],
+              ['lfcId', 'ALLRED SUPPORT ID'],
             ] as const
           ).map(([key, label]) => (
             <label key={key} className="block text-sm font-medium">
@@ -411,6 +434,29 @@ export function ProfilePage() {
               />
             </label>
           ))}
+          <fieldset className="space-y-2 md:col-span-2">
+            <legend className="text-sm font-bold text-ink">{privacyLegend}</legend>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={privacy.listedInDirectory}
+                onChange={(e) =>
+                  setPrivacy((p) => ({ ...p, listedInDirectory: e.target.checked }))
+                }
+              />
+              Show me in the member directory
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={privacy.hideFromLeaderboard}
+                onChange={(e) =>
+                  setPrivacy((p) => ({ ...p, hideFromLeaderboard: e.target.checked }))
+                }
+              />
+              Hide my name on the public leaderboard
+            </label>
+          </fieldset>
           <div className="md:col-span-2">
             <button type="submit" disabled={loading} className="kop-btn-primary">
               {loading ? 'Saving...' : 'Save profile'}
@@ -428,6 +474,35 @@ export function ProfilePage() {
             {message}
           </div>
         ) : null}
+      </div>
+
+      <div className="kop-card p-6">
+        <h3 className="mb-1 font-bold text-ink">Your data</h3>
+        <p className="mb-4 text-sm text-black/50">
+          Download a JSON copy of your profile and activity summary.
+        </p>
+        <button
+          type="button"
+          className="kop-btn-secondary !text-sm"
+          onClick={async () => {
+            try {
+              const data = await apiRequest<Record<string, unknown>>('/users/me/export', {
+                token: accessToken,
+              });
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'redleb-hub-my-data.json';
+              a.click();
+              URL.revokeObjectURL(url);
+            } catch {
+              setError('Unable to export data.');
+            }
+          }}
+        >
+          Download my data
+        </button>
       </div>
 
       <div className="kop-card p-6">

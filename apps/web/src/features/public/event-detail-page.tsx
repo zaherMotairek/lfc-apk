@@ -1,7 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { useAuth } from '../auth/auth-context';
+import { useContent } from '../content/content-provider';
+import { fetchPublicSiteSettings } from '../../lib/site-settings';
 
 type EventDetail = {
   id: string;
@@ -38,7 +41,44 @@ function capacityPercent(registered: number, capacity?: number | null) {
 export function EventDetailPage() {
   const { id = '' } = useParams();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, accessToken } = useAuth();
+  const queryClient = useQueryClient();
+  const [guestCount, setGuestCount] = useState(0);
+  const [guestNames, setGuestNames] = useState('');
+  const [registerMessage, setRegisterMessage] = useState<string | null>(null);
+  const signInRegisterLabel = useContent('events.register.signInHint', 'Sign in to register');
+  const becomeMemberLabel = useContent('cta.becomeMember', 'Become a member');
+  const guestsLabel = useContent('events.guests.label', 'Guests');
+  const guestNamesLabel = useContent('events.guests.namesLabel', 'Guest names (optional)');
+  const apiBase = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+  const calendarUrl = `${apiBase}/events/${id}/calendar.ics`;
+
+  const siteSettingsQuery = useQuery({
+    queryKey: ['site-settings-public'],
+    queryFn: fetchPublicSiteSettings,
+  });
+  const maxGuests = Math.min(
+    2,
+    Math.max(0, Number(siteSettingsQuery.data?.['features.guestsMax'] ?? '2') || 2),
+  );
+
+  const registerMutation = useMutation({
+    mutationFn: ({ joinWaitlist = false }: { joinWaitlist?: boolean } = {}) =>
+      apiRequest<{ message: string }>(`/events/${id}/register`, {
+        method: 'POST',
+        token: accessToken,
+        body: {
+          guestCount,
+          guestNames: guestNames.trim() || undefined,
+          joinWaitlist: joinWaitlist || undefined,
+        },
+      }),
+    onSuccess: (res) => {
+      setRegisterMessage(res.message);
+      void queryClient.invalidateQueries({ queryKey: ['public-event', id] });
+    },
+    onError: (err) => setRegisterMessage(err instanceof Error ? err.message : 'Registration failed'),
+  });
   const { data, isLoading, error } = useQuery({
     queryKey: ['public-event', id],
     queryFn: () => apiRequest<EventDetail>(`/events/${id}`),
@@ -156,6 +196,13 @@ export function EventDetailPage() {
 
           {/* Sidebar — registration */}
           <aside className="space-y-4">
+            <a
+              href={calendarUrl}
+              className="kop-btn-secondary block w-full text-center !text-sm"
+              download={`redleb-event-${id}.ics`}
+            >
+              Add to calendar (.ics)
+            </a>
             <div className="kop-card overflow-hidden">
               <div
                 className={`px-5 py-4 text-white ${canRegister ? 'kop-gradient-hero' : 'bg-ink'}`}
@@ -219,24 +266,71 @@ export function EventDetailPage() {
                   )}
                 </div>
 
-                {!isPast && (isAuthenticated ? (
-                  <Link to="/app/community" className="kop-btn-primary w-full">
-                    Register in member app
-                  </Link>
-                ) : (
-                  <div className="space-y-2">
-                    <Link
-                      to="/login"
-                      state={{ from: { pathname: location.pathname, search: location.search } }}
-                      className="kop-btn-primary w-full"
-                    >
-                      Member login
-                    </Link>
-                    <Link to="/signup" className="kop-btn-secondary w-full">
-                      Create account
-                    </Link>
-                  </div>
-                ))}
+                {!isPast && (canRegister || (isAuthenticated && spotsLeft === 0 && data.capacity)) ? (
+                  isAuthenticated ? (
+                    <div className="space-y-3">
+                      <label className="block text-sm font-medium">
+                        {guestsLabel}
+                        <select
+                          className="kop-input mt-1"
+                          value={guestCount}
+                          onChange={(e) => setGuestCount(Number(e.target.value))}
+                        >
+                          <option value={0}>Just me</option>
+                          {maxGuests >= 1 ? <option value={1}>Me + 1 guest</option> : null}
+                          {maxGuests >= 2 ? <option value={2}>Me + 2 guests</option> : null}
+                        </select>
+                      </label>
+                      {guestCount > 0 ? (
+                        <label className="block text-sm font-medium">
+                          {guestNamesLabel}
+                          <input
+                            className="kop-input mt-1"
+                            value={guestNames}
+                            onChange={(e) => setGuestNames(e.target.value)}
+                            placeholder="e.g. Alex, Sam"
+                            maxLength={120}
+                          />
+                        </label>
+                      ) : null}
+                      {spotsLeft === 0 && data.capacity ? (
+                        <button
+                          type="button"
+                          className="kop-btn-primary w-full"
+                          disabled={registerMutation.isPending}
+                          onClick={() => registerMutation.mutate({ joinWaitlist: true })}
+                        >
+                          {registerMutation.isPending ? 'Joining…' : 'Join waitlist'}
+                        </button>
+                      ) : canRegister ? (
+                        <button
+                          type="button"
+                          className="kop-btn-primary w-full"
+                          disabled={registerMutation.isPending}
+                          onClick={() => registerMutation.mutate({})}
+                        >
+                          {registerMutation.isPending ? 'Registering…' : 'Register for this event'}
+                        </button>
+                      ) : null}
+                      {registerMessage ? (
+                        <p className="text-center text-xs text-pitch">{registerMessage}</p>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Link
+                        to="/login"
+                        state={{ from: { pathname: location.pathname, search: location.search } }}
+                        className="kop-btn-ghost w-full !text-sm"
+                      >
+                        {signInRegisterLabel}
+                      </Link>
+                      <Link to="/membership/apply" className="kop-btn-primary w-full">
+                        {becomeMemberLabel}
+                      </Link>
+                    </div>
+                  )
+                ) : null}
               </div>
             </div>
 

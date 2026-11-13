@@ -107,6 +107,9 @@ export class UsersService {
       avatarUrl: user.avatarUrl,
       phoneNumber: user.phoneNumber,
       favoritePlayer: user.favoritePlayer,
+      city: user.city,
+      listedInDirectory: user.listedInDirectory,
+      hideFromLeaderboard: user.hideFromLeaderboard,
       olscId: user.olscId,
       lfcId: user.lfcId,
       platformAccountStatus: user.platformAccountStatus,
@@ -125,6 +128,25 @@ export class UsersService {
         icon: item.achievement.icon,
         unlockedAt: item.unlockedAt,
       })),
+    };
+  }
+
+  async exportPersonalData(userId: string) {
+    const profile = await this.getMe(userId);
+    const [predictionCount, eventRegistrations] = await Promise.all([
+      this.prisma.prediction.count({ where: { userId } }),
+      this.prisma.eventRegistration.count({ where: { userId } }),
+    ]);
+
+    return {
+      exportedAt: new Date().toISOString(),
+      profile,
+      activity: {
+        predictions: predictionCount,
+        eventRegistrations,
+      },
+      notice:
+        'Personal data export from RedLeb Hub. For deletion requests, contact the OLSC Lebanon committee.',
     };
   }
 
@@ -159,6 +181,13 @@ export class UsersService {
           dto.phoneNumber === undefined ? undefined : normalizePhoneNumber(dto.phoneNumber),
         favoritePlayer: dto.favoritePlayer,
         avatarUrl: dto.avatarUrl,
+        city: dto.city === undefined ? undefined : dto.city?.trim() || null,
+        ...(dto.listedInDirectory !== undefined
+          ? { listedInDirectory: dto.listedInDirectory }
+          : {}),
+        ...(dto.hideFromLeaderboard !== undefined
+          ? { hideFromLeaderboard: dto.hideFromLeaderboard }
+          : {}),
         ...(dto.olscId !== undefined ? { olscId: nextOlscId } : {}),
         ...(dto.lfcId !== undefined ? { lfcId: nextLfcId } : {}),
       },

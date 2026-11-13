@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { PageHeader } from '../../components/ui/page-header';
+import { useConfirm } from '../../components/ui/confirm-provider';
 import { useAuth } from '../auth/auth-context';
 import { apiUploadFile } from '../../lib/api';
 import { RedlebDispatch } from './newsletter/redleb-dispatch';
 import { REDLEB_DISPATCH_CSS } from './newsletter/newsletter-styles';
 import { AdminNewsletterPublish } from './admin-newsletter-publish';
+import { NewsletterContentPicker } from './newsletter-content-picker';
 import {
   createEmptyNewsletter,
   emptyPhoto,
@@ -311,6 +313,7 @@ function PhotoFields({
 
 export function AdminNewsletterPage() {
   const { accessToken } = useAuth();
+  const confirm = useConfirm();
   const [data, setData] = useState<NewsletterData>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -410,6 +413,13 @@ export function AdminNewsletterPage() {
       </div>
 
       <AdminNewsletterPublish />
+
+      <NewsletterContentPicker
+        onPick={(text) => {
+          void navigator.clipboard?.writeText(text);
+          setMessage('Copied to clipboard — paste into a newsletter field.');
+        }}
+      />
 
       <div className={previewOpen ? 'grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]' : 'grid gap-6'}>
         <div className="space-y-6">
@@ -786,9 +796,14 @@ export function AdminNewsletterPage() {
               type="button"
               className="kop-btn-secondary"
               onClick={() => {
-                if (window.confirm('Start a blank issue? The current draft will be replaced.')) {
-                  setData(createEmptyNewsletter(data.issueNumber + 1));
-                }
+                void (async () => {
+                  const ok = await confirm({
+                    title: 'New issue',
+                    message: 'Start a blank issue? The current draft will be replaced.',
+                    confirmLabel: 'Continue',
+                  });
+                  if (ok) setData(createEmptyNewsletter(data.issueNumber + 1));
+                })();
               }}
             >
               New issue

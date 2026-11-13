@@ -7,6 +7,9 @@ import { MatchStatus, NewsStatus, RegistrationStatus } from '@prisma/client';
 import { isEventPast } from '../../common/utils/event.utils';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
+import { SiteSettingsService } from '../site-settings/site-settings.service';
+import { MembershipCardsService } from '../members/membership-cards.service';
+import { PushDispatchService } from '../../common/services/push-dispatch.service';
 import {
   AddNewsCommentDto,
   RegisterEventDto,
@@ -18,10 +21,19 @@ export class CommunityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
+    private readonly siteSettingsService: SiteSettingsService,
+    private readonly membershipCardsService: MembershipCardsService,
+    private readonly pushDispatch: PushDispatchService,
   ) {}
 
+  private firePush(userId: string, title: string, message: string) {
+    void this.pushDispatch
+      .sendToUser(userId, { title, body: message })
+      .catch(() => undefined);
+  }
+
   async getCommunityFeed(limit = 30) {
-    const [latestNews, latestEvents, latestAchievements, latestGoals] = await Promise.all([
+    const [latestNews, latestEvents, latestAchievements] = await Promise.all([
       this.prisma.newsArticle.findMany({
         where: { status: NewsStatus.PUBLISHED },
         orderBy: { publishedAt: 'desc' },
@@ -54,20 +66,7 @@ export class CommunityService {
           achievement: { select: { code: true, name: true } },
         },
       }),
-      this.prisma.matchGoal.findMany({
-        orderBy: { createdAt: 'desc' },
-        take: 10,
-        include: {
-          match: {
-            select: {
-              id: true,
-              homeTeamName: true,
-              awayTeamName: true,
-              status: true,
-            },
-          },
-        },
-      }),
+      Promise.resolve([]),
     ]);
 
     return [
@@ -95,27 +94,37 @@ export class CommunityService {
         subtitle: item.achievement.code,
         link: '/app/hall-of-fame',
       })),
-      ...latestGoals
-        .filter((item) => item.match.status === MatchStatus.LIVE || item.match.status === MatchStatus.FINISHED)
-        .map((item) => ({
-          id: `goal-${item.id}`,
-          type: item.isLiverpoolGoal ? 'MATCH_GOAL' : 'MATCH_GOAL_OPPONENT',
-          createdAt: item.createdAt,
-          title: item.isLiverpoolGoal
-            ? `GOOOOAAAAAL! ${item.scorerName ?? 'Liverpool'}`
-            : `${item.match.awayTeamName} score`,
-          subtitle: `${item.match.homeTeamName} ${item.homeScoreAfter}–${item.awayScoreAfter} ${item.match.awayTeamName}${item.minute != null ? ` · ${item.minute}'` : ''}`,
-          link: `/app/matches/${item.match.id}`,
-        })),
     ]
       .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
       .slice(0, limit);
   }
 
+  private async countEventAttendeeSeats(eventId: string) {
+    const registrations = await this.prisma.eventRegistration.findMany({
+      where: {
+        eventId,
+        status: {
+          in: [
+            RegistrationStatus.REGISTERED,
+            RegistrationStatus.WAITLISTED,
+            RegistrationStatus.ATTENDED,
+          ],
+        },
+      },
+      select: { guestCount: true },
+    });
+    return registrations.reduce((sum, row) => sum + 1 + (row.guestCount ?? 0), 0);
+  }
+
   async registerToEvent(eventId: string, userId: string, dto: RegisterEventDto) {
+    const maxGuests = await this.siteSettingsService.getMaxGuests();
+    const guestCount = dto.guestCount ?? 0;
+    if (guestCount < 0 || guestCount > maxGuests) {
+      throw new BadRequestException(`guestCount must be between 0 and ${maxGuests}`);
+    }
+
     const event = await this.prisma.event.findUnique({
       where: { id: eventId },
-      include: { _count: { select: { registrations: true } } },
     });
     if (!event) {
       throw new NotFoundException('Event not found');
@@ -134,8 +143,10 @@ export class CommunityService {
       throw new BadRequestException('You are already registered to this event');
     }
 
+    const seatsUsed = await this.countEventAttendeeSeats(eventId);
+    const seatsRequested = 1 + guestCount;
     const capacityReached =
-      typeof event.capacity === 'number' && event._count.registrations >= event.capacity;
+      typeof event.capacity === 'number' && seatsUsed + seatsRequested > event.capacity;
     const status =
       capacityReached && dto.joinWaitlist
         ? RegistrationStatus.WAITLISTED
@@ -151,21 +162,37 @@ export class CommunityService {
 
     await this.prisma.eventRegistration.upsert({
       where: { userId_eventId: { userId, eventId } },
-      update: { status, registeredAt: new Date() },
-      create: { userId, eventId, status, registeredAt: new Date() },
+      update: {
+        status,
+        guestCount,
+        guestNames: dto.guestNames?.trim() || null,
+        registeredAt: new Date(),
+      },
+      create: {
+        userId,
+        eventId,
+        status,
+        guestCount,
+        guestNames: dto.guestNames?.trim() || null,
+        registeredAt: new Date(),
+      },
     });
 
+    const eventTitle =
+      status === 'WAITLISTED' ? 'Added to waitlist' : 'Event registration confirmed';
+    const eventMessage =
+      status === 'WAITLISTED'
+        ? `You are waitlisted for ${event.title}.`
+        : `You are registered for ${event.title}.`;
     await this.prisma.notification.create({
       data: {
         userId,
         type: 'EVENT_UPDATE',
-        title: status === 'WAITLISTED' ? 'Added to waitlist' : 'Event registration confirmed',
-        message:
-          status === 'WAITLISTED'
-            ? `You are waitlisted for ${event.title}.`
-            : `You are registered for ${event.title}.`,
+        title: eventTitle,
+        message: eventMessage,
       },
     });
+    this.firePush(userId, eventTitle, eventMessage);
 
     await this.auditService.log({
       actorUserId: userId,
@@ -236,7 +263,7 @@ export class CommunityService {
   async listNewsComments(newsId: string) {
     await this.ensureNewsExists(newsId);
     return this.prisma.comment.findMany({
-      where: { newsArticleId: newsId },
+      where: { newsArticleId: newsId, isHidden: false },
       orderBy: { createdAt: 'asc' },
       include: {
         user: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
@@ -310,11 +337,19 @@ export class CommunityService {
         },
       }),
       this.prisma.leaderboardSnapshot.findMany({
-        where: { type: 'overall' },
+        where: { type: 'overall', user: { hideFromLeaderboard: false } },
         orderBy: [{ periodEnd: 'desc' }, { rank: 'asc' }],
         take: 10,
         include: {
-          user: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              avatarUrl: true,
+              hideFromLeaderboard: true,
+            },
+          },
         },
       }),
       this.prisma.userAchievement.findMany({
@@ -331,6 +366,184 @@ export class CommunityService {
       currentKingOfTheKop: king,
       topPredictors,
       recentAchievements,
+    };
+  }
+
+  async listRecentCommentsForAdmin(limit = 80) {
+    const take = Math.min(Math.max(limit, 1), 200);
+    return this.prisma.comment.findMany({
+      take,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: { select: { id: true, firstName: true, lastName: true, email: true } },
+        newsArticle: { select: { id: true, title: true, slug: true } },
+      },
+    });
+  }
+
+  async hideComment(commentId: string, actorUserId: string) {
+    const comment = await this.prisma.comment.findUnique({ where: { id: commentId } });
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+    await this.prisma.comment.update({
+      where: { id: commentId },
+      data: { isHidden: true },
+    });
+    await this.auditService.log({
+      actorUserId,
+      action: 'HIDE_NEWS_COMMENT',
+      entityType: 'COMMENT',
+      entityId: commentId,
+    });
+    return { message: 'Comment hidden from members.' };
+  }
+
+  async deleteComment(commentId: string, actorUserId: string) {
+    const comment = await this.prisma.comment.findUnique({ where: { id: commentId } });
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+    await this.prisma.comment.delete({ where: { id: commentId } });
+    await this.auditService.log({
+      actorUserId,
+      action: 'DELETE_NEWS_COMMENT',
+      entityType: 'COMMENT',
+      entityId: commentId,
+    });
+    return { message: 'Comment deleted.' };
+  }
+
+  getPushConfig() {
+    const publicKey = process.env.VAPID_PUBLIC_KEY?.trim() || null;
+    return {
+      publicKey,
+      supported: Boolean(publicKey),
+    };
+  }
+
+  async registerPushSubscription(
+    userId: string,
+    body: { endpoint: string; keys: { p256dh: string; auth: string } },
+  ) {
+    const pushOn = await this.siteSettingsService.getPublicSettings();
+    if (pushOn['features.pushEnabled'] === 'false') {
+      throw new BadRequestException('Push notifications are disabled.');
+    }
+    if (!body.endpoint?.trim() || !body.keys?.p256dh || !body.keys?.auth) {
+      throw new BadRequestException('Invalid push subscription payload');
+    }
+
+    const row = await this.prisma.pushSubscription.upsert({
+      where: { endpoint: body.endpoint.trim() },
+      create: {
+        userId,
+        endpoint: body.endpoint.trim(),
+        p256dh: body.keys.p256dh,
+        auth: body.keys.auth,
+      },
+      update: {
+        userId,
+        p256dh: body.keys.p256dh,
+        auth: body.keys.auth,
+      },
+    });
+
+    await this.auditService.log({
+      actorUserId: userId,
+      action: 'REGISTER_PUSH_SUBSCRIPTION',
+      entityType: 'PUSH_SUBSCRIPTION',
+      entityId: row.id,
+    });
+
+    return { message: 'Push subscription saved.' };
+  }
+
+  async unregisterPushSubscription(userId: string, endpoint: string) {
+    await this.prisma.pushSubscription.deleteMany({
+      where: { userId, endpoint: endpoint.trim() },
+    });
+    return { message: 'Push subscription removed.' };
+  }
+
+  async adminBroadcastPush(actorUserId: string, dto: { title: string; body: string; url?: string }) {
+    const pushOn = await this.siteSettingsService.getPublicSettings();
+    if (pushOn['features.pushEnabled'] === 'false') {
+      throw new BadRequestException('Push notifications are disabled in site settings.');
+    }
+
+    const title = dto.title.trim();
+    const body = dto.body.trim();
+    if (!title || !body) {
+      throw new BadRequestException('Title and body are required.');
+    }
+
+    const result = await this.pushDispatch.broadcast({
+      title,
+      body,
+      url: dto.url?.trim() || undefined,
+    });
+
+    await this.auditService.log({
+      actorUserId,
+      action: 'ADMIN_PUSH_BROADCAST',
+      entityType: 'PUSH_BROADCAST',
+      metadata: { title, ...result },
+    });
+
+    return {
+      message: result.skipped
+        ? `Push skipped: ${result.reason ?? 'not configured'}`
+        : `Push delivered to ${result.sent} device(s).`,
+      ...result,
+    };
+  }
+
+  async staffEventCheckIn(eventId: string, qrToken: string, staffUserId: string) {
+    const event = await this.prisma.event.findUnique({ where: { id: eventId } });
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    const verify = await this.membershipCardsService.verifyCard(qrToken.trim(), staffUserId, eventId);
+    if (verify.result !== 'VALID' || !('member' in verify)) {
+      return verify;
+    }
+
+    const card = await this.prisma.membershipCard.findUnique({
+      where: { qrSecureToken: qrToken.trim() },
+      select: { userId: true },
+    });
+    if (!card) {
+      return verify;
+    }
+
+    const registration = await this.prisma.eventRegistration.findUnique({
+      where: { userId_eventId: { userId: card.userId, eventId } },
+    });
+
+    if (registration && registration.status !== RegistrationStatus.CANCELED) {
+      await this.prisma.eventRegistration.update({
+        where: { id: registration.id },
+        data: {
+          status: RegistrationStatus.ATTENDED,
+          attendanceMarkedAt: new Date(),
+        },
+      });
+    }
+
+    await this.auditService.log({
+      actorUserId: staffUserId,
+      action: 'EVENT_QR_CHECK_IN',
+      entityType: 'EVENT',
+      entityId: eventId,
+      metadata: { memberUserId: card.userId, qrResult: verify.result },
+    });
+
+    return {
+      ...verify,
+      attendanceMarked: Boolean(registration),
+      guests: registration?.guestCount ?? 0,
     };
   }
 

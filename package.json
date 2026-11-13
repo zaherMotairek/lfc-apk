@@ -10,7 +10,7 @@
   "scripts": {
     "dev:api": "npm run start:dev -w @kop/api",
     "dev:web": "npm run dev -w @kop/web",
-    "build": "npm run build -w @kop/shared && npm run build -w @kop/api && npm run build -w @kop/web",
+    "build": "npm run build -w @kop/shared && npm run prisma:generate -w @kop/api && npm run build -w @kop/api && npm run build -w @kop/web",
     "build:shared": "npm run build -w @kop/shared",
     "prisma:generate": "npm run prisma:generate -w @kop/api",
     "prisma:migrate": "npm run prisma:migrate -w @kop/api",
@@ -18,7 +18,25 @@
     "prisma:seed": "npm run prisma:seed -w @kop/api",
     "docker:prod:up": "docker compose -f docker-compose.prod.yml up -d --build",
     "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
-    "lint": "npm run lint -w @kop/api && npm run lint -w @kop/web"
+    "lint": "eslint apps/api/src apps/api/test apps/web/src",
+    "test": "npm run test -w @kop/api",
+    "test:api:e2e": "npm run test:e2e -w @kop/api",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test e2e/smoke-public.spec.ts e2e/smoke-i18n.spec.ts",
+    "test:e2e:auth": "playwright test e2e/smoke-member.spec.ts e2e/smoke-admin.spec.ts e2e/smoke-dynamic.spec.ts --project=desktop-admin --project=desktop-member --project=desktop",
+    "test:e2e:ui": "playwright test --ui",
+    "check": "npm run build && npm run test",
+    "check:strings": "node scripts/check-user-facing-strings.mjs",
+    "lighthouse:smoke": "node scripts/lighthouse-smoke.mjs"
+  },
+  "devDependencies": {
+    "chrome-launcher": "^1.1.2",
+    "lighthouse": "^12.4.0",
+    "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.51.0",
+    "concurrently": "^9.2.5",
+    "eslint": "^9.17.0",
+    "typescript-eslint": "^8.18.1"
   },
   "engines": {
     "node": ">=20"

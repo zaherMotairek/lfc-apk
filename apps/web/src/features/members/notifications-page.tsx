@@ -2,7 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useContent } from '../content/content-provider';
 import { EmptyState } from '../../components/ui/interactive-chips';
+import { PushNotificationsPanel } from '../notifications/push-notifications-panel';
 
 type NotificationItem = {
   id: string;
@@ -37,6 +39,7 @@ function formatRelativeTime(dateStr: string) {
 }
 
 export function NotificationsPage() {
+  const notificationsTitle = useContent('member.notifications.title', 'Notifications');
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
 
@@ -62,13 +65,15 @@ export function NotificationsPage() {
     <section>
       <PageHeader
         eyebrow="Alerts"
-        title="Notifications"
+        title={notificationsTitle}
         description={
           unreadCount > 0
             ? `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}`
             : 'In-app alerts for matches, events, and achievements.'
         }
       />
+
+      <PushNotificationsPanel />
 
       <div className="space-y-3">
         {notificationsQuery.isLoading ? (

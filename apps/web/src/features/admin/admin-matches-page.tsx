@@ -2,7 +2,10 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
+import { isDatetimeLocalInPast, minDatetimeLocal } from '../../lib/datetime-local';
 import { PageHeader } from '../../components/ui/page-header';
+import { useConfirm } from '../../components/ui/confirm-provider';
+import { useFeatureFlags } from '../site/use-feature-flags';
 
 type LiverpoolSquadPlayer = {
   number: number;
@@ -78,14 +81,13 @@ type AdminMatchItem = {
 type MatchPanel = 'live' | 'result';
 
 const STATUS_GROUPS = [
-  { key: 'LIVE', label: 'Live now' },
   { key: 'UPCOMING', label: 'Upcoming' },
   { key: 'FINISHED', label: 'Finished' },
   { key: 'CANCELED', label: 'Canceled' },
 ] as const;
 
 function statusBadge(status: string) {
-  if (status === 'LIVE') return 'live-match-badge';
+  if (status === 'LIVE') return 'kop-badge';
   if (status === 'UPCOMING') return 'kop-badge-green';
   if (status === 'FINISHED') return 'kop-badge';
   return 'kop-badge-red';
@@ -130,6 +132,9 @@ function nextWinningOutcome(home: number, away: number) {
 
 export function AdminMatchesPage() {
   const { accessToken } = useAuth();
+  const { matchLiveEnabled } = useFeatureFlags();
+  const showLiveAdminControls = matchLiveEnabled;
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const { data: matches, isLoading } = useQuery({
     queryKey: ['matches'],
@@ -139,7 +144,7 @@ export function AdminMatchesPage() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [createKind, setCreateKind] = useState<'liverpool' | 'other' | null>(null);
-  const [panel, setPanel] = useState<MatchPanel>('live');
+  const [panel, setPanel] = useState<MatchPanel>('result');
   const [createForm, setCreateForm] = useState({
     opponent: '',
     competition: 'Premier League',
@@ -226,7 +231,13 @@ export function AdminMatchesPage() {
   }
 
   async function deleteMatch(match: AdminMatchItem) {
-    if (!window.confirm(`Delete match vs ${match.opponent}? This cannot be undone.`)) return;
+    const ok = await confirm({
+      title: 'Delete match',
+      message: `Delete match vs ${match.opponent}? This cannot be undone.`,
+      danger: true,
+      confirmLabel: 'Delete',
+    });
+    if (!ok) return;
     setMessage(null);
     try {
       const result = await apiRequest<{ message: string }>(`/matches/${match.id}`, {
@@ -249,6 +260,19 @@ export function AdminMatchesPage() {
     event.preventDefault();
     if (!createKind) return;
     setMessage(null);
+    if (
+      isDatetimeLocalInPast(createForm.matchDate) ||
+      isDatetimeLocalInPast(createForm.predictionClosesAt)
+    ) {
+      setMessage('Kick-off and predictions close must be today or later.');
+      return;
+    }
+    const kickoffMs = new Date(createForm.matchDate).getTime();
+    const closesMs = new Date(createForm.predictionClosesAt).getTime();
+    if (closesMs > kickoffMs) {
+      setMessage('Predictions must close at or before kick-off.');
+      return;
+    }
     try {
       const isLfcCreate = createKind === 'liverpool';
       const homeTeam = isLfcCreate ? 'Liverpool' : createForm.homeTeamName.trim();
@@ -564,6 +588,7 @@ export function AdminMatchesPage() {
             <input
               type="datetime-local"
               className="kop-input"
+              min={minDatetimeLocal()}
               value={createForm.matchDate}
               onChange={(e) => setCreateForm((prev) => ({ ...prev, matchDate: e.target.value }))}
               required
@@ -574,6 +599,7 @@ export function AdminMatchesPage() {
             <input
               type="datetime-local"
               className="kop-input"
+              min={minDatetimeLocal()}
               value={createForm.predictionClosesAt}
               onChange={(e) =>
                 setCreateForm((prev) => ({ ...prev, predictionClosesAt: e.target.value }))
@@ -689,7 +715,7 @@ export function AdminMatchesPage() {
                 </div>
 
                 <div className="mt-4 flex gap-2">
-                  {selectedIsLfc ? (
+                  {selectedIsLfc && showLiveAdminControls ? (
                     <button
                       type="button"
                       className={panel === 'live' ? 'kop-btn-primary !px-4 !py-2 !text-xs' : 'kop-btn-secondary !px-4 !py-2 !text-xs'}
@@ -715,7 +741,7 @@ export function AdminMatchesPage() {
                 </div>
               </div>
 
-              {panel === 'live' && selectedIsLfc ? (
+              {showLiveAdminControls && panel === 'live' && selectedIsLfc ? (
                 <div className="space-y-5 p-5">
                   {selected.status === 'FINISHED' ? (
                     <p className="text-sm text-black/55">

@@ -10,6 +10,7 @@ import { EditableText } from '../cms/editable-text';
 import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
 import type { HighlightItem, PillarItem } from '../cms/cms-types';
 import { CmsInlineEditProvider, useCmsInlineEdit } from '../cms/use-cms-inline-edit';
+import { useContent } from '../content/content-provider';
 
 function getCtaContent<T extends Record<string, unknown>>(
   getSection: ReturnType<typeof useCmsInlineEdit>['getSection'],
@@ -21,6 +22,7 @@ function getCtaContent<T extends Record<string, unknown>>(
 }
 
 function AboutPublicPageContent() {
+  const becomeMemberLabel = useContent('cta.becomeMember', 'Become a member');
   const { isAuthenticated } = useAuth();
   const { page, isLoading, getSection, updateSection, updateContent } = useCmsInlineEdit();
 
@@ -54,9 +56,9 @@ function AboutPublicPageContent() {
     items: DEFAULT_ABOUT_PILLARS,
   });
   const platform = getCtaContent(getSection, 'platform', {
-    eyebrow: 'Kop Platform',
+    eyebrow: 'RedLeb Hub',
     title: 'Your digital Kop identity',
-    body: 'Official members get access to Match Hub predictions, live goal notifications, digital membership cards, community events, and the Hall of Fame — the full supporters club experience, built for OLSC Lebanon.',
+    body: 'Official members get access to Match Hub predictions, digital membership cards, community events, and the season leaderboard — the full supporters club experience, built for OLSC Lebanon.',
     features: DEFAULT_ABOUT_PLATFORM_FEATURES,
   });
   const footer = getCtaContent(getSection, 'footer', {
@@ -276,10 +278,10 @@ function AboutPublicPageContent() {
                 onSave={(value) => updateContent('CTA', { body: value }, 'platform')}
               />
               <Link
-                to={isAuthenticated ? '/app' : '/login'}
+                to={isAuthenticated ? '/app' : '/membership/apply'}
                 className="kop-btn-primary mt-6 inline-flex"
               >
-                {isAuthenticated ? 'Open member app' : 'Member login'}
+                {isAuthenticated ? 'Open member app' : becomeMemberLabel}
               </Link>
             </div>
             <div className="kop-gradient-hero flex flex-col justify-center p-8 text-white md:p-10">

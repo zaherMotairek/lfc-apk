@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
+import { useContent } from '../content/content-provider';
 
 type LeaderboardResponse = {
   type: string;
@@ -14,6 +15,11 @@ type LeaderboardResponse = {
 };
 
 export function LeaderboardPage() {
+  const leaderboardTitle = useContent('member.leaderboard.title', 'Leaderboard');
+  const leaderboardSubtitle = useContent(
+    'member.leaderboard.subtitle',
+    'Overall ranking after Liverpool prediction scoring. Every match can change the order.',
+  );
   const { accessToken } = useAuth();
   const { data, isLoading, error } = useQuery({
     queryKey: ['leaderboard-overall'],
@@ -29,10 +35,8 @@ export function LeaderboardPage() {
         <div className="leaderboard-hero">
           <div>
             <p className="kop-badge-gold">Season Race</p>
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">Leaderboard</h1>
-            <p className="mt-2 max-w-2xl text-black/60">
-              Overall ranking after Liverpool prediction scoring. Every match can change the order.
-            </p>
+            <h1 className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">{leaderboardTitle}</h1>
+            <p className="mt-2 max-w-2xl text-black/60">{leaderboardSubtitle}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="stat-pill">

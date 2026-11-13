@@ -1,4 +1,7 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { fetchPublicSiteSettings, SITE_SETTING_KEYS } from '../../lib/site-settings';
 import {
   DEFAULT_CONTACT_CHANNELS,
   DEFAULT_CONTACT_INTRO,
@@ -30,6 +33,27 @@ function ContactPublicPageContent() {
   const channels = getCtaContent(getSection, 'channels', {
     items: DEFAULT_CONTACT_CHANNELS,
   });
+  const siteSettingsQuery = useQuery({
+    queryKey: ['site-settings-public'],
+    queryFn: fetchPublicSiteSettings,
+    staleTime: 60_000,
+  });
+
+  const channelItems = useMemo(() => {
+    const items = [...(channels.items as ContactChannel[])];
+    const whatsapp = siteSettingsQuery.data?.[SITE_SETTING_KEYS.contactWhatsappDisplay];
+    if (!whatsapp) return items;
+    const digits = whatsapp.replace(/\D/g, '');
+    return items.map((channel) =>
+      channel.label === 'WhatsApp'
+        ? {
+            ...channel,
+            value: whatsapp,
+            href: digits ? `https://wa.me/${digits}` : channel.href,
+          }
+        : channel,
+    );
+  }, [channels.items, siteSettingsQuery.data]);
 
   const intro = richContent.body ?? DEFAULT_CONTACT_INTRO;
 
@@ -75,7 +99,7 @@ function ContactPublicPageContent() {
         />
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {(channels.items as ContactChannel[]).map((channel, index) => (
+          {channelItems.map((channel, index) => (
             <div key={`${channel.label}-${index}`} className="kop-card kop-card-hover p-6 text-center">
               <div className="text-3xl">{channel.icon}</div>
               <EditableText

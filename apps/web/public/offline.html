@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#c8102e" />
+    <title>Offline · RedLeb Hub</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: system-ui, sans-serif;
+        background: #0c0c0c;
+        color: #fff;
+        padding: 24px;
+        text-align: center;
+      }
+      .card {
+        max-width: 22rem;
+      }
+      .logo {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 12px;
+        border-radius: 18px;
+        background: #1a1a1a;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 8px 32px rgba(200, 16, 46, 0.25);
+      }
+      .logo img {
+        width: 48px;
+        height: 48px;
+      }
+      .ribbon {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+        margin-bottom: 8px;
+      }
+      h1 {
+        color: #c8102e;
+        margin: 0 0 8px;
+        font-size: 1.65rem;
+      }
+      p {
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.55;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+      a,
+      button.retry {
+        display: inline-block;
+        margin-top: 22px;
+        padding: 12px 22px;
+        background: #c8102e;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+      a:hover,
+      button.retry:hover {
+        filter: brightness(1.08);
+      }
+      html[dir='rtl'] body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="logo" aria-hidden="true">
+        <img src="/pwa-192.svg" alt="" width="48" height="48" />
+      </div>
+      <div class="ribbon" id="ribbon">OLSC Lebanon · RedLeb Hub</div>
+      <h1 id="title">You're offline</h1>
+      <p id="body">
+        RedLeb Hub needs a connection for live scores, events, and your membership tools. Check mobile
+        data or Wi‑Fi, then try again.
+      </p>
+      <button type="button" class="retry" id="retry">Try again</button>
+    </div>
+    <script>
+      const FALLBACK = {
+        en: {
+          title: "You're offline",
+          body: 'RedLeb Hub needs a connection for live scores, events, and your membership tools. Check mobile data or Wi‑Fi, then try again.',
+          retry: 'Try again',
+          ribbon: 'OLSC Lebanon · RedLeb Hub',
+        },
+        ar: {
+          title: 'أنت غير متصل',
+          body: 'يحتاج رد لب هب إلى اتصال للنتائج المباشرة والفعاليات وأدوات العضوية. تحقق من البيانات أو الواي فاي ثم أعد المحاولة.',
+          retry: 'أعد المحاولة',
+          ribbon: 'OLSC لبنان · رد لب هب',
+        },
+      };
+
+      function lang() {
+        const stored = localStorage.getItem('redleb.lang');
+        if (stored === 'ar' || stored === 'en') return stored;
+        return navigator.language && navigator.language.toLowerCase().startsWith('ar') ? 'ar' : 'en';
+      }
+
+      function apply(copy) {
+        document.getElementById('title').textContent = copy.title;
+        document.getElementById('body').textContent = copy.body;
+        document.getElementById('retry').textContent = copy.retry;
+        document.getElementById('ribbon').textContent = copy.ribbon;
+      }
+
+      async function hydrate() {
+        const code = lang();
+        document.documentElement.lang = code;
+        document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
+        let copy = FALLBACK[code] || FALLBACK.en;
+        try {
+          const cache = await caches.open('redleb-static-v3');
+          const res = await cache.match('/offline-copy.json');
+          if (res) {
+            const data = await res.json();
+            if (data[code]) copy = { ...copy, ...data[code] };
+          }
+        } catch (_) {
+          /* use fallback */
+        }
+        apply(copy);
+      }
+
+      document.getElementById('retry').addEventListener('click', () => {
+        window.location.href = '/';
+      });
+
+      void hydrate();
+    </script>
+  </body>
+</html>

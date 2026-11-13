@@ -147,7 +147,7 @@ export function MatchHubPage() {
     },
     enabled: Boolean(id),
     retry: 1,
-    refetchInterval: (query) => (query.state.data?.status === 'LIVE' ? 10_000 : false),
+    refetchInterval: false,
   });
 
   useEffect(() => {
@@ -293,7 +293,6 @@ export function MatchHubPage() {
         <div className="match-hub-hero-top">
           <span className="kop-badge-red">{match.competition}</span>
           <span className="kop-badge">{match.status}</span>
-          {isLfc && match.status === 'LIVE' ? <span className="live-match-badge">LIVE</span> : null}
         </div>
 
         <div className="mt-5 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
@@ -305,12 +304,11 @@ export function MatchHubPage() {
           </div>
           <div className="text-center">
             <div className="text-3xl font-black tracking-tight text-white md:text-5xl">
-              {isLfc && match.status === 'LIVE'
-                ? `${match.liveHomeScore ?? 0}:${match.liveAwayScore ?? 0}`
+              {match.status === 'FINISHED' && match.result
+                ? `${match.result.finalHomeScore}:${match.result.finalAwayScore}`
                 : 'VS'}
             </div>
-            <p className="mt-2 text-[11px] text-white/65">
-              {isLfc && match.status === 'LIVE' ? 'LIVE NOW' : countdownLabel}
+            <p className="mt-2 text-[11px] text-white/65">{countdownLabel}
             </p>
           </div>
           <div className="text-center">
@@ -325,31 +323,6 @@ export function MatchHubPage() {
           {match.stadium ?? 'TBC'} · {new Date(match.matchDate).toLocaleString()}
         </p>
       </div>
-
-      {isLfc && match.liveGoals?.length ? (
-        <div className="kop-card p-4">
-          <h2 className="text-base font-bold">Live timeline</h2>
-          <div className="mt-3 space-y-2">
-            {match.liveGoals.map((goal) => (
-              <div
-                key={goal.id}
-                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm ${
-                  goal.isLiverpoolGoal ? 'bg-lfc-red/10 text-lfc-red' : 'bg-black/5 text-black/70'
-                }`}
-              >
-                <span>{goal.isLiverpoolGoal ? '⚽' : '⚪'}</span>
-                <span className="font-semibold">{goal.minute != null ? `${goal.minute}'` : '—'}</span>
-                <span className="flex-1">
-                  {goal.isLiverpoolGoal ? goal.scorerName ?? 'Liverpool goal' : `${match.awayTeamName} score`}
-                </span>
-                <span className="font-bold">
-                  {goal.homeScoreAfter}–{goal.awayScoreAfter}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
 
       {match.result ? (
         <div className="kop-card overflow-hidden p-4">

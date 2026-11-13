@@ -181,7 +181,7 @@ export function NewsDetailPage() {
               state={{ from: { pathname: location.pathname, search: location.search } }}
               className="kop-btn-primary mt-6 inline-flex"
             >
-              Member Login
+              Sign in
             </Link>
           </div>
         )}

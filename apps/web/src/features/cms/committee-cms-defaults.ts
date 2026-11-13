@@ -41,9 +41,9 @@ export const DEFAULT_COMMITTEE_MEMBERS: CommitteeMember[] = [
   },
   {
     name: 'Layla Gemayel',
-    role: 'Digital & Kop Platform',
+    role: 'Digital & RedLeb Hub',
     initials: 'LG',
-    bio: 'Oversees the Kop Platform — Match Hub, digital cards, community feed, and member digital experience.',
+    bio: 'Oversees RedLeb Hub — Match Hub, digital cards, community feed, and member digital experience.',
     email: 'digital@olsclebanon.com',
   },
 ];

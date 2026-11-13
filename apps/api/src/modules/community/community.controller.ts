@@ -102,4 +102,27 @@ export class CommunityController {
   getHallOfFame() {
     return this.communityService.getHallOfFame();
   }
+
+  @Get('notifications/push/config')
+  getPushConfig() {
+    return this.communityService.getPushConfig();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('notifications/push/subscribe')
+  subscribePush(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: { endpoint: string; keys: { p256dh: string; auth: string } },
+  ) {
+    return this.communityService.registerPushSubscription(user.id, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('notifications/push/subscribe')
+  unsubscribePush(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: { endpoint: string },
+  ) {
+    return this.communityService.unregisterPushSubscription(user.id, body.endpoint ?? '');
+  }
 }

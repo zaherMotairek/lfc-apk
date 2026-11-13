@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useConfirm } from '../../components/ui/confirm-provider';
 
 type MemberListItem = {
   id: string;
@@ -78,11 +79,26 @@ function badgeClass(badge: MemberListItem['membershipBadge']) {
 
 export function AdminMembersPage() {
   const { accessToken } = useAuth();
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const [form, setForm] = useState(emptyCreateForm);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [editingMember, setEditingMember] = useState<MemberListItem | null>(null);
+
+  const activityQuery = useQuery({
+    queryKey: ['admin-member-activity', editingMember?.id],
+    queryFn: () =>
+      apiRequest<{
+        loginCount: number;
+        predictionCount: number;
+        eventRegistrations: number;
+        commentCount: number;
+        recentLogins: Array<{ id: string; createdAt: string }>;
+        user: { lastSeenAt?: string | null; lastLoginAt?: string | null };
+      }>(`/admin/members/${editingMember!.id}/activity`, { token: accessToken }),
+    enabled: Boolean(accessToken && editingMember?.id),
+  });
   const [editForm, setEditForm] = useState<EditForm | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
@@ -397,7 +413,7 @@ export function AdminMembersPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="font-semibold uppercase tracking-wide text-black/35">LFC ID</div>
+                    <div className="font-semibold uppercase tracking-wide text-black/35">ALLRED SUPPORT ID</div>
                     <div className="mt-1 font-semibold text-ink">{member.lfcId ?? '-'}</div>
                   </div>
                 </div>
@@ -409,9 +425,15 @@ export function AdminMembersPage() {
                     type="button"
                     className="rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-700"
                     onClick={() => {
-                      if (window.confirm(`Delete ${member.email}?`)) {
-                        deleteMutation.mutate(member.id);
-                      }
+                      void (async () => {
+                        const ok = await confirm({
+                          title: 'Delete user',
+                          message: `Delete ${member.email}?`,
+                          danger: true,
+                          confirmLabel: 'Delete',
+                        });
+                        if (ok) deleteMutation.mutate(member.id);
+                      })();
                     }}
                   >
                     Delete
@@ -456,7 +478,7 @@ export function AdminMembersPage() {
                       <div className="font-semibold">
                         {member.olscId ?? membership?.officialMemberId ?? '-'}
                       </div>
-                      <div className="mt-2 text-xs text-black/45">LFC</div>
+                      <div className="mt-2 text-xs text-black/45">ALLRED</div>
                       <div className="font-semibold">{member.lfcId ?? '-'}</div>
                     </td>
                     <td className="px-4 py-3">
@@ -481,9 +503,15 @@ export function AdminMembersPage() {
                           type="button"
                           className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700"
                           onClick={() => {
-                            if (window.confirm(`Delete ${member.email}? This cannot be undone.`)) {
-                              deleteMutation.mutate(member.id);
-                            }
+                            void (async () => {
+                              const ok = await confirm({
+                                title: 'Delete user',
+                                message: `Delete ${member.email}? This cannot be undone.`,
+                                danger: true,
+                                confirmLabel: 'Delete',
+                              });
+                              if (ok) deleteMutation.mutate(member.id);
+                            })();
                           }}
                         >
                           Delete
@@ -527,6 +555,43 @@ export function AdminMembersPage() {
               </button>
             </div>
 
+            {activityQuery.data ? (
+              <div className="mb-5 grid grid-cols-2 gap-2 rounded-2xl border border-black/5 bg-black/[0.02] p-4 text-sm sm:grid-cols-4">
+                <div>
+                  <div className="text-xs text-black/45">Last seen</div>
+                  <div className="font-semibold">
+                    {activityQuery.data.user.lastSeenAt
+                      ? new Date(activityQuery.data.user.lastSeenAt).toLocaleString()
+                      : '—'}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-black/45">Logins</div>
+                  <div className="font-semibold">{activityQuery.data.loginCount}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-black/45">Predictions</div>
+                  <div className="font-semibold">{activityQuery.data.predictionCount}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-black/45">Event sign-ups</div>
+                  <div className="font-semibold">{activityQuery.data.eventRegistrations}</div>
+                </div>
+                {activityQuery.data.recentLogins.length ? (
+                  <div className="col-span-full mt-2 border-t border-black/5 pt-3">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-black/40">
+                      Recent sign-ins
+                    </div>
+                    <ul className="mt-2 max-h-32 space-y-1 overflow-y-auto text-xs text-black/55">
+                      {activityQuery.data.recentLogins.map((ev) => (
+                        <li key={ev.id}>{new Date(ev.createdAt).toLocaleString()}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
             <div className="grid gap-4 md:grid-cols-2">
               {(
                 [
@@ -535,7 +600,7 @@ export function AdminMembersPage() {
                   ['email', 'Email'],
                   ['phoneNumber', 'Phone number'],
                   ['olscId', 'OLSC ID'],
-                  ['lfcId', 'LFC ID'],
+                  ['lfcId', 'ALLRED SUPPORT ID'],
                   ['officialMemberId', 'Official Member ID'],
                   ['seasonLabel', 'Season label'],
                   ['favoritePlayer', 'Favorite player'],

@@ -105,7 +105,7 @@ export function InstallAppBanner({ variant = 'compact' }: InstallAppBannerProps)
   return (
     <div className="install-banner">
       <div className="install-banner-copy">
-        <p className="install-banner-title">Install Kop Platform</p>
+        <p className="install-banner-title">Install RedLeb Hub</p>
         <p className="install-banner-text">
           Add it to your home screen for a full-screen mobile experience.
         </p>

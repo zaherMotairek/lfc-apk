@@ -4,6 +4,7 @@ import { EditableText } from '../cms/editable-text';
 import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
 import type { PillarItem } from '../cms/cms-types';
 import { CmsInlineEditProvider, useCmsInlineEdit } from '../cms/use-cms-inline-edit';
+import { useContent } from '../content/content-provider';
 
 function getCtaContent<T extends Record<string, unknown>>(
   getSection: ReturnType<typeof useCmsInlineEdit>['getSection'],
@@ -16,6 +17,7 @@ function getCtaContent<T extends Record<string, unknown>>(
 
 function MembershipPublicPageContent() {
   const location = useLocation();
+  const signInLabel = useContent('cta.signIn', 'Sign in');
   const { isAuthenticated } = useAuth();
   const { page, isLoading, getSection, updateSection, updateContent } = useCmsInlineEdit();
 
@@ -34,7 +36,7 @@ function MembershipPublicPageContent() {
     eyebrow: 'Two paths',
     heading: 'New members & existing card holders',
     intro:
-      'Whether you are joining for the first time or you already have a printed OLSC card, the Kop Platform supports both journeys.',
+      'Whether you are joining for the first time or you already have a printed OLSC card, RedLeb Hub supports both journeys.',
     newTitle: 'New to the platform',
     newBody: 'Request membership information or activate your account after committee approval.',
     existingTitle: 'Already have a card',
@@ -44,7 +46,7 @@ function MembershipPublicPageContent() {
 
   const steps = getCtaContent(getSection, 'steps', {
     eyebrow: 'How it works',
-    heading: 'From committee to Kop Platform',
+    heading: 'From committee to RedLeb Hub',
     items: [] as PillarItem[],
   });
 
@@ -99,15 +101,7 @@ function MembershipPublicPageContent() {
                 <Link to="/app/membership-card" className="kop-btn-secondary">
                   Open my digital card
                 </Link>
-              ) : (
-                <Link
-                  to="/login"
-                  state={{ from: { pathname: location.pathname, search: location.search } }}
-                  className="kop-btn-secondary"
-                >
-                  Member login
-                </Link>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -152,7 +146,7 @@ function MembershipPublicPageContent() {
             <div className="text-xs font-bold uppercase tracking-wider text-lfc-red">Step 2</div>
             <h3 className="mt-2 font-bold">Create your account</h3>
             <p className="mt-2 text-sm leading-relaxed text-black/55">
-              Sign up with a username and password, then add your name and OLSC / LFC IDs in your profile.
+              Sign up with a username and password, then add your name, OLSC ID, and ALLRED SUPPORT ID in your profile.
             </p>
             <Link to="/signup" className="kop-btn-secondary mt-4 w-full !py-2 !text-sm">
               Sign up
@@ -174,7 +168,7 @@ function MembershipPublicPageContent() {
                 state={{ from: { pathname: location.pathname, search: location.search } }}
                 className="kop-btn-primary mt-4 w-full !py-2 !text-sm"
               >
-                Member login
+                {signInLabel}
               </Link>
             )}
           </li>
@@ -272,7 +266,7 @@ function MembershipPublicPageContent() {
               to={isAuthenticated ? '/app/membership-card' : '/login'}
               className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
             >
-              {isAuthenticated ? 'Go to my card' : 'Member login'}
+              {isAuthenticated ? 'Go to my card' : signInLabel}
             </Link>
           </div>
         </div>

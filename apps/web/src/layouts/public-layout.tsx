@@ -4,7 +4,10 @@ import { BrandLogo } from '../components/ui/brand-logo';
 import { InstallAppBanner } from '../components/ui/install-app-banner';
 import { PageBackBar } from '../components/ui/page-back-bar';
 import { useAuth } from '../features/auth/auth-context';
-import { isAdminRole, PUBLIC_NAV } from '../components/layout/nav-config';
+import { useContent } from '../features/content/content-provider';
+import { isAdminRole } from '../components/layout/nav-config';
+import { usePublicNav } from '../components/layout/use-public-nav';
+import { LanguageSwitcher } from '../components/ui/language-switcher';
 
 function publicBackFallback(pathname: string) {
   if (/^\/news\/[^/]+$/.test(pathname)) return '/news';
@@ -24,6 +27,20 @@ function publicBackFallback(pathname: string) {
 export function PublicLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, user } = useAuth();
+  const headerRibbon = useContent('public.header.ribbon', 'OLSC Lebanon · RedLeb Hub');
+  const becomeMemberLabel = useContent('nav.becomeMember', 'Become a member');
+  const signInLabel = useContent('nav.signIn', 'Sign in');
+  const membersFooterHeading = useContent('footer.membersHeading', 'Members');
+  const memberAppLabel = useContent('nav.memberApp', 'Member App');
+  const adminPanelLabel = useContent('nav.adminPanel', 'Admin Panel');
+  const accountLabel = useContent('nav.account', 'Account');
+  const openMemberAppLabel = useContent('nav.openMemberApp', 'Open Member App');
+  const footerSiteHeading = useContent('footer.siteHeading', 'Site');
+  const footerBlurb = useContent(
+    'footer.blurb',
+    'The digital home of Liverpool FC supporters in Lebanon. Community, match predictions, and official membership — managed by the committee.',
+  );
+  const publicNav = usePublicNav();
   const isAdmin = isAdminRole(user?.roles);
   const location = useLocation();
   const loginTarget = {
@@ -41,16 +58,17 @@ export function PublicLayout() {
       <header className="sticky top-0 z-50 border-b border-white/10 kop-gradient-dark text-white shadow-xl">
         <div className="flex items-center justify-end gap-2 border-b border-white/10 bg-lfc-red px-4 py-1.5">
           <span className="mr-auto hidden text-[10px] font-semibold uppercase tracking-widest text-white/80 sm:inline">
-            OLSC Lebanon · Digital Platform
+            {headerRibbon}
           </span>
+          <LanguageSwitcher className="mr-2" />
           <InstallAppBanner variant="compact" />
         </div>
 
         <div className="kop-container flex items-center justify-between gap-4 py-4">
-          <BrandLogo subtitle="Kop Platform" />
+          <BrandLogo />
 
           <nav className="hidden items-center gap-1 lg:flex">
-            {PUBLIC_NAV.map((link) => (
+            {publicNav.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
@@ -62,24 +80,24 @@ export function PublicLayout() {
             {isAuthenticated ? (
               <>
                 <Link to="/app" className="kop-btn-ghost !text-sm">
-                  Member App
+                  {memberAppLabel}
                 </Link>
                 {isAdmin ? (
                   <Link to="/admin" className="kop-btn-ghost !text-sm">
-                    Admin Panel
+                    {adminPanelLabel}
                   </Link>
                 ) : null}
                 <Link to="/app/profile" className="kop-btn-primary ml-2 !py-2.5 !text-sm">
-                  Account
+                  {accountLabel}
                 </Link>
               </>
             ) : (
               <>
-                <Link to="/signup" className="kop-btn-ghost !text-sm">
-                  Sign up
+                <Link to="/membership/apply" className="kop-btn-ghost !text-sm">
+                  {becomeMemberLabel}
                 </Link>
-                <Link to={loginTarget} state={loginState} className="kop-btn-primary ml-2 !py-2.5 !text-sm">
-                  Member Login
+                <Link to={loginTarget} state={loginState} className="kop-btn-ghost ml-2 !py-2.5 !text-sm">
+                  {signInLabel}
                 </Link>
               </>
             )}
@@ -104,7 +122,7 @@ export function PublicLayout() {
         {menuOpen ? (
           <nav className="border-t border-white/10 px-4 py-4 lg:hidden">
             <div className="flex flex-col gap-1">
-              {PUBLIC_NAV.map((link) => (
+              {publicNav.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
@@ -121,7 +139,7 @@ export function PublicLayout() {
                     className="rounded-lg px-3 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Member App
+                    {memberAppLabel}
                   </Link>
                   {isAdmin ? (
                     <Link
@@ -129,7 +147,7 @@ export function PublicLayout() {
                       className="rounded-lg px-3 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
                       onClick={() => setMenuOpen(false)}
                     >
-                      Admin Panel
+                      {adminPanelLabel}
                     </Link>
                   ) : null}
                   <Link
@@ -137,17 +155,17 @@ export function PublicLayout() {
                     className="kop-btn-primary mt-2 text-center"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Open Member App
+                    {openMemberAppLabel}
                   </Link>
                 </>
               ) : (
                 <>
                   <Link
-                    to="/signup"
+                    to="/membership/apply"
                     className="kop-btn-primary mt-2 text-center"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Sign up
+                    {becomeMemberLabel}
                   </Link>
                   <Link
                     to={loginTarget}
@@ -155,7 +173,7 @@ export function PublicLayout() {
                     className="kop-btn-secondary mt-2 text-center !border-white/20 !bg-white/10 !text-white"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Member Login
+                    {signInLabel}
                   </Link>
                 </>
               )}
@@ -178,15 +196,12 @@ export function PublicLayout() {
         <div className="kop-container grid gap-8 py-12 md:grid-cols-3">
           <div>
             <BrandLogo subtitle="Official Supporters Club" />
-            <p className="mt-4 text-sm leading-relaxed text-white/55">
-              The digital home of Liverpool FC supporters in Lebanon. Community, match predictions,
-              and official membership — managed by the committee.
-            </p>
+            <p className="mt-4 text-sm leading-relaxed text-white/55">{footerBlurb}</p>
           </div>
           <div>
-            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">Explore</div>
+            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">{footerSiteHeading}</div>
             <div className="flex flex-col gap-2 text-sm text-white/70">
-              {PUBLIC_NAV.map((link) => (
+              {publicNav.map((link) => (
                 <Link key={link.to} to={link.to} className="hover:text-white">
                   {link.label}
                 </Link>
@@ -194,29 +209,29 @@ export function PublicLayout() {
             </div>
           </div>
           <div>
-            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">Members</div>
+            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">{membersFooterHeading}</div>
                         <div className="flex flex-col gap-2 text-sm text-white/70">
               {isAuthenticated ? (
                 <>
                   <Link to="/app" className="hover:text-white">
-                    Member App
+                    {memberAppLabel}
                   </Link>
                   <Link to="/app/profile" className="hover:text-white">
-                    My Account
+                    {accountLabel}
                   </Link>
                   {isAdmin ? (
                     <Link to="/admin" className="hover:text-white">
-                      Admin Panel
+                      {adminPanelLabel}
                     </Link>
                   ) : null}
                 </>
               ) : (
                 <>
-                  <Link to="/signup" className="hover:text-white">
-                    Sign up
+                  <Link to="/membership/apply" className="hover:text-white">
+                    {becomeMemberLabel}
                   </Link>
                   <Link to={loginTarget} state={loginState} className="hover:text-white">
-                    Member Login
+                    {signInLabel}
                   </Link>
                 </>
               )}

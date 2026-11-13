@@ -81,20 +81,23 @@ export function CmsInlineEditProvider({
 }) {
   const { accessToken, user } = useAuth();
   const queryClient = useQueryClient();
-  const canEdit = Boolean(
+  const wantsEdit = Boolean(
     accessToken && user?.permissions.includes('MANAGE_CONTENT'),
   );
+
+  const adminQuery = useQuery({
+    queryKey: ['admin-cms', pageCode],
+    queryFn: () => apiRequest<CmsPage>(`/admin/cms/pages/${pageCode}`, { token: accessToken }),
+    enabled: wantsEdit,
+    retry: false,
+  });
+
+  const canEdit = wantsEdit && !adminQuery.isError;
 
   const publicQuery = useQuery({
     queryKey: ['cms-page', pageCode],
     queryFn: () => apiRequest<CmsPage>(`/cms/pages/${pageCode}`),
     enabled: !canEdit,
-  });
-
-  const adminQuery = useQuery({
-    queryKey: ['admin-cms', pageCode],
-    queryFn: () => apiRequest<CmsPage>(`/admin/cms/pages/${pageCode}`, { token: accessToken }),
-    enabled: canEdit,
   });
 
   const sourcePage = canEdit ? adminQuery.data : publicQuery.data;

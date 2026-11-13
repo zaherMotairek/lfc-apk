@@ -1,15 +1,22 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { MediaType, NewsStatus, Prisma } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
+import { MediaType, NewsStatus, PlatformAccountStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
+import { EmailService } from '../../common/services/email.service';
 import {
   isEventPast,
   isRegistrationOpen,
 } from '../../common/utils/event.utils';
+import {
+  validateEventEnd,
+  validateEventStart,
+} from '../../common/utils/schedule-dates';
 import {
   CreateEventDto,
   CreateMediaAlbumDto,
@@ -21,9 +28,13 @@ import {
 
 @Injectable()
 export class ContentService {
+  private readonly logger = new Logger(ContentService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
+    private readonly emailService: EmailService,
+    private readonly configService: ConfigService,
   ) {}
 
   listPublishedNews() {
@@ -205,6 +216,41 @@ export class ContentService {
     return [...upcoming, ...past];
   }
 
+  private formatIcsUtc(date: Date) {
+    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+  }
+
+  private escapeIcsText(value: string) {
+    return value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/\n/g, '\\n').replace(/,/g, '\\,');
+  }
+
+  async buildEventIcs(id: string) {
+    const event = await this.prisma.event.findUnique({ where: { id } });
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    const end = event.endDateTime ?? new Date(event.startDateTime.getTime() + 2 * 60 * 60 * 1000);
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//OLSC Lebanon//RedLeb Hub//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:${event.id}@redleb-hub`,
+      `DTSTAMP:${this.formatIcsUtc(new Date())}`,
+      `DTSTART:${this.formatIcsUtc(event.startDateTime)}`,
+      `DTEND:${this.formatIcsUtc(end)}`,
+      `SUMMARY:${this.escapeIcsText(event.title)}`,
+      `LOCATION:${this.escapeIcsText(event.location)}`,
+      `DESCRIPTION:${this.escapeIcsText(event.description.slice(0, 2000))}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ];
+    return `${lines.join('\r\n')}\r\n`;
+  }
+
   async getPublicEvent(id: string) {
     const event = await this.prisma.event.findUnique({
       where: { id },
@@ -263,6 +309,11 @@ export class ContentService {
   }
 
   async createEvent(dto: CreateEventDto, actorUserId: string) {
+    validateEventStart(dto.startDateTime);
+    if (dto.endDateTime) {
+      validateEventEnd(dto.startDateTime, dto.endDateTime);
+    }
+
     const event = await this.prisma.event.create({
       data: {
         title: dto.title,
@@ -293,6 +344,18 @@ export class ContentService {
     const existing = await this.prisma.event.findUnique({ where: { id } });
     if (!existing) {
       throw new NotFoundException('Event not found');
+    }
+
+    if (dto.startDateTime) {
+      const startChanged =
+        dto.startDateTime.getTime() !== existing.startDateTime.getTime();
+      if (startChanged) {
+        validateEventStart(dto.startDateTime);
+      }
+    }
+    const effectiveStart = dto.startDateTime ?? existing.startDateTime;
+    if (dto.endDateTime) {
+      validateEventEnd(effectiveStart, dto.endDateTime);
     }
 
     const event = await this.prisma.event.update({
@@ -413,8 +476,15 @@ export class ContentService {
   }
 
   listPublishedNewsletters() {
+    const now = new Date();
     return this.prisma.newsletterIssue.findMany({
-      where: { isPublished: true },
+      where: {
+        isPublished: true,
+        AND: [
+          { OR: [{ publishedAt: null }, { publishedAt: { lte: now } }] },
+          { OR: [{ scheduledPublishAt: null }, { scheduledPublishAt: { lte: now } }] },
+        ],
+      },
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
       select: {
         id: true,
@@ -430,8 +500,16 @@ export class ContentService {
   }
 
   async getPublishedNewsletter(slug: string) {
+    const now = new Date();
     const issue = await this.prisma.newsletterIssue.findFirst({
-      where: { slug, isPublished: true },
+      where: {
+        slug,
+        isPublished: true,
+        AND: [
+          { OR: [{ publishedAt: null }, { publishedAt: { lte: now } }] },
+          { OR: [{ scheduledPublishAt: null }, { scheduledPublishAt: { lte: now } }] },
+        ],
+      },
     });
     if (!issue) {
       throw new NotFoundException('Newsletter not found');
@@ -452,6 +530,8 @@ export class ContentService {
       monthLabel: string;
       excerpt?: string;
       pdfUrl: string;
+      saveAsDraft?: boolean;
+      scheduledPublishAt?: Date | null;
     },
     actorUserId: string,
   ) {
@@ -477,6 +557,13 @@ export class ContentService {
       n += 1;
     }
 
+    const saveAsDraft = Boolean(input.saveAsDraft);
+    const scheduled =
+      input.scheduledPublishAt && !Number.isNaN(input.scheduledPublishAt.getTime())
+        ? input.scheduledPublishAt
+        : null;
+    const publishAt = saveAsDraft ? null : scheduled ?? new Date();
+
     const issue = await this.prisma.newsletterIssue.create({
       data: {
         title: input.title.trim(),
@@ -485,23 +572,94 @@ export class ContentService {
         monthLabel: input.monthLabel.trim(),
         excerpt: input.excerpt?.trim() || null,
         pdfUrl: input.pdfUrl,
-        isPublished: true,
-        publishedAt: new Date(),
+        isPublished: !saveAsDraft,
+        publishedAt: publishAt,
+        scheduledPublishAt: scheduled,
         createdById: actorUserId,
       },
     });
 
     await this.auditService.log({
       actorUserId,
-      action: 'PUBLISH_NEWSLETTER',
+      action: saveAsDraft ? 'DRAFT_NEWSLETTER' : 'PUBLISH_NEWSLETTER',
       entityType: 'NEWSLETTER_ISSUE',
       entityId: issue.id,
     });
 
+    let emailSummary: { sent: number; skipped?: boolean } | undefined;
+    if (!saveAsDraft && this.isNewsletterPubliclyVisible(issue, new Date())) {
+      emailSummary = await this.sendMemberNewsletterEmails(issue.id, actorUserId);
+    }
+
+    const emailNote =
+      emailSummary?.skipped === false && emailSummary.sent > 0
+        ? ` Member emails sent: ${emailSummary.sent}.`
+        : emailSummary?.skipped
+          ? ' (Member emails skipped — configure SMTP or wait for schedule.)'
+          : '';
+
     return {
-      message: 'Newsletter published on the public website.',
+      message: saveAsDraft
+        ? 'Newsletter saved as draft.'
+        : scheduled && scheduled > new Date()
+          ? `Newsletter scheduled for publication.${emailNote}`
+          : `Newsletter published on the public website.${emailNote}`,
       issue,
+      memberEmails: emailSummary,
     };
+  }
+
+  async updateNewsletterIssue(
+    id: string,
+    input: {
+      isPublished?: boolean;
+      publishedAt?: Date | null;
+      scheduledPublishAt?: Date | null;
+      title?: string;
+      excerpt?: string;
+    },
+    actorUserId: string,
+  ) {
+    const existing = await this.prisma.newsletterIssue.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException('Newsletter not found');
+    }
+
+    const issue = await this.prisma.newsletterIssue.update({
+      where: { id },
+      data: {
+        ...(input.isPublished !== undefined ? { isPublished: input.isPublished } : {}),
+        ...(input.publishedAt !== undefined ? { publishedAt: input.publishedAt } : {}),
+        ...(input.scheduledPublishAt !== undefined
+          ? { scheduledPublishAt: input.scheduledPublishAt }
+          : {}),
+        ...(input.title !== undefined ? { title: input.title.trim() } : {}),
+        ...(input.excerpt !== undefined ? { excerpt: input.excerpt?.trim() || null } : {}),
+      },
+    });
+
+    await this.auditService.log({
+      actorUserId,
+      action: input.isPublished === false ? 'UNPUBLISH_NEWSLETTER' : 'UPDATE_NEWSLETTER',
+      entityType: 'NEWSLETTER_ISSUE',
+      entityId: id,
+    });
+
+    let memberEmails: Awaited<ReturnType<ContentService['sendMemberNewsletterEmails']>> | undefined;
+    if (
+      input.isPublished === true &&
+      !existing.memberEmailsSentAt &&
+      this.isNewsletterPubliclyVisible(issue, new Date())
+    ) {
+      memberEmails = await this.sendMemberNewsletterEmails(issue.id, actorUserId);
+    }
+
+    const emailNote =
+      memberEmails && !memberEmails.skipped && memberEmails.sent > 0
+        ? ` Member emails sent: ${memberEmails.sent}.`
+        : '';
+
+    return { message: `Newsletter updated.${emailNote}`, issue, memberEmails };
   }
 
   async deleteNewsletterIssue(id: string, actorUserId: string) {
@@ -517,5 +675,168 @@ export class ContentService {
       entityId: id,
     });
     return { message: 'Newsletter removed from the website.' };
+  }
+
+  async notifyNewsletterMembers(issueId: string, actorUserId: string) {
+    const issue = await this.prisma.newsletterIssue.findUnique({ where: { id: issueId } });
+    if (!issue) {
+      throw new NotFoundException('Newsletter not found');
+    }
+    if (!issue.isPublished) {
+      throw new BadRequestException('Publish the newsletter before notifying members.');
+    }
+    if (!this.isNewsletterPubliclyVisible(issue, new Date())) {
+      throw new BadRequestException('Newsletter is not live yet (check schedule).');
+    }
+
+    await this.prisma.newsletterIssue.update({
+      where: { id: issueId },
+      data: { memberEmailsSentAt: null },
+    });
+
+    const result = await this.sendMemberNewsletterEmails(issueId, actorUserId, { force: true });
+    return {
+      message: result.skipped
+        ? 'Member emails skipped (SMTP disabled or opt-out).'
+        : `Sent to ${result.sent} member(s).`,
+      ...result,
+    };
+  }
+
+  async processNewsletterJobs() {
+    const now = new Date();
+
+    const scheduledDrafts = await this.prisma.newsletterIssue.findMany({
+      where: {
+        isPublished: false,
+        scheduledPublishAt: { lte: now },
+      },
+    });
+
+    for (const draft of scheduledDrafts) {
+      const issue = await this.prisma.newsletterIssue.update({
+        where: { id: draft.id },
+        data: {
+          isPublished: true,
+          publishedAt: draft.scheduledPublishAt ?? now,
+        },
+      });
+
+      await this.auditService.log({
+        actorUserId: draft.createdById ?? draft.id,
+        action: 'AUTO_PUBLISH_NEWSLETTER',
+        entityType: 'NEWSLETTER_ISSUE',
+        entityId: draft.id,
+      });
+
+      if (!issue.memberEmailsSentAt && this.isNewsletterPubliclyVisible(issue, now)) {
+        await this.sendMemberNewsletterEmails(issue.id, draft.createdById ?? undefined);
+      }
+    }
+
+    const pendingEmail = await this.prisma.newsletterIssue.findMany({
+      where: {
+        isPublished: true,
+        memberEmailsSentAt: null,
+      },
+    });
+
+    for (const issue of pendingEmail) {
+      if (!this.isNewsletterPubliclyVisible(issue, now)) continue;
+      await this.sendMemberNewsletterEmails(issue.id, issue.createdById ?? undefined);
+    }
+  }
+
+  private isNewsletterPubliclyVisible(
+    issue: {
+      isPublished: boolean;
+      publishedAt: Date | null;
+      scheduledPublishAt: Date | null;
+    },
+    at: Date,
+  ) {
+    if (!issue.isPublished) return false;
+    if (issue.publishedAt && issue.publishedAt > at) return false;
+    if (issue.scheduledPublishAt && issue.scheduledPublishAt > at) return false;
+    return true;
+  }
+
+  private memberEmailsEnabled() {
+    return this.configService.get<string>('NEWSLETTER_MEMBER_EMAILS') !== 'false';
+  }
+
+  private newsletterReadUrl(slug: string) {
+    const base = this.configService.get<string>('APP_URL') ?? 'http://localhost:5173';
+    return `${base.replace(/\/$/, '')}/newsletter/${slug}`;
+  }
+
+  async sendMemberNewsletterEmails(
+    issueId: string,
+    actorUserId?: string,
+    options?: { force?: boolean },
+  ) {
+    const issue = await this.prisma.newsletterIssue.findUnique({ where: { id: issueId } });
+    if (!issue) {
+      return { sent: 0, failed: 0, skipped: true, reason: 'not_found' };
+    }
+
+    if (issue.memberEmailsSentAt && !options?.force) {
+      return { sent: 0, failed: 0, skipped: true, reason: 'already_sent' };
+    }
+
+    if (!this.memberEmailsEnabled()) {
+      return { sent: 0, failed: 0, skipped: true, reason: 'disabled' };
+    }
+
+    if (!this.emailService.isConfigured()) {
+      this.logger.warn(`Newsletter ${issueId}: SMTP not configured — member emails deferred.`);
+      return { sent: 0, failed: 0, skipped: true, reason: 'smtp' };
+    }
+
+    const members = await this.prisma.user.findMany({
+      where: {
+        platformAccountStatus: PlatformAccountStatus.ACTIVE,
+        passwordHash: { not: null },
+      },
+      select: { id: true, email: true, firstName: true },
+    });
+
+    const readUrl = this.newsletterReadUrl(issue.slug);
+    let sent = 0;
+    let failed = 0;
+
+    for (const member of members) {
+      try {
+        await this.emailService.sendNewsletterIssueEmail(member.email, member.firstName, {
+          title: issue.title,
+          monthLabel: issue.monthLabel,
+          excerpt: issue.excerpt,
+          readUrl,
+        });
+        sent += 1;
+      } catch (err) {
+        failed += 1;
+        this.logger.warn(
+          `Newsletter email failed for ${member.id}: ${err instanceof Error ? err.message : err}`,
+        );
+      }
+    }
+
+    await this.prisma.newsletterIssue.update({
+      where: { id: issueId },
+      data: { memberEmailsSentAt: new Date() },
+    });
+
+    if (actorUserId) {
+      await this.auditService.log({
+        actorUserId,
+        action: 'NEWSLETTER_MEMBER_EMAIL_BLAST',
+        entityType: 'NEWSLETTER_ISSUE',
+        entityId: issueId,
+        metadata: { sent, failed, recipients: members.length },
+      });
+    }
+
+    return { sent, failed, skipped: false, recipients: members.length };
   }
 }
