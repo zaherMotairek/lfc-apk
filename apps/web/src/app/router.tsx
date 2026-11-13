@@ -24,29 +24,32 @@ import { MemberHomePage } from '../features/members/member-home-page';
 import { MembershipCardPage } from '../features/members/membership-card-page';
 import { ProfilePage } from '../features/members/profile-page';
 import { MatchesListPage } from '../features/members/matches-list-page';
-import { MatchHubPage } from '../features/members/match-hub-page';
 import { LeaderboardPage } from '../features/members/leaderboard-page';
 import { CommunityPage } from '../features/members/community-page';
 import { NotificationsPage } from '../features/members/notifications-page';
 import { HallOfFamePage } from '../features/members/hall-of-fame-page';
 import { MembersDirectoryPage } from '../features/members/members-directory-page';
-import { AdminDashboardPage } from '../features/admin/admin-dashboard-page';
-import { AdminMembersPage } from '../features/admin/admin-members-page';
-import { AdminApplicationsPage } from '../features/admin/admin-applications-page';
-import { AdminCmsPage } from '../features/admin/admin-cms-page';
-import { AdminNewsPage } from '../features/admin/admin-news-page';
-import { AdminEventsPage } from '../features/admin/admin-events-page';
-import { AdminMatchesPage } from '../features/admin/admin-matches-page';
-import { AdminNewsletterPage } from '../features/admin/admin-newsletter-page';
-import { AdminTextsPage } from '../features/admin/admin-texts-page';
-import { AdminSiteSettingsPage } from '../features/admin/admin-site-settings-page';
-import { AdminDesignPage } from '../features/admin/admin-design-page';
-import { AdminAuditLogPage } from '../features/admin/admin-audit-log-page';
-import { AdminGuidePage } from '../features/admin/admin-guide-page';
-import { AdminModerationPage } from '../features/admin/admin-moderation-page';
-import { AdminCheckInPage } from '../features/admin/admin-check-in-page';
 import { NewsletterListPage } from '../features/public/newsletter-list-page';
 import { NewsletterDetailPage } from '../features/public/newsletter-detail-page';
+import {
+  AdminApplicationsPage,
+  AdminAuditLogPage,
+  AdminCheckInPage,
+  AdminCmsPage,
+  AdminDashboardPage,
+  AdminDesignPage,
+  AdminEventsPage,
+  AdminGuidePage,
+  AdminMatchesPage,
+  AdminMembersPage,
+  AdminModerationPage,
+  AdminNewsletterPage,
+  AdminNewsPage,
+  AdminSiteSettingsPage,
+  AdminTextsPage,
+  MatchHubPage,
+  withPageSuspense,
+} from './lazy-pages';
 
 export function AppRouter() {
   return (
@@ -79,7 +82,7 @@ export function AppRouter() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="membership-card" element={<MembershipCardPage />} />
           <Route path="matches" element={<MatchesListPage />} />
-          <Route path="matches/:id" element={<MatchHubPage />} />
+          <Route path="matches/:id" element={withPageSuspense(<MatchHubPage />)} />
           <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="community" element={<CommunityPage />} />
           <Route path="members" element={<MembersDirectoryPage />} />
@@ -90,21 +93,21 @@ export function AppRouter() {
 
       <Route element={<ProtectedRoute requireAdmin />}>
         <Route path="admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboardPage />} />
-          <Route path="members" element={<AdminMembersPage />} />
-          <Route path="applications" element={<AdminApplicationsPage />} />
-          <Route path="cms" element={<AdminCmsPage />} />
-          <Route path="texts" element={<AdminTextsPage />} />
-          <Route path="settings" element={<AdminSiteSettingsPage />} />
-          <Route path="design" element={<AdminDesignPage />} />
-          <Route path="guide" element={<AdminGuidePage />} />
-          <Route path="audit" element={<AdminAuditLogPage />} />
-          <Route path="moderation" element={<AdminModerationPage />} />
-          <Route path="check-in" element={<AdminCheckInPage />} />
-          <Route path="news" element={<AdminNewsPage />} />
-          <Route path="events" element={<AdminEventsPage />} />
-          <Route path="matches" element={<AdminMatchesPage />} />
-          <Route path="newsletter" element={<AdminNewsletterPage />} />
+          <Route index element={withPageSuspense(<AdminDashboardPage />)} />
+          <Route path="members" element={withPageSuspense(<AdminMembersPage />)} />
+          <Route path="applications" element={withPageSuspense(<AdminApplicationsPage />)} />
+          <Route path="cms" element={withPageSuspense(<AdminCmsPage />)} />
+          <Route path="texts" element={withPageSuspense(<AdminTextsPage />)} />
+          <Route path="settings" element={withPageSuspense(<AdminSiteSettingsPage />)} />
+          <Route path="design" element={withPageSuspense(<AdminDesignPage />)} />
+          <Route path="guide" element={withPageSuspense(<AdminGuidePage />)} />
+          <Route path="audit" element={withPageSuspense(<AdminAuditLogPage />)} />
+          <Route path="moderation" element={withPageSuspense(<AdminModerationPage />)} />
+          <Route path="check-in" element={withPageSuspense(<AdminCheckInPage />)} />
+          <Route path="news" element={withPageSuspense(<AdminNewsPage />)} />
+          <Route path="events" element={withPageSuspense(<AdminEventsPage />)} />
+          <Route path="matches" element={withPageSuspense(<AdminMatchesPage />)} />
+          <Route path="newsletter" element={withPageSuspense(<AdminNewsletterPage />)} />
         </Route>
       </Route>
     </Routes>

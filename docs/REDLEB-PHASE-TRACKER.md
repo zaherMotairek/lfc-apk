@@ -7,7 +7,7 @@
 | 1 | ~92% | Dynamic PWA manifest from `/api/brand/manifest.webmanifest`; brand.version bump on save |
 | 3 | In progress | Moderation, audit, feature flags API, check-in QR, ConfirmProvider |
 | 4 | Partial | Guests, waitlist UI, invitation share card, `.ics`, QR check-in |
-| 2 | Started | 5-tab mobile bar; `/admin/design` gallery; design tokens doc |
+| 2 | In progress | Code-split admin/newsletter; font preload; offline SW |
 | 5 | ~95% | Push + SW prod register, offline shell, admin broadcast |
 | 6 | ~85% | Draft/schedule/publish, cron auto-publish, member email blast + resend |
 | 7 | Partial | CI workflow + ops/privacy docs |
