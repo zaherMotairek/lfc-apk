@@ -4,6 +4,8 @@ import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
 import { FeedCard, FeedCardSkeleton } from '../../components/ui/feed-card';
+import { useContent } from '../content/content-provider';
+import { useToast } from '../../components/ui/toast-provider';
 
 type FeedItem = {
   id: string;
@@ -28,7 +30,16 @@ type EventItem = {
 export function CommunityPage() {
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
+  const showToast = useToast();
+  const communityTitle = useContent('member.community.title', 'Your Kop Feed');
+  const communitySubtitle = useContent(
+    'member.community.subtitle',
+    'News, events, and achievements from your supporters club.',
+  );
+  const guestsLabel = useContent('events.guests.label', 'Guests');
+  const guestNamesLabel = useContent('events.guests.namesLabel', 'Guest names (optional)');
   const [guestCount, setGuestCount] = useState(0);
+  const [guestNames, setGuestNames] = useState('');
 
   const feedQuery = useQuery({
     queryKey: ['community-feed'],
@@ -46,12 +57,16 @@ export function CommunityPage() {
       apiRequest<{ message: string }>(`/events/${eventId}/register`, {
         method: 'POST',
         token: accessToken,
-        body: { joinWaitlist: true, guestCount },
+        body: { joinWaitlist: true, guestCount, guestNames: guestNames.trim() || undefined },
       }),
-    onSuccess: () => {
+    onSuccess: (res) => {
+      showToast(res.message ?? 'Registered', 'success');
       queryClient.invalidateQueries({ queryKey: ['public-events'] });
       queryClient.invalidateQueries({ queryKey: ['community-feed'] });
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    },
+    onError: (err) => {
+      showToast(err instanceof Error ? err.message : 'Registration failed', 'error');
     },
   });
 
@@ -59,8 +74,8 @@ export function CommunityPage() {
     <section>
       <PageHeader
         eyebrow="Community"
-        title="Your Kop Feed"
-        description="News, events, and achievements from your supporters club — without live score spam."
+        title={communityTitle}
+        description={`${communitySubtitle} — without live score spam.`}
       />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
@@ -109,7 +124,7 @@ export function CommunityPage() {
               <p className="mt-1 text-xs text-white/70">Register for watch parties & meetups</p>
             </div>
             <label className="block border-b border-black/5 px-4 py-3 text-sm font-medium">
-              Guests (optional)
+              {guestsLabel} (optional)
               <select
                 className="kop-input mt-1"
                 value={guestCount}
@@ -120,6 +135,18 @@ export function CommunityPage() {
                 <option value={2}>Me + 2 guests</option>
               </select>
             </label>
+            {guestCount > 0 ? (
+              <label className="block border-b border-black/5 px-4 py-3 text-sm font-medium">
+                {guestNamesLabel}
+                <input
+                  className="kop-input mt-1"
+                  value={guestNames}
+                  onChange={(e) => setGuestNames(e.target.value)}
+                  placeholder="e.g. Alex, Sam"
+                  maxLength={120}
+                />
+              </label>
+            ) : null}
             <div className="space-y-0 divide-y divide-black/5 p-4">
               {eventsQuery.isLoading ? (
                 <p className="py-4 text-center text-sm text-black/40">Loading events...</p>

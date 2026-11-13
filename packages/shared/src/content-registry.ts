@@ -179,6 +179,46 @@ export const CONTENT_REGISTRY: ContentRegistryEntry[] = [
     area: 'Buttons',
     description: 'Generic sign-in button label (not header).',
   },
+  {
+    key: 'events.register.signInHint',
+    defaultEn: 'Sign in to register',
+    type: 'text',
+    maxLength: 60,
+    area: 'Events',
+    description: 'CTA on public event detail when not logged in.',
+  },
+  {
+    key: 'events.guests.label',
+    defaultEn: 'Guests',
+    type: 'text',
+    maxLength: 40,
+    area: 'Events',
+    description: 'Guest count field label on registration.',
+  },
+  {
+    key: 'events.guests.namesLabel',
+    defaultEn: 'Guest names (optional)',
+    type: 'text',
+    maxLength: 60,
+    area: 'Events',
+    description: 'Helper for naming guests when bringing +1/+2.',
+  },
+  {
+    key: 'member.community.title',
+    defaultEn: 'Your Kop Feed',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Community page heading.',
+  },
+  {
+    key: 'member.community.subtitle',
+    defaultEn: 'News, events, and achievements from your supporters club.',
+    type: 'text',
+    maxLength: 200,
+    area: 'Member app',
+    description: 'Community page description.',
+  },
 ];
 
 export const CONTENT_DEFAULTS_EN: Record<string, string> = Object.fromEntries(

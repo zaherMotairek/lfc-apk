@@ -4,6 +4,7 @@ import { EditableText } from '../cms/editable-text';
 import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
 import type { PillarItem } from '../cms/cms-types';
 import { CmsInlineEditProvider, useCmsInlineEdit } from '../cms/use-cms-inline-edit';
+import { useContent } from '../content/content-provider';
 
 function getCtaContent<T extends Record<string, unknown>>(
   getSection: ReturnType<typeof useCmsInlineEdit>['getSection'],
@@ -16,6 +17,7 @@ function getCtaContent<T extends Record<string, unknown>>(
 
 function MembershipPublicPageContent() {
   const location = useLocation();
+  const signInLabel = useContent('cta.signIn', 'Sign in');
   const { isAuthenticated } = useAuth();
   const { page, isLoading, getSection, updateSection, updateContent } = useCmsInlineEdit();
 
@@ -166,7 +168,7 @@ function MembershipPublicPageContent() {
                 state={{ from: { pathname: location.pathname, search: location.search } }}
                 className="kop-btn-primary mt-4 w-full !py-2 !text-sm"
               >
-                Sign in
+                {signInLabel}
               </Link>
             )}
           </li>
@@ -264,7 +266,7 @@ function MembershipPublicPageContent() {
               to={isAuthenticated ? '/app/membership-card' : '/login'}
               className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
             >
-              {isAuthenticated ? 'Go to my card' : 'Sign in'}
+              {isAuthenticated ? 'Go to my card' : signInLabel}
             </Link>
           </div>
         </div>

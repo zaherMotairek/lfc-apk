@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useToast } from '../../components/ui/toast-provider';
 
 type TextRow = {
   key: string;
@@ -14,6 +15,7 @@ type TextRow = {
 };
 
 export function AdminTextsPage() {
+  const showToast = useToast();
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState('');
@@ -52,6 +54,7 @@ export function AdminTextsPage() {
       }),
     onSuccess: (res) => {
       setMessage(res.message);
+      showToast(res.message, 'success');
       setEditingKey(null);
       void queryClient.invalidateQueries({ queryKey: ['admin-content-texts'] });
       void queryClient.invalidateQueries({ queryKey: ['content-bundle'] });

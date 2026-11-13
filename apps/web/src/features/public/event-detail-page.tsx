@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { useAuth } from '../auth/auth-context';
+import { useContent } from '../content/content-provider';
 
 type EventDetail = {
   id: string;
@@ -42,14 +43,19 @@ export function EventDetailPage() {
   const { isAuthenticated, accessToken } = useAuth();
   const queryClient = useQueryClient();
   const [guestCount, setGuestCount] = useState(0);
+  const [guestNames, setGuestNames] = useState('');
   const [registerMessage, setRegisterMessage] = useState<string | null>(null);
+  const signInRegisterLabel = useContent('events.register.signInHint', 'Sign in to register');
+  const becomeMemberLabel = useContent('cta.becomeMember', 'Become a member');
+  const guestsLabel = useContent('events.guests.label', 'Guests');
+  const guestNamesLabel = useContent('events.guests.namesLabel', 'Guest names (optional)');
 
   const registerMutation = useMutation({
     mutationFn: () =>
       apiRequest<{ message: string }>(`/events/${id}/register`, {
         method: 'POST',
         token: accessToken,
-        body: { guestCount },
+        body: { guestCount, guestNames: guestNames.trim() || undefined },
       }),
     onSuccess: (res) => {
       setRegisterMessage(res.message);
@@ -241,7 +247,7 @@ export function EventDetailPage() {
                   isAuthenticated ? (
                     <div className="space-y-3">
                       <label className="block text-sm font-medium">
-                        Guests
+                        {guestsLabel}
                         <select
                           className="kop-input mt-1"
                           value={guestCount}
@@ -252,6 +258,18 @@ export function EventDetailPage() {
                           <option value={2}>Me + 2 guests</option>
                         </select>
                       </label>
+                      {guestCount > 0 ? (
+                        <label className="block text-sm font-medium">
+                          {guestNamesLabel}
+                          <input
+                            className="kop-input mt-1"
+                            value={guestNames}
+                            onChange={(e) => setGuestNames(e.target.value)}
+                            placeholder="e.g. Alex, Sam"
+                            maxLength={120}
+                          />
+                        </label>
+                      ) : null}
                       <button
                         type="button"
                         className="kop-btn-primary w-full"
@@ -271,10 +289,10 @@ export function EventDetailPage() {
                         state={{ from: { pathname: location.pathname, search: location.search } }}
                         className="kop-btn-ghost w-full !text-sm"
                       >
-                        Sign in to register
+                        {signInRegisterLabel}
                       </Link>
                       <Link to="/membership/apply" className="kop-btn-primary w-full">
-                        Become a member
+                        {becomeMemberLabel}
                       </Link>
                     </div>
                   )

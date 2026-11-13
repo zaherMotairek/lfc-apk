@@ -6,6 +6,7 @@ import { AppRouter } from './app/router';
 import { AuthProvider } from './features/auth/auth-context';
 import { ContentProvider } from './features/content/content-provider';
 import { ConfirmProvider } from './components/ui/confirm-provider';
+import { ToastProvider } from './components/ui/toast-provider';
 import { ApiError } from './lib/api';
 import './styles.css';
 
@@ -41,7 +42,9 @@ createRoot(document.getElementById('root')!).render(
         <AuthProvider>
           <ContentProvider>
             <ConfirmProvider>
-              <AppRouter />
+              <ToastProvider>
+                <AppRouter />
+              </ToastProvider>
             </ConfirmProvider>
           </ContentProvider>
         </AuthProvider>
