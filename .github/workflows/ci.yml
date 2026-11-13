@@ -114,3 +114,17 @@ jobs:
       - run: npm run prisma:seed -w @kop/api
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e:auth
+
+  lighthouse-smoke:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @kop/shared
+      - run: npm run build -w @kop/web
+      - run: npm run lighthouse:smoke

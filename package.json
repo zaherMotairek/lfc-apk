@@ -26,9 +26,12 @@
     "test:e2e:auth": "playwright test e2e/smoke-member.spec.ts e2e/smoke-admin.spec.ts e2e/smoke-dynamic.spec.ts --project=desktop-admin --project=desktop-member --project=desktop",
     "test:e2e:ui": "playwright test --ui",
     "check": "npm run build && npm run test",
-    "check:strings": "node scripts/check-user-facing-strings.mjs"
+    "check:strings": "node scripts/check-user-facing-strings.mjs",
+    "lighthouse:smoke": "node scripts/lighthouse-smoke.mjs"
   },
   "devDependencies": {
+    "chrome-launcher": "^1.1.2",
+    "lighthouse": "^12.4.0",
     "@eslint/js": "^9.17.0",
     "@playwright/test": "^1.51.0",
     "concurrently": "^9.2.5",

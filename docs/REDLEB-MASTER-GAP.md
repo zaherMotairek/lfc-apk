@@ -49,7 +49,7 @@ See **`docs/REDLEB-PHASE-TRACKER.md`** for detail. Summary:
 
 | Phase | Status | Next sprint focus |
 |-------|--------|-------------------|
-| 2 | 🟡 | Digital card polish, Lighthouse; offline page ✅ (EN/ar, registry) |
+| 2 | 🟡 | Digital card polish; Lighthouse smoke in CI; offline page ✅ |
 | 3 | 🟡 | Dashboard copy via registry; audit, settings tabs, moderation |
 | 4 | 🟡 | .ics calendar, invitation cards, QR check-in |
 | 5 | 🟡 | Web push + admin broadcast ✅; directory opt-in ✅ |

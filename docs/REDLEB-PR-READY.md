@@ -12,6 +12,7 @@ npm run test:api:e2e
 npm run check:strings
 npm run test:e2e:smoke
 npm run test:e2e:auth
+npm run lighthouse:smoke
 ```
 
 Playwright starts API + web automatically (see `playwright.config.ts`). For member/admin auth smokes, seed with `SEED_E2E_FIXTURES=true` first locally.
@@ -49,4 +50,4 @@ Suggested title: **RedLeb Hub — committee platform (phases 0–8 partial)**
 
 ## Honest scope
 
-Not every master-prompt line item is 100 %. See `docs/REDLEB-MASTER-GAP.md` for remaining work (admin route editor, full string codemod, Lighthouse budget in CI).
+Not every master-prompt line item is 100 %. See `docs/REDLEB-MASTER-GAP.md` for remaining work (full string codemod, stricter Lighthouse budgets).

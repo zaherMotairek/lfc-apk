@@ -5,6 +5,7 @@ import { apiRequest } from '../../lib/api';
 import { isDatetimeLocalInPast, minDatetimeLocal } from '../../lib/datetime-local';
 import { PageHeader } from '../../components/ui/page-header';
 import { useConfirm } from '../../components/ui/confirm-provider';
+import { useFeatureFlags } from '../site/use-feature-flags';
 
 type LiverpoolSquadPlayer = {
   number: number;
@@ -79,9 +80,6 @@ type AdminMatchItem = {
 
 type MatchPanel = 'live' | 'result';
 
-/** Live score UI disabled for RedLeb Hub (predictions + results only). */
-const SHOW_LIVE_ADMIN_CONTROLS = false;
-
 const STATUS_GROUPS = [
   { key: 'UPCOMING', label: 'Upcoming' },
   { key: 'FINISHED', label: 'Finished' },
@@ -134,6 +132,8 @@ function nextWinningOutcome(home: number, away: number) {
 
 export function AdminMatchesPage() {
   const { accessToken } = useAuth();
+  const { matchLiveEnabled } = useFeatureFlags();
+  const showLiveAdminControls = matchLiveEnabled;
   const confirm = useConfirm();
   const queryClient = useQueryClient();
   const { data: matches, isLoading } = useQuery({
@@ -144,7 +144,7 @@ export function AdminMatchesPage() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [createKind, setCreateKind] = useState<'liverpool' | 'other' | null>(null);
-  const [panel, setPanel] = useState<MatchPanel>('live');
+  const [panel, setPanel] = useState<MatchPanel>('result');
   const [createForm, setCreateForm] = useState({
     opponent: '',
     competition: 'Premier League',
@@ -715,7 +715,7 @@ export function AdminMatchesPage() {
                 </div>
 
                 <div className="mt-4 flex gap-2">
-                  {selectedIsLfc && SHOW_LIVE_ADMIN_CONTROLS ? (
+                  {selectedIsLfc && showLiveAdminControls ? (
                     <button
                       type="button"
                       className={panel === 'live' ? 'kop-btn-primary !px-4 !py-2 !text-xs' : 'kop-btn-secondary !px-4 !py-2 !text-xs'}
@@ -741,7 +741,7 @@ export function AdminMatchesPage() {
                 </div>
               </div>
 
-              {SHOW_LIVE_ADMIN_CONTROLS && panel === 'live' && selectedIsLfc ? (
+              {showLiveAdminControls && panel === 'live' && selectedIsLfc ? (
                 <div className="space-y-5 p-5">
                   {selected.status === 'FINISHED' ? (
                     <p className="text-sm text-black/55">
