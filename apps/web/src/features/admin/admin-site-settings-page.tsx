@@ -42,6 +42,16 @@ const TABS: Array<{ id: string; label: string; keys: string[] }> = [
     label: 'Payment',
     keys: [SITE_SETTING_KEYS.paymentPayPhone, SITE_SETTING_KEYS.paymentPayName],
   },
+  {
+    id: 'features',
+    label: 'Features',
+    keys: ['features.predictionsEnabled', 'features.guestsMax', 'features.pushEnabled'],
+  },
+  {
+    id: 'social',
+    label: 'Social',
+    keys: ['social.instagram', 'social.facebook', 'social.x'],
+  },
 ];
 
 export function AdminSiteSettingsPage() {

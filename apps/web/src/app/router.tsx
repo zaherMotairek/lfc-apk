@@ -40,6 +40,8 @@ import { AdminNewsletterPage } from '../features/admin/admin-newsletter-page';
 import { AdminTextsPage } from '../features/admin/admin-texts-page';
 import { AdminSiteSettingsPage } from '../features/admin/admin-site-settings-page';
 import { AdminDesignPage } from '../features/admin/admin-design-page';
+import { AdminAuditLogPage } from '../features/admin/admin-audit-log-page';
+import { AdminGuidePage } from '../features/admin/admin-guide-page';
 import { NewsletterListPage } from '../features/public/newsletter-list-page';
 import { NewsletterDetailPage } from '../features/public/newsletter-detail-page';
 
@@ -91,6 +93,8 @@ export function AppRouter() {
           <Route path="texts" element={<AdminTextsPage />} />
           <Route path="settings" element={<AdminSiteSettingsPage />} />
           <Route path="design" element={<AdminDesignPage />} />
+          <Route path="guide" element={<AdminGuidePage />} />
+          <Route path="audit" element={<AdminAuditLogPage />} />
           <Route path="news" element={<AdminNewsPage />} />
           <Route path="events" element={<AdminEventsPage />} />
           <Route path="matches" element={<AdminMatchesPage />} />

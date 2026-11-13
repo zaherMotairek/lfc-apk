@@ -951,6 +951,12 @@ const E2E_SITE_SETTINGS: Array<{ key: string; value: string; description: string
   { key: 'brand.tagline', value: 'OLSC Lebanon', description: 'Tagline under logo.' },
   { key: 'brand.themeColor', value: '#c8102e', description: 'Theme colour.' },
   { key: 'brand.red', value: '#c8102e', description: 'Brand red.' },
+  { key: 'features.predictionsEnabled', value: 'true', description: 'Enable Match Hub predictions.' },
+  { key: 'features.guestsMax', value: '2', description: 'Max guests per registration.' },
+  { key: 'features.pushEnabled', value: 'false', description: 'Web push notifications.' },
+  { key: 'social.instagram', value: '', description: 'Instagram URL.' },
+  { key: 'social.facebook', value: '', description: 'Facebook URL.' },
+  { key: 'social.x', value: '', description: 'X profile URL.' },
   { key: 'brand.version', value: '1', description: 'Brand asset version.' },
 ];
 

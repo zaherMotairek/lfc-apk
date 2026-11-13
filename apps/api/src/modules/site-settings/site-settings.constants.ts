@@ -13,6 +13,12 @@ export const SITE_SETTING_KEYS = {
   brandLogoDark: 'brand.logoUrlDark',
   brandIcon: 'brand.iconUrl',
   brandVersion: 'brand.version',
+  featuresPredictions: 'features.predictionsEnabled',
+  featuresGuestsMax: 'features.guestsMax',
+  featuresPush: 'features.pushEnabled',
+  socialInstagram: 'social.instagram',
+  socialFacebook: 'social.facebook',
+  socialX: 'social.x',
 } as const;
 
 export type SiteSettingKey = (typeof SITE_SETTING_KEYS)[keyof typeof SITE_SETTING_KEYS];
@@ -73,5 +79,29 @@ export const SITE_SETTING_DEFAULTS: Record<SiteSettingKey, SettingDefault> = {
     [SITE_SETTING_KEYS.brandVersion]: {
       value: '1',
       description: 'Cache-busting version for icons.',
+    },
+    [SITE_SETTING_KEYS.featuresPredictions]: {
+      value: 'true',
+      description: 'Enable Match Hub predictions for members.',
+    },
+    [SITE_SETTING_KEYS.featuresGuestsMax]: {
+      value: '2',
+      description: 'Max guests per event registration (0–2).',
+    },
+    [SITE_SETTING_KEYS.featuresPush]: {
+      value: 'false',
+      description: 'Enable web push notifications (requires HTTPS).',
+    },
+    [SITE_SETTING_KEYS.socialInstagram]: {
+      value: '',
+      description: 'Instagram profile URL.',
+    },
+    [SITE_SETTING_KEYS.socialFacebook]: {
+      value: '',
+      description: 'Facebook page URL.',
+    },
+    [SITE_SETTING_KEYS.socialX]: {
+      value: '',
+      description: 'X (Twitter) profile URL.',
     },
   };

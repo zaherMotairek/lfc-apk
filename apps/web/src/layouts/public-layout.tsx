@@ -6,6 +6,7 @@ import { PageBackBar } from '../components/ui/page-back-bar';
 import { useAuth } from '../features/auth/auth-context';
 import { useContent } from '../features/content/content-provider';
 import { isAdminRole, PUBLIC_NAV } from '../components/layout/nav-config';
+import { LanguageSwitcher } from '../components/ui/language-switcher';
 
 function publicBackFallback(pathname: string) {
   if (/^\/news\/[^/]+$/.test(pathname)) return '/news';
@@ -48,6 +49,7 @@ export function PublicLayout() {
           <span className="mr-auto hidden text-[10px] font-semibold uppercase tracking-widest text-white/80 sm:inline">
             {headerRibbon}
           </span>
+          <LanguageSwitcher className="mr-2" />
           <InstallAppBanner variant="compact" />
         </div>
 

@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
   Post,
   Put,
@@ -55,6 +56,13 @@ export class ContentController {
   @Get('events/:id')
   getPublicEvent(@Param('id') id: string) {
     return this.contentService.getPublicEvent(id);
+  }
+
+  @Get('events/:id/calendar.ics')
+  @Header('Content-Type', 'text/calendar; charset=utf-8')
+  @Header('Content-Disposition', 'attachment; filename="redleb-event.ics"')
+  getEventCalendar(@Param('id') id: string) {
+    return this.contentService.buildEventIcs(id);
   }
 
   @Get('gallery')

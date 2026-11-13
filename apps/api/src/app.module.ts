@@ -15,6 +15,7 @@ import { CommunityModule } from './modules/community/community.module';
 import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
 import { ContentRegistryModule } from './modules/content-registry/content-registry.module';
 import { BrandModule } from './modules/brand/brand.module';
+import { AuditModule } from './modules/audit/audit.module';
 import { LastSeenInterceptor } from './common/interceptors/last-seen.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ApiRootController } from './api-root.controller';
@@ -45,6 +46,7 @@ import { HealthController } from './health.controller';
     SiteSettingsModule,
     ContentRegistryModule,
     BrandModule,
+    AuditModule,
   ],
   controllers: [ApiRootController, HealthController],
   providers: [

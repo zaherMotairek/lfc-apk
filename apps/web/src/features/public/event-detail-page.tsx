@@ -49,6 +49,8 @@ export function EventDetailPage() {
   const becomeMemberLabel = useContent('cta.becomeMember', 'Become a member');
   const guestsLabel = useContent('events.guests.label', 'Guests');
   const guestNamesLabel = useContent('events.guests.namesLabel', 'Guest names (optional)');
+  const apiBase = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+  const calendarUrl = `${apiBase}/events/${id}/calendar.ics`;
 
   const registerMutation = useMutation({
     mutationFn: () =>
@@ -180,6 +182,13 @@ export function EventDetailPage() {
 
           {/* Sidebar — registration */}
           <aside className="space-y-4">
+            <a
+              href={calendarUrl}
+              className="kop-btn-secondary block w-full text-center !text-sm"
+              download={`redleb-event-${id}.ics`}
+            >
+              Add to calendar (.ics)
+            </a>
             <div className="kop-card overflow-hidden">
               <div
                 className={`px-5 py-4 text-white ${canRegister ? 'kop-gradient-hero' : 'bg-ink'}`}

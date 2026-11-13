@@ -47,6 +47,8 @@ export const ADMIN_NAV: NavItem[] = [
   { to: '/admin/texts', label: 'Texts & Labels', icon: '✏️' },
   { to: '/admin/settings', label: 'Site settings', icon: '⚙️' },
   { to: '/admin/design', label: 'Design', icon: '🎨' },
+  { to: '/admin/guide', label: 'Guide', icon: '📖' },
+  { to: '/admin/audit', label: 'Audit log', icon: '📜' },
 ];
 
 /** Bottom tab bar on mobile admin — Newsletter must stay visible here. */

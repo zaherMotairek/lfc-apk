@@ -209,6 +209,41 @@ export class ContentService {
     return [...upcoming, ...past];
   }
 
+  private formatIcsUtc(date: Date) {
+    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+  }
+
+  private escapeIcsText(value: string) {
+    return value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/\n/g, '\\n').replace(/,/g, '\\,');
+  }
+
+  async buildEventIcs(id: string) {
+    const event = await this.prisma.event.findUnique({ where: { id } });
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    const end = event.endDateTime ?? new Date(event.startDateTime.getTime() + 2 * 60 * 60 * 1000);
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//OLSC Lebanon//RedLeb Hub//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:${event.id}@redleb-hub`,
+      `DTSTAMP:${this.formatIcsUtc(new Date())}`,
+      `DTSTART:${this.formatIcsUtc(event.startDateTime)}`,
+      `DTEND:${this.formatIcsUtc(end)}`,
+      `SUMMARY:${this.escapeIcsText(event.title)}`,
+      `LOCATION:${this.escapeIcsText(event.location)}`,
+      `DESCRIPTION:${this.escapeIcsText(event.description.slice(0, 2000))}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ];
+    return `${lines.join('\r\n')}\r\n`;
+  }
+
   async getPublicEvent(id: string) {
     const event = await this.prisma.event.findUnique({
       where: { id },
