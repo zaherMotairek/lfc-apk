@@ -289,7 +289,10 @@ export function ProfilePage() {
                 </p>
               ) : (
                 <p className="mt-3 text-sm text-white/70">
-                  {[profile?.olscId ? `OLSC ${profile.olscId}` : null, profile?.lfcId ? `LFC ${profile.lfcId}` : null]
+                  [
+                    profile?.olscId ? `OLSC ${profile.olscId}` : null,
+                    profile?.lfcId ? `ALLRED ${profile.lfcId}` : null,
+                  ]
                     .filter(Boolean)
                     .join(' · ') || 'Complete your profile and add OLSC / LFC IDs to match the roster'}
                 </p>

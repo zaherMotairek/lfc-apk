@@ -40,4 +40,4 @@ npm run test:api:e2e
 
 ## Branche
 
-Work is on **`feat/redleb-hub`** — not pushed to `main` unless you ask.
+Branch **`feat/redleb-hub`** is on GitHub (`origin/feat/redleb-hub`). Open a PR to merge into `main` when ready.

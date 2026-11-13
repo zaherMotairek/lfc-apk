@@ -4,6 +4,7 @@ import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
 import { useConfirm } from '../../components/ui/confirm-provider';
+import { useToast } from '../../components/ui/toast-provider';
 
 type AdminNewsItem = {
   id: string;
@@ -39,6 +40,7 @@ function slugify(title: string) {
 export function AdminNewsPage() {
   const { accessToken } = useAuth();
   const confirm = useConfirm();
+  const showToast = useToast();
   const queryClient = useQueryClient();
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -61,6 +63,7 @@ export function AdminNewsPage() {
       }),
     onSuccess: (res, deletedId) => {
       setMessage(res.message);
+      showToast(res.message, 'success');
       if (editingId === deletedId) closeForm();
       void queryClient.invalidateQueries({ queryKey: ['admin-news'] });
     },
@@ -117,10 +120,13 @@ export function AdminNewsPage() {
             body,
           });
       setMessage(res.message);
+      showToast(res.message, 'success');
       closeForm();
       await queryClient.invalidateQueries({ queryKey: ['admin-news'] });
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : 'Save failed');
+      const msg = err instanceof Error ? err.message : 'Save failed';
+      setMessage(msg);
+      showToast(msg, 'error');
     } finally {
       setSaving(false);
     }

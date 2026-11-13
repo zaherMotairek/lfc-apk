@@ -11,6 +11,9 @@ const ADMIN_ROUTES = [
   '/admin/events',
   '/admin/matches',
   '/admin/newsletter',
+  '/admin/texts',
+  '/admin/settings',
+  '/admin/design',
 ];
 
 const adminUser = process.env.E2E_ADMIN_USERNAME ?? 'admin';
