@@ -340,6 +340,30 @@ export const CONTENT_REGISTRY: ContentRegistryEntry[] = [
     area: 'Member app',
     description: 'Hint under membership QR.',
   },
+  {
+    key: 'member.profile.title',
+    defaultEn: 'My Profile',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Profile page title.',
+  },
+  {
+    key: 'member.profile.subtitle',
+    defaultEn: 'Your Kop identity, login details, stats, and membership info.',
+    type: 'text',
+    maxLength: 200,
+    area: 'Member app',
+    description: 'Profile page intro.',
+  },
+  {
+    key: 'member.profile.privacyLegend',
+    defaultEn: 'Privacy',
+    type: 'text',
+    maxLength: 40,
+    area: 'Member app',
+    description: 'Privacy fieldset legend.',
+  },
 ];
 
 export const CONTENT_DEFAULTS_EN: Record<string, string> = Object.fromEntries(

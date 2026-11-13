@@ -46,4 +46,7 @@ export const CONTENT_DEFAULTS_AR_PARTIAL: Record<string, string> = {
     'المشجعون الذين اختاروا الظهور هنا. حدّث ملفك للانضمام أو إخفاء نفسك.',
   'member.directory.privacyCta': 'إعدادات الخصوصية ←',
   'member.card.qrHint': 'اعرض رمز QR هذا في لقاءات المشاهدة للتحقق.',
+  'member.profile.title': 'ملفي الشخصي',
+  'member.profile.subtitle': 'هويتك في الكوب، بيانات الدخول، الإحصاءات، ومعلومات العضوية.',
+  'member.profile.privacyLegend': 'الخصوصية',
 };

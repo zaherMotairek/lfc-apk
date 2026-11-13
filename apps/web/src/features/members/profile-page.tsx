@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useContent } from '../content/content-provider';
 import { resolveMediaUrl } from '../../lib/media-url';
 
 type ProfileResponse = {
@@ -76,6 +77,12 @@ function formatRoleLabel(role: string) {
 }
 
 export function ProfilePage() {
+  const profileTitle = useContent('member.profile.title', 'My Profile');
+  const profileSubtitle = useContent(
+    'member.profile.subtitle',
+    'Your Kop identity, login details, stats, and membership info.',
+  );
+  const privacyLegend = useContent('member.profile.privacyLegend', 'Privacy');
   const { accessToken, user } = useAuth();
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [form, setForm] = useState({
@@ -247,11 +254,7 @@ export function ProfilePage() {
 
   return (
     <section className="max-w-3xl space-y-6">
-      <PageHeader
-        eyebrow="Account"
-        title="My Profile"
-        description="Your Kop identity, login details, stats, and membership info."
-      />
+      <PageHeader eyebrow="Account" title={profileTitle} description={profileSubtitle} />
 
       {profile && (!profile.firstName.trim() || !profile.lastName.trim()) ? (
         <div className="rounded-2xl border border-lfc-red/25 bg-lfc-red/[0.06] px-5 py-4 text-sm text-ink">
@@ -432,7 +435,7 @@ export function ProfilePage() {
             </label>
           ))}
           <fieldset className="space-y-2 md:col-span-2">
-            <legend className="text-sm font-bold text-ink">Privacy</legend>
+            <legend className="text-sm font-bold text-ink">{privacyLegend}</legend>
             <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"

@@ -10,19 +10,10 @@ import { ConfirmProvider } from './components/ui/confirm-provider';
 import { ToastProvider } from './components/ui/toast-provider';
 import { BrandHead } from './components/ui/brand-head';
 import { ApiError } from './lib/api';
+import { registerAppServiceWorker } from './lib/register-service-worker';
 import './styles.css';
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // Prevent stale UI chunks by removing old service workers and caches.
-    void navigator.serviceWorker
-      .getRegistrations()
-      .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())));
-    if ('caches' in window) {
-      void caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))));
-    }
-  });
-}
+registerAppServiceWorker();
 
 const queryClient = new QueryClient({
   defaultOptions: {

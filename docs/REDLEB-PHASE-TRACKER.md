@@ -8,7 +8,7 @@
 | 3 | In progress | Moderation, audit, feature flags API, check-in QR, ConfirmProvider |
 | 4 | Partial | Guests, waitlist UI, invitation share card, `.ics`, QR check-in |
 | 2 | Started | 5-tab mobile bar; `/admin/design` gallery; design tokens doc |
-| 5 | ~90% | Directory, subscribe API, RSVP push, admin broadcast, privacy toggles |
+| 5 | ~95% | Push + SW prod register, offline shell, admin broadcast |
 | 6 | ~85% | Draft/schedule/publish, cron auto-publish, member email blast + resend |
 | 7 | Partial | CI workflow + ops/privacy docs |
 | 8 | In progress | ar bundle defaults; import presets in /admin/texts |

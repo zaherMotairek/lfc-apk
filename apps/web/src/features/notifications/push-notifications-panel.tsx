@@ -42,7 +42,11 @@ export function PushNotificationsPanel() {
         throw new Error('Permission denied.');
       }
 
-      const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      let registration = await navigator.serviceWorker.getRegistration('/');
+      if (!registration) {
+        registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      }
+      await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(configQuery.data.publicKey),
