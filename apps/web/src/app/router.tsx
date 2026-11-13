@@ -31,6 +31,7 @@ import { HallOfFamePage } from '../features/members/hall-of-fame-page';
 import { MembersDirectoryPage } from '../features/members/members-directory-page';
 import { NewsletterListPage } from '../features/public/newsletter-list-page';
 import { NewsletterDetailPage } from '../features/public/newsletter-detail-page';
+import { OfflinePage } from '../features/public/offline-page';
 import {
   AdminApplicationsPage,
   AdminAuditLogPage,
@@ -54,6 +55,7 @@ import {
 export function AppRouter() {
   return (
     <Routes>
+      <Route path="offline" element={<OfflinePage />} />
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPublicPage />} />

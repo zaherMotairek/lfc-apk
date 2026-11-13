@@ -68,7 +68,7 @@ Push on localhost: set `VITE_ENABLE_SW=true` in `apps/web/.env.local`, build or 
 
 - Optional: `NEWSLETTER_MEMBER_EMAILS=false` to disable blast emails.
 
-- **HTTPS required** for PWA push. Service worker registers automatically on **production builds** (`npm run build` + static host).
+- **HTTPS required** for PWA push. Service worker registers automatically on **production builds** (`npm run build` + static host). Offline shell: `offline.html` + registry keys `offline.*` (Texts); build writes `offline-copy.json` for EN/ar.
 
 - Merge checklist: **`docs/REDLEB-PR-READY.md`** · PR text: **`docs/REDLEB-PR-BODY.md`**
 - Open PR: https://github.com/zaherMotairek/lfc-apk/compare/main...feat/redleb-hub

@@ -7,7 +7,7 @@ import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 
 const ROOT = join(import.meta.dirname, '..', 'apps', 'web', 'src', 'features');
-const SCAN_DIRS = ['public', 'members', 'auth'];
+const SCAN_DIRS = ['public', 'members', 'auth', 'admin'];
 const IGNORE = new Set(['useContent', 'defaultEn', 'console.', 'className', 'http', 'https', '/api', 'kop-']);
 
 const STRING_LIT = /(?:>|{\s*)(['"`])([A-Za-z][^'"`]{6,})\1/g;

@@ -114,6 +114,11 @@ export const CONTENT_DEFAULTS_AR_PARTIAL: Record<string, string> = {
   'admin.quick.newsletter.desc': 'قالب RedLeb Dispatch PDF',
   'admin.quick.community.label': 'عرض المجتمع',
   'admin.quick.community.desc': 'خلاصة الأعضاء',
+  'offline.title': 'أنت غير متصل',
+  'offline.body':
+    'يحتاج رد لب هب إلى اتصال للنتائج المباشرة والفعاليات وأدوات العضوية. تحقق من البيانات أو الواي فاي ثم أعد المحاولة.',
+  'offline.retry': 'أعد المحاولة',
+  'offline.ribbon': 'OLSC لبنان · رد لب هب',
   'public.header.ribbon': 'OLSC لبنان · رد لب هب',
   'auth.login.title': 'تسجيل الدخول إلى رد لب هب',
   'membership.apply.title': 'طلب عضوية OLSC لبنان',

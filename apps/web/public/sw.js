@@ -1,10 +1,14 @@
 /* RedLeb Hub PWA — push + offline shell. Bump CACHE when offline assets change. */
-const CACHE = 'redleb-static-v2';
+const CACHE = 'redleb-static-v3';
 const OFFLINE_URL = '/offline.html';
+const OFFLINE_COPY = '/offline-copy.json';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll([OFFLINE_URL, '/pwa-192.svg'])).catch(() => undefined),
+    caches
+      .open(CACHE)
+      .then((cache) => cache.addAll([OFFLINE_URL, OFFLINE_COPY, '/pwa-192.svg']))
+      .catch(() => undefined),
   );
   self.skipWaiting();
 });

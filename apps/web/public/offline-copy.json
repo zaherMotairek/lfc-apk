@@ -1,0 +1,14 @@
+{
+  "en": {
+    "title": "You're offline",
+    "body": "RedLeb Hub needs a connection for live scores, events, and your membership tools. Check mobile data or Wi‑Fi, then try again.",
+    "retry": "Try again",
+    "ribbon": "OLSC Lebanon · RedLeb Hub"
+  },
+  "ar": {
+    "title": "أنت غير متصل",
+    "body": "يحتاج رد لب هب إلى اتصال للنتائج المباشرة والفعاليات وأدوات العضوية. تحقق من البيانات أو الواي فاي ثم أعد المحاولة.",
+    "retry": "أعد المحاولة",
+    "ribbon": "OLSC لبنان · رد لب هب"
+  }
+}
