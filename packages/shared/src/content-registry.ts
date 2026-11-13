@@ -308,6 +308,38 @@ export const CONTENT_REGISTRY: ContentRegistryEntry[] = [
     area: 'Member app',
     description: 'Hall of fame intro.',
   },
+  {
+    key: 'member.directory.title',
+    defaultEn: 'Member directory',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Directory page title.',
+  },
+  {
+    key: 'member.directory.subtitle',
+    defaultEn: 'Supporters who chose to appear here. Update your profile to opt in or out.',
+    type: 'text',
+    maxLength: 200,
+    area: 'Member app',
+    description: 'Directory page intro.',
+  },
+  {
+    key: 'member.directory.privacyCta',
+    defaultEn: 'Privacy settings →',
+    type: 'text',
+    maxLength: 60,
+    area: 'Member app',
+    description: 'Link to profile privacy.',
+  },
+  {
+    key: 'member.card.qrHint',
+    defaultEn: 'Show this QR at watch parties for verification.',
+    type: 'text',
+    maxLength: 120,
+    area: 'Member app',
+    description: 'Hint under membership QR.',
+  },
 ];
 
 export const CONTENT_DEFAULTS_EN: Record<string, string> = Object.fromEntries(

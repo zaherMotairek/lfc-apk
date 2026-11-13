@@ -41,4 +41,9 @@ export const CONTENT_DEFAULTS_AR_PARTIAL: Record<string, string> = {
   'member.notifications.title': 'الإشعارات',
   'member.hall.title': 'قاعة المشاهير',
   'member.hall.subtitle': 'أساطير التوقعات وإنجازات المجتمع.',
+  'member.directory.title': 'دليل الأعضاء',
+  'member.directory.subtitle':
+    'المشجعون الذين اختاروا الظهور هنا. حدّث ملفك للانضمام أو إخفاء نفسك.',
+  'member.directory.privacyCta': 'إعدادات الخصوصية ←',
+  'member.card.qrHint': 'اعرض رمز QR هذا في لقاءات المشاهدة للتحقق.',
 };

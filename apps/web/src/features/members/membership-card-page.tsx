@@ -52,6 +52,7 @@ export function MembershipCardPage() {
     'member.card.description',
     'Take a photo or upload your physical OLSC membership card here.',
   );
+  const qrHint = useContent('member.card.qrHint', 'Show this QR at watch parties for verification.');
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -128,7 +129,7 @@ export function MembershipCardPage() {
   }
 
   return (
-    <section className="mx-auto max-w-xl space-y-5">
+    <section className="mx-auto max-w-xl space-y-5 pb-[calc(1rem+env(safe-area-inset-bottom))]">
       <PageHeader eyebrow="Membership" title={cardTitle} description={cardDescription} />
 
       {card ? (
@@ -265,7 +266,10 @@ export function MembershipCardPage() {
             </dl>
           </div>
 
-          <div className="membership-card-visual overflow-hidden rounded-[24px] shadow-xl shadow-lfc-red/20">
+          <div
+            className="membership-card-visual overflow-hidden rounded-[24px] shadow-xl shadow-lfc-red/20"
+            data-testid="membership-card-visual"
+          >
             <div className="relative bg-[linear-gradient(145deg,#c8102e_0%,#8a0b1f_45%,#101418_100%)] p-5 text-white">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -300,9 +304,7 @@ export function MembershipCardPage() {
               <div className="mt-5 flex justify-center rounded-2xl bg-white p-3">
                 <QRCodeSVG value={card.qrSecureToken} size={132} level="M" includeMargin />
               </div>
-              <p className="mt-2 text-center text-[11px] text-white/55">
-                Show this QR at watch parties for verification.
-              </p>
+              <p className="mt-2 text-center text-[11px] text-white/55">{qrHint}</p>
             </div>
           </div>
         </>

@@ -11,6 +11,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
         value={lang}
         onChange={(e) => setLang(e.target.value as AppLanguage)}
         aria-label="Site language"
+        data-testid="language-switcher"
       >
         <option value="en">EN</option>
         <option value="ar">عربي</option>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useContent } from '../content/content-provider';
 import { resolveMediaUrl } from '../../lib/media-url';
 
 type DirectoryMember = {
@@ -15,6 +16,12 @@ type DirectoryMember = {
 };
 
 export function MembersDirectoryPage() {
+  const dirTitle = useContent('member.directory.title', 'Member directory');
+  const dirSubtitle = useContent(
+    'member.directory.subtitle',
+    'Supporters who chose to appear here. Update your profile to opt in or out.',
+  );
+  const privacyCta = useContent('member.directory.privacyCta', 'Privacy settings →');
   const { accessToken } = useAuth();
   const query = useQuery({
     queryKey: ['members-directory'],
@@ -24,14 +31,10 @@ export function MembersDirectoryPage() {
 
   return (
     <section className="space-y-6">
-      <PageHeader
-        eyebrow="Community"
-        title="Member directory"
-        description="Supporters who chose to appear here. Update your profile to opt in or out."
-      />
+      <PageHeader eyebrow="Community" title={dirTitle} description={dirSubtitle} />
 
       <Link to="/app/profile" className="kop-btn-secondary inline-block !text-sm">
-        Privacy settings →
+        {privacyCta}
       </Link>
 
       {query.isLoading ? <p className="text-black/50">Loading…</p> : null}

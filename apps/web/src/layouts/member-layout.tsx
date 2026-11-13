@@ -12,6 +12,7 @@ import {
   SidebarNav,
 } from '../components/layout/sidebar-nav';
 import { useFeatureFlags } from '../features/site/use-feature-flags';
+import { LanguageSwitcher } from '../components/ui/language-switcher';
 
 function memberBackFallback(pathname: string) {
   if (/^\/app\/matches\/[^/]+$/.test(pathname)) {
@@ -112,6 +113,7 @@ export function MemberLayout() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher className="!text-white" />
             <InstallAppBanner variant="compact" />
             {isAdmin ? (
               <Link to="/admin" className="rounded-lg bg-white/15 px-3 py-2 text-xs font-bold">

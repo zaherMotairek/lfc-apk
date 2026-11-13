@@ -8,7 +8,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 
 | ID | Item | Status |
 |----|------|--------|
-| 0.1 | Playwright smoke + baseline captures | 🟡 Desktop smoke OK; mobile suite to extend |
+| 0.1 | Playwright smoke + baseline captures | 🟡 Desktop/mobile projects; i18n RTL smoke added |
 | 0.2 | Jest API characterization + e2e flows | ✅ |
 | 0.3 | Repo hygiene, SiteSetting, assert-local-db | ✅ |
 | 0.4 | Phase report | 🟡 Handoff + this doc |
@@ -40,7 +40,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 | 13 | Guests 0–2 + admin/CSV | ✅ |
 | 14 | ALLRED SUPPORT ID | ✅ |
 | 15–17 | Last seen, login events, activity panel | ✅ |
-| 18 | No LIVE UI | 🟡 UI reduced; code remains |
+| 18 | No LIVE UI | 🟡 Member celebration overlay removed; admin LIVE panel gated off |
 | 19 | Newsletter monthly workflow | 🟡 Member emails + schedule cron (Phase 6) |
 
 ## Phases 2–8
