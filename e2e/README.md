@@ -7,6 +7,8 @@
 3. Optional demo routes: `SEED_E2E_FIXTURES=true npm run prisma:seed`.
 4. API running: `npm run dev:api` (port 3000).
 5. Web is started automatically by Playwright unless `PLAYWRIGHT_SKIP_WEBSERVER=1`.
+6. First run: `npx playwright install chromium` (browsers are not in git).
+7. Default base URL is `http://localhost:5173` (not `127.0.0.1` — Vite on Windows).
 
 ## Commands
 
