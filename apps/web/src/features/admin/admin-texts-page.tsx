@@ -72,6 +72,33 @@ export function AdminTextsPage() {
     onError: (err) => setMessage(err instanceof Error ? err.message : 'Save failed'),
   });
 
+  const rollbackMutation = useMutation({
+    mutationFn: (key: string) =>
+      apiRequest<{ message: string }>('/admin/content/texts/rollback', {
+        method: 'POST',
+        token: accessToken,
+        body: { key, language: 'en' },
+      }),
+    onSuccess: (res) => {
+      setMessage(res.message);
+      showToast(res.message, 'success');
+      void queryClient.invalidateQueries({ queryKey: ['admin-content-texts'] });
+      void queryClient.invalidateQueries({ queryKey: ['content-bundle'] });
+    },
+    onError: (err) => showToast(err instanceof Error ? err.message : 'Rollback failed', 'error'),
+  });
+
+  const revisionsQuery = useQuery({
+    queryKey: ['content-revisions', editingKey],
+    queryFn: () =>
+      apiRequest<
+        Array<{ id: string; valueBefore: string | null; valueAfter: string; createdAt: string }>
+      >(`/admin/content/texts/revisions?key=${encodeURIComponent(editingKey!)}&lang=en`, {
+        token: accessToken,
+      }),
+    enabled: Boolean(accessToken && editingKey),
+  });
+
   const resetMutation = useMutation({
     mutationFn: (key: string) =>
       apiRequest<{ message: string }>(
@@ -161,13 +188,22 @@ export function AdminTextsPage() {
                           Edit
                         </button>
                         {row.isOverridden ? (
-                          <button
-                            type="button"
-                            className="kop-btn-ghost !text-xs"
-                            onClick={() => resetMutation.mutate(row.key)}
-                          >
-                            Reset
-                          </button>
+                          <>
+                            <button
+                              type="button"
+                              className="kop-btn-ghost !text-xs"
+                              onClick={() => rollbackMutation.mutate(row.key)}
+                            >
+                              Roll back
+                            </button>
+                            <button
+                              type="button"
+                              className="kop-btn-ghost !text-xs"
+                              onClick={() => resetMutation.mutate(row.key)}
+                            >
+                              Reset
+                            </button>
+                          </>
                         ) : null}
                       </div>
                     </td>
@@ -183,14 +219,37 @@ export function AdminTextsPage() {
         <form onSubmit={onSubmit} className="kop-card space-y-3 p-5">
           <h2 className="font-bold">Edit {editingKey}</h2>
           <textarea className="kop-input min-h-28" value={draft} onChange={(e) => setDraft(e.target.value)} required />
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button type="submit" className="kop-btn-primary" disabled={saveMutation.isPending}>
               Save
             </button>
+            {editingKey && rows.find((r) => r.key === editingKey)?.isOverridden ? (
+              <button
+                type="button"
+                className="kop-btn-secondary"
+                disabled={rollbackMutation.isPending}
+                onClick={() => rollbackMutation.mutate(editingKey)}
+              >
+                Roll back once
+              </button>
+            ) : null}
             <button type="button" className="kop-btn-secondary" onClick={() => setEditingKey(null)}>
               Cancel
             </button>
           </div>
+          {revisionsQuery.data?.length ? (
+            <div className="border-t border-black/5 pt-3">
+              <div className="text-xs font-semibold uppercase tracking-wide text-black/40">Recent revisions</div>
+              <ul className="mt-2 max-h-40 space-y-2 overflow-y-auto text-xs text-black/55">
+                {revisionsQuery.data.map((rev) => (
+                  <li key={rev.id} className="rounded-lg bg-black/[0.03] px-3 py-2">
+                    <time>{new Date(rev.createdAt).toLocaleString()}</time>
+                    <div className="mt-1 text-black/70">→ {rev.valueAfter.slice(0, 120)}</div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </form>
       ) : null}
     </section>

@@ -148,4 +148,41 @@ export class ContentRegistryService {
 
     return { message: 'Reset to default.' };
   }
+
+  async listRevisions(key: string, language: string, limit = 12) {
+    const entry = CONTENT_REGISTRY.find((item) => item.key === key);
+    if (!entry) {
+      throw new BadRequestException(`Unknown content key: ${key}`);
+    }
+    return this.prisma.contentRevision.findMany({
+      where: { key, language },
+      orderBy: { createdAt: 'desc' },
+      take: Math.min(limit, 50),
+      select: {
+        id: true,
+        key: true,
+        language: true,
+        valueBefore: true,
+        valueAfter: true,
+        createdAt: true,
+        actorUserId: true,
+      },
+    });
+  }
+
+  async rollbackToPrevious(key: string, language: string, actorUserId: string) {
+    const latest = await this.prisma.contentRevision.findFirst({
+      where: { key, language },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!latest?.valueBefore) {
+      throw new BadRequestException('No revision history to roll back.');
+    }
+    return this.upsertOverride({
+      key,
+      language,
+      value: latest.valueBefore,
+      actorUserId,
+    });
+  }
 }

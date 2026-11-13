@@ -219,6 +219,55 @@ export const CONTENT_REGISTRY: ContentRegistryEntry[] = [
     area: 'Member app',
     description: 'Community page description.',
   },
+  {
+    key: 'member.home.welcome',
+    defaultEn: 'Welcome back',
+    type: 'text',
+    maxLength: 40,
+    area: 'Member app',
+    description: 'Member home banner eyebrow.',
+  },
+  {
+    key: 'member.home.subtitle',
+    defaultEn:
+      'Your weekly home for Liverpool match predictions, community events, and your official digital membership identity.',
+    type: 'text',
+    maxLength: 220,
+    area: 'Member app',
+    description: 'Member home banner body.',
+  },
+  {
+    key: 'member.matches.title',
+    defaultEn: 'Choose a match',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Matches list page title.',
+  },
+  {
+    key: 'member.matches.description',
+    defaultEn: 'Tap a fixture, set your score, and submit your prediction before kickoff.',
+    type: 'text',
+    maxLength: 200,
+    area: 'Member app',
+    description: 'Matches list page description.',
+  },
+  {
+    key: 'member.leaderboard.title',
+    defaultEn: 'Leaderboard',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Leaderboard page title.',
+  },
+  {
+    key: 'member.leaderboard.subtitle',
+    defaultEn: 'Overall ranking after Liverpool prediction scoring. Every match can change the order.',
+    type: 'text',
+    maxLength: 200,
+    area: 'Member app',
+    description: 'Leaderboard intro line.',
+  },
 ];
 
 export const CONTENT_DEFAULTS_EN: Record<string, string> = Object.fromEntries(

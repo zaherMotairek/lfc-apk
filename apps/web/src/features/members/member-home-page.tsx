@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { QuickActionCard } from '../../components/ui/quick-action-card';
+import { useContent } from '../content/content-provider';
 
 export function MemberHomePage() {
+  const welcomeLabel = useContent('member.home.welcome', 'Welcome back');
+  const homeSubtitle = useContent(
+    'member.home.subtitle',
+    'Your weekly home for Liverpool match predictions, community events, and your official digital membership identity.',
+  );
   const { user } = useAuth();
 
   return (
@@ -11,14 +17,11 @@ export function MemberHomePage() {
       <div className="kop-gradient-hero mb-8 overflow-hidden rounded-3xl p-6 text-white shadow-xl shadow-lfc-red/20 md:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-white/70">Welcome back</p>
+            <p className="text-sm font-medium text-white/70">{welcomeLabel}</p>
             <h1 className="mt-1 text-3xl font-extrabold md:text-4xl">
               {user?.firstName} {user?.lastName}
             </h1>
-            <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/75">
-              Your weekly home for Liverpool match predictions, community events, and your official
-              digital membership identity.
-            </p>
+            <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/75">{homeSubtitle}</p>
           </div>
           <Link
             to="/app/membership-card"

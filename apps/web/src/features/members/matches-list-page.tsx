@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { teamCrestLabel } from '../../lib/team-labels';
 import { PageHeader } from '../../components/ui/page-header';
+import { useContent } from '../content/content-provider';
 
 type MatchItem = {
   id: string;
@@ -26,12 +27,13 @@ function isPredictionsOpen(match: MatchItem) {
 }
 
 function displayStatus(match: MatchItem) {
+  if (match.status === 'LIVE') return 'AWAITING RESULT';
   if (match.status === 'UPCOMING' && !isPredictionsOpen(match)) return 'CLOSED';
   return match.status;
 }
 
 function statusTone(status: string) {
-  if (status === 'LIVE') return 'kop-badge';
+  if (status === 'AWAITING RESULT') return 'kop-badge-gold';
   if (status === 'UPCOMING') return 'kop-badge-green';
   if (status === 'CLOSED') return 'kop-badge-red';
   if (status === 'FINISHED') return 'kop-badge';
@@ -49,6 +51,11 @@ function formatKickoff(date: string) {
 }
 
 export function MatchesListPage() {
+  const matchesTitle = useContent('member.matches.title', 'Choose a match');
+  const matchesDescription = useContent(
+    'member.matches.description',
+    'Tap a fixture, set your score, and submit your prediction before kickoff.',
+  );
   const location = useLocation();
   const { data, isLoading, error } = useQuery({
     queryKey: ['matches'],
@@ -58,8 +65,8 @@ export function MatchesListPage() {
   const sorted = useMemo(() => {
     const items = [...(data ?? [])];
     const rank = (match: MatchItem) => {
+      if (match.status === 'LIVE') return 3;
       const status = displayStatus(match);
-      if (status === 'LIVE') return 0;
       if (status === 'UPCOMING') return 1;
       if (status === 'CLOSED') return 2;
       if (status === 'FINISHED') return 3;
@@ -76,8 +83,8 @@ export function MatchesListPage() {
     <section className="space-y-6">
       <PageHeader
         eyebrow="Match Hub"
-        title="Choose a match"
-        description="Tap a fixture, set your score, and submit your prediction before kickoff."
+        title={matchesTitle}
+        description={matchesDescription}
       />
 
       {isLoading ? (

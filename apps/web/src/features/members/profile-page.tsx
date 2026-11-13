@@ -289,7 +289,7 @@ export function ProfilePage() {
                 </p>
               ) : (
                 <p className="mt-3 text-sm text-white/70">
-                  [
+                  {[
                     profile?.olscId ? `OLSC ${profile.olscId}` : null,
                     profile?.lfcId ? `ALLRED ${profile.lfcId}` : null,
                   ]

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { Permissions } from '../../common/decorators/permissions.decorator';
@@ -44,5 +44,26 @@ export class ContentRegistryController {
     @CurrentUser() user: { id: string },
   ) {
     return this.contentRegistryService.resetOverride(key, lang?.trim() || 'en', user.id);
+  }
+
+  @Get('admin/content/texts/revisions')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionCode.MANAGE_CONTENT)
+  listRevisions(@Query('key') key: string, @Query('lang') lang?: string) {
+    return this.contentRegistryService.listRevisions(key, lang?.trim() || 'en');
+  }
+
+  @Post('admin/content/texts/rollback')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionCode.MANAGE_CONTENT)
+  rollback(
+    @Body() body: { key: string; language?: string },
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.contentRegistryService.rollbackToPrevious(
+      body.key,
+      body.language ?? 'en',
+      user.id,
+    );
   }
 }

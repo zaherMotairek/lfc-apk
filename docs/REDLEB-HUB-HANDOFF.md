@@ -8,7 +8,7 @@ This branch implements **Phase 0** fully and a **pragmatic slice of Phases 1A–
 |------|----------------|
 | **Branding** | `RedLeb Hub` naming in HTML, PWA manifest, member/admin chrome; configurable logo via `GET /api/brand` + wordmark placeholder |
 | **Home** | New hero CTA → `/membership/apply`, highlight carousel (gallery), removed duplicate “Member Login” on home; footer/header single **Sign in** |
-| **Content** | Registry in `@kop/shared`, overrides API `GET /api/content/bundle`, admin **Texts & Labels** at `/admin/texts` |
+| **Content** | Registry in `@kop/shared`, overrides API `GET /api/content/bundle`, admin **Texts & Labels** at `/admin/texts` with **revision history + one-step rollback** |
 | **Settings** | `SiteSetting` table — payment phone, WhatsApp, brand keys (no real numbers in repo) |
 | **Events** | `guestCount` 0–2 on registrations (API + community page) |
 | **Members** | XP/coins hidden in UI; XP/coin **awards disabled** in API; live goal feed removed; Match Hub no LIVE timeline |
@@ -19,7 +19,7 @@ This branch implements **Phase 0** fully and a **pragmatic slice of Phases 1A–
 
 See **`docs/REDLEB-PHASE-TRACKER.md`** for live status.
 
-- **Phase 1A**: Registry has ~12 keys; most UI strings still in CMS/components — extend registry + codemod
+- **Phase 1A**: Registry ~30+ keys (member home/matches/leaderboard added); most UI strings still in CMS/components — extend registry + codemod
 - **Phase 3**: `/admin/settings` + brand image upload; ConfirmProvider; logo sharp/manifest still TODO
 - **Tooling**: ESLint flat config at repo root; Playwright starts API+web via `scripts/playwright-serve.mjs`
 - **Phases 4–8**: Incremental — not complete per master prompt
