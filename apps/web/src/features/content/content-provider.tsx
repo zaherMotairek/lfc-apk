@@ -25,6 +25,10 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
   return <ContentContext.Provider value={values}>{children}</ContentContext.Provider>;
 }
 
+export function useContentBundle() {
+  return useContext(ContentContext);
+}
+
 export function useContent(key: string, fallback?: string) {
   const map = useContext(ContentContext);
   return map[key] ?? fallback ?? key;

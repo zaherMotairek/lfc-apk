@@ -21,7 +21,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 | 1A.2 | Overrides + revisions + bundle API | ✅ |
 | 1A.3 | Admin Texts + inline CMS edit | 🟡 Texts ✅; inline 🟡 |
 | 1A.4 | CTA/link editor | 🟡 Header/footer CTAs in registry |
-| 1A.5 | Nav editor | 🟡 Public nav labels in registry (`nav.public.*`) |
+| 1A.5 | Nav editor | 🟡 Public + member nav labels in registry |
 | 1A.6 | Page block editor (drag/hide) | 🟡 CMS pages exist; not full block kit |
 | 1A.7 | Media library crop/resize | 🟡 Upload exists |
 | 1A.8 | Theme editor live preview | 🟡 Brand colours in settings |

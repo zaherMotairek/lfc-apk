@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../features/auth/auth-context';
-import { isAdminRole, MEMBER_EXTRA_NAV, MEMBER_NAV } from '../components/layout/nav-config';
+import { isAdminRole } from '../components/layout/nav-config';
+import { useMemberNav } from '../components/layout/use-member-nav';
 import { InstallAppBanner } from '../components/ui/install-app-banner';
 import { PageBackBar } from '../components/ui/page-back-bar';
 import {
@@ -26,62 +27,51 @@ export function MemberLayout() {
   const { predictionsEnabled } = useFeatureFlags();
   const isAdmin = isAdminRole(user?.roles);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const mobileTabs = [
-    { to: '/app', label: 'Home', icon: '🏠', end: true },
-    ...(predictionsEnabled ? [{ to: '/app/matches', label: 'Matches', icon: '⚽' as const }] : []),
-    { to: '/app/community', label: 'Community', icon: '📣' as const },
-    { to: '/app/membership-card', label: 'Card', icon: '🎫' as const },
-    { to: '/app/profile', label: 'Profile', icon: '👤' as const },
-  ];
-
-  const sidebarItems = [
-    ...MEMBER_NAV,
-    ...MEMBER_EXTRA_NAV,
-    ...(isAdmin ? [{ to: '/admin', label: 'Admin Panel', icon: '⚙️' }] : []),
-  ];
-
-  const mobileNavItems = [
-    ...MEMBER_NAV,
-    ...MEMBER_EXTRA_NAV,
-    ...(isAdmin ? [{ to: '/admin', label: 'Admin Panel', icon: '⚙️' }] : []),
-  ];
+  const {
+    drawerNav,
+    mobileTabs,
+    adminShort,
+    shellTitle,
+    shellSubtitle,
+    footerPublic,
+    logoutLabel,
+  } = useMemberNav({ predictionsEnabled, includeAdminLink: isAdmin });
 
   return (
     <div className="min-h-screen bg-paper pb-[calc(5rem+env(safe-area-inset-bottom))] md:grid md:grid-cols-[260px_1fr] md:pb-0">
       <MobileDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        title="RedLeb Hub"
-        subtitle="OLSC Lebanon · Member App"
-        items={mobileNavItems}
+        title={shellTitle}
+        subtitle={shellSubtitle}
+        items={drawerNav}
         footer={
           <>
-            <NavFooterLink to="/">← Public website</NavFooterLink>
+            <NavFooterLink to="/">{footerPublic}</NavFooterLink>
             <button
               type="button"
               onClick={() => { logout(); setDrawerOpen(false); }}
               className="mt-1 block w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
             >
-              Logout
+              {logoutLabel}
             </button>
           </>
         }
       />
       <div className="hidden md:block">
         <SidebarNav
-          title="RedLeb Hub"
-          subtitle="OLSC Lebanon · Member App"
-          items={sidebarItems}
+          title={shellTitle}
+          subtitle={shellSubtitle}
+          items={drawerNav}
           footer={
             <>
-              <NavFooterLink to="/">← Public website</NavFooterLink>
+              <NavFooterLink to="/">{footerPublic}</NavFooterLink>
               <button
                 type="button"
                 onClick={logout}
                 className="mt-1 block w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
               >
-                Logout
+                {logoutLabel}
               </button>
             </>
           }
@@ -89,7 +79,7 @@ export function MemberLayout() {
       </div>
 
       <div className="min-w-0">
-        <HorizontalNav items={mobileNavItems} />
+        <HorizontalNav items={drawerNav} />
 
         <header className="flex items-center justify-between border-b border-black/5 bg-lfc-red px-4 py-3 text-white md:hidden">
           <div className="flex items-center gap-3">
@@ -106,7 +96,7 @@ export function MemberLayout() {
               </svg>
             </button>
             <div>
-              <div className="text-sm font-extrabold">RedLeb Hub</div>
+              <div className="text-sm font-extrabold">{shellTitle}</div>
               <div className="text-[11px] text-white/65">
                 {user?.firstName} {user?.lastName}
               </div>
@@ -117,7 +107,7 @@ export function MemberLayout() {
             <InstallAppBanner variant="compact" />
             {isAdmin ? (
               <Link to="/admin" className="rounded-lg bg-white/15 px-3 py-2 text-xs font-bold">
-                Admin
+                {adminShort}
               </Link>
             ) : null}
           </div>

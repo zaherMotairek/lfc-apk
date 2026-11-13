@@ -29,24 +29,52 @@ export const PUBLIC_NAV: NavItem[] = PUBLIC_NAV_SPECS.map((spec) => ({
   label: spec.defaultLabel,
 }));
 
-export const MEMBER_NAV: NavItem[] = [
-  { to: '/app', label: 'Home', icon: '🏠', end: true },
-  { to: '/app/matches', label: 'Match Hub', icon: '⚽' },
-  { to: '/app/leaderboard', label: 'Leaderboard', icon: '🏆' },
-  { to: '/app/community', label: 'Community Feed', icon: '📣' },
-  { to: '/app/notifications', label: 'Notifications', icon: '🔔' },
-  { to: '/app/hall-of-fame', label: 'Hall of Fame', icon: '👑' },
-  { to: '/app/profile', label: 'My Profile', icon: '👤' },
-  { to: '/app/members', label: 'Member directory', icon: '📖' },
-  { to: '/app/membership-card', label: 'Membership Card', icon: '🎫' },
+export type MemberNavSpec = PublicNavSpec & { icon?: string; end?: boolean };
+
+export const MEMBER_NAV_SPECS: MemberNavSpec[] = [
+  { to: '/app', contentKey: 'nav.member.home', defaultLabel: 'Home', icon: '🏠', end: true },
+  { to: '/app/matches', contentKey: 'nav.member.matchHub', defaultLabel: 'Match Hub', icon: '⚽' },
+  { to: '/app/leaderboard', contentKey: 'nav.member.leaderboard', defaultLabel: 'Leaderboard', icon: '🏆' },
+  { to: '/app/community', contentKey: 'nav.member.community', defaultLabel: 'Community Feed', icon: '📣' },
+  { to: '/app/notifications', contentKey: 'nav.member.notifications', defaultLabel: 'Notifications', icon: '🔔' },
+  { to: '/app/hall-of-fame', contentKey: 'nav.member.hall', defaultLabel: 'Hall of Fame', icon: '👑' },
+  { to: '/app/profile', contentKey: 'nav.member.profile', defaultLabel: 'My Profile', icon: '👤' },
+  { to: '/app/members', contentKey: 'nav.member.directory', defaultLabel: 'Member directory', icon: '📖' },
+  {
+    to: '/app/membership-card',
+    contentKey: 'nav.member.card',
+    defaultLabel: 'Membership Card',
+    icon: '🎫',
+  },
 ];
 
-export const MEMBER_EXTRA_NAV: NavItem[] = [
-  { to: '/news', label: 'Club News', icon: '📰' },
-  { to: '/newsletter', label: 'Newsletter', icon: '🗞️' },
-  { to: '/events', label: 'Public Events', icon: '📅' },
-  { to: '/gallery', label: 'Gallery', icon: '🖼️' },
+export const MEMBER_EXTRA_NAV_SPECS: MemberNavSpec[] = [
+  { to: '/news', contentKey: 'nav.member.extra.news', defaultLabel: 'Club News', icon: '📰' },
+  { to: '/newsletter', contentKey: 'nav.member.extra.newsletter', defaultLabel: 'Newsletter', icon: '🗞️' },
+  { to: '/events', contentKey: 'nav.member.extra.events', defaultLabel: 'Public Events', icon: '📅' },
+  { to: '/gallery', contentKey: 'nav.member.extra.gallery', defaultLabel: 'Gallery', icon: '🖼️' },
 ];
+
+export const MEMBER_MOBILE_TAB_SPECS: MemberNavSpec[] = [
+  { to: '/app', contentKey: 'nav.member.tab.home', defaultLabel: 'Home', icon: '🏠', end: true },
+  { to: '/app/matches', contentKey: 'nav.member.tab.matches', defaultLabel: 'Matches', icon: '⚽' },
+  { to: '/app/community', contentKey: 'nav.member.tab.community', defaultLabel: 'Community', icon: '📣' },
+  { to: '/app/membership-card', contentKey: 'nav.member.tab.card', defaultLabel: 'Card', icon: '🎫' },
+  { to: '/app/profile', contentKey: 'nav.member.tab.profile', defaultLabel: 'Profile', icon: '👤' },
+];
+
+export const MEMBER_NAV: NavItem[] = MEMBER_NAV_SPECS.map((spec) => ({
+  to: spec.to,
+  label: spec.defaultLabel,
+  icon: spec.icon,
+  end: spec.end,
+}));
+
+export const MEMBER_EXTRA_NAV: NavItem[] = MEMBER_EXTRA_NAV_SPECS.map((spec) => ({
+  to: spec.to,
+  label: spec.defaultLabel,
+  icon: spec.icon,
+}));
 
 export const ADMIN_NAV: NavItem[] = [
   { to: '/admin', label: 'Dashboard', icon: '📊', end: true },
