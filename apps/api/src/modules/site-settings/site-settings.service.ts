@@ -82,6 +82,25 @@ export class SiteSettingsService {
       });
     }
 
+    const brandTouched = dto.settings.some((entry) => entry.key.startsWith('brand.'));
+    if (brandTouched) {
+      const versionRow = await this.prisma.siteSetting.findUnique({
+        where: { key: 'brand.version' },
+      });
+      const current = Number(versionRow?.value ?? '1');
+      const nextVersion = Number.isFinite(current) ? String(current + 1) : String(Date.now());
+      await this.prisma.siteSetting.upsert({
+        where: { key: 'brand.version' },
+        create: {
+          key: 'brand.version',
+          value: nextVersion,
+          description: 'Brand asset version.',
+          updatedById: actorUserId,
+        },
+        update: { value: nextVersion, updatedById: actorUserId },
+      });
+    }
+
     await this.auditService.log({
       actorUserId,
       action: 'UPDATE_SITE_SETTINGS',

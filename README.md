@@ -1,6 +1,6 @@
-# Kop Platform
+# RedLeb Hub (Kop Platform)
 
-Official digital platform for OLSC Lebanon (Official Liverpool Supporters Club Lebanon).
+**RedLeb Hub** is the official digital platform for OLSC Lebanon (Official Liverpool Supporters Club Lebanon). The monorepo package name remains `kop-platform` for tooling compatibility.
 
 ## Structure
 

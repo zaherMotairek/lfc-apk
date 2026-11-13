@@ -8,7 +8,7 @@ import { useToast } from '../../components/ui/toast-provider';
 type TextRow = {
   key: string;
   area: string;
-  description: string;
+  description?: string;
   defaultValue: string;
   currentValue: string;
   isOverridden: boolean;
@@ -44,6 +44,16 @@ export function AdminTextsPage() {
     }
     return list;
   }, [textsQuery.data, filter, changedOnly]);
+
+  const groupedRows = useMemo(() => {
+    const map = new Map<string, TextRow[]>();
+    for (const row of rows) {
+      const bucket = map.get(row.area) ?? [];
+      bucket.push(row);
+      map.set(row.area, bucket);
+    }
+    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
+  }, [rows]);
 
   const saveMutation = useMutation({
     mutationFn: (body: { key: string; value: string }) =>
@@ -118,47 +128,55 @@ export function AdminTextsPage() {
         </label>
       </div>
 
-      <div className="kop-card overflow-hidden">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-black/5 bg-black/[0.02] text-xs uppercase tracking-wide text-black/45">
-            <tr>
-              <th className="px-4 py-3">Key</th>
-              <th className="px-4 py-3">Area</th>
-              <th className="px-4 py-3">Current</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.key} className="border-b border-black/5 align-top">
-                <td className="px-4 py-3 font-mono text-xs">{row.key}</td>
-                <td className="px-4 py-3">{row.area}</td>
-                <td className="px-4 py-3">
-                  <div className="font-medium">{row.currentValue}</div>
-                  {row.isOverridden ? (
-                    <div className="mt-1 text-xs text-black/45">Default: {row.defaultValue}</div>
-                  ) : null}
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" className="kop-btn-secondary !text-xs" onClick={() => startEdit(row)}>
-                      Edit
-                    </button>
-                    {row.isOverridden ? (
-                      <button
-                        type="button"
-                        className="kop-btn-ghost !text-xs"
-                        onClick={() => resetMutation.mutate(row.key)}
-                      >
-                        Reset
-                      </button>
-                    ) : null}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="space-y-6">
+        {groupedRows.map(([area, areaRows]) => (
+          <div key={area} className="kop-card overflow-hidden">
+            <div className="border-b border-black/5 bg-black/[0.02] px-4 py-3 text-xs font-bold uppercase tracking-widest text-black/45">
+              {area} ({areaRows.length})
+            </div>
+            <table className="w-full text-left text-sm">
+              <thead className="sr-only">
+                <tr>
+                  <th>Key</th>
+                  <th>Current</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {areaRows.map((row) => (
+                  <tr key={row.key} className="border-b border-black/5 align-top last:border-0">
+                    <td className="px-4 py-3 font-mono text-xs text-black/55">{row.key}</td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{row.currentValue}</div>
+                      {row.description ? (
+                        <div className="mt-1 text-xs text-black/45">{row.description}</div>
+                      ) : null}
+                      {row.isOverridden ? (
+                        <div className="mt-1 text-xs text-black/45">Default: {row.defaultValue}</div>
+                      ) : null}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-2">
+                        <button type="button" className="kop-btn-secondary !text-xs" onClick={() => startEdit(row)}>
+                          Edit
+                        </button>
+                        {row.isOverridden ? (
+                          <button
+                            type="button"
+                            className="kop-btn-ghost !text-xs"
+                            onClick={() => resetMutation.mutate(row.key)}
+                          >
+                            Reset
+                          </button>
+                        ) : null}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
       </div>
 
       {editingKey ? (

@@ -4,7 +4,7 @@
 |-------|--------|-------|
 | 0 | Done | Tests, Playwright, local DB guard, ESLint flat config, dual dev-server for e2e |
 | 1A | In progress | ~28 registry keys; events/member community wired; codemod bulk still TODO |
-| 1 | ~90% | guest names on register; RedLeb meta; item 1 logo pipeline still TODO |
+| 1 | ~92% | Dynamic PWA manifest from `/api/brand/manifest.webmanifest`; brand.version bump on save |
 | 3 | Started | ToastProvider + admin texts save; ConfirmProvider on deletes |
 | 4 | Partial | Guests + optional guest names (public + community) |
 | 2 | Started | 5-tab mobile bar; `/admin/design` gallery; design tokens doc |

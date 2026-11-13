@@ -4,6 +4,7 @@ import { useAuth } from '../auth/auth-context';
 import { apiRequest, apiUploadFile } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
 import { SITE_SETTING_KEYS } from '../../lib/site-settings';
+import { useToast } from '../../components/ui/toast-provider';
 import { resolveMediaUrl } from '../../lib/media-url';
 
 type SettingRow = {
@@ -44,6 +45,7 @@ const TABS: Array<{ id: string; label: string; keys: string[] }> = [
 ];
 
 export function AdminSiteSettingsPage() {
+  const showToast = useToast();
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   const [tab, setTab] = useState('branding');
@@ -72,6 +74,7 @@ export function AdminSiteSettingsPage() {
       }),
     onSuccess: (res) => {
       setMessage(res.message);
+      showToast(res.message, 'success');
       setDraft({});
       void queryClient.invalidateQueries({ queryKey: ['admin-site-settings'] });
       void queryClient.invalidateQueries({ queryKey: ['brand'] });
