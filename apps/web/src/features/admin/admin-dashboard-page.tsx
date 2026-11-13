@@ -6,7 +6,13 @@ import { PageHeader } from '../../components/ui/page-header';
 import { ADMIN_QUICK_LINKS } from '../../components/layout/nav-config';
 
 type Dashboard = {
-  members: { total: number; activeMemberships: number; pendingInvites: number };
+  members: {
+    total: number;
+    activeMemberships: number;
+    pendingInvites: number;
+    inactive30Days?: number;
+  };
+  applications?: { pending: number };
   predictions: { total: number };
   matches: { upcoming: number };
   events: { total: number };
@@ -31,12 +37,22 @@ export function AdminDashboardPage() {
       {error ? <p className="text-lfc-red">Unable to load dashboard.</p> : null}
 
       {data ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {[
             {
               label: 'Members',
               value: data.members.total,
               hint: `${data.members.activeMemberships} active · ${data.members.pendingInvites} invited`,
+            },
+            {
+              label: 'Applications',
+              value: data.applications?.pending ?? 0,
+              hint: 'Pending review',
+            },
+            {
+              label: 'Inactive 30d',
+              value: data.members.inactive30Days ?? 0,
+              hint: 'No recent login',
             },
             { label: 'Predictions', value: data.predictions.total, hint: 'Total submitted' },
             { label: 'Upcoming matches', value: data.matches.upcoming, hint: 'Open for predictions' },

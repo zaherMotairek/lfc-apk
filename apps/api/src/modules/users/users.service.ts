@@ -131,6 +131,25 @@ export class UsersService {
     };
   }
 
+  async exportPersonalData(userId: string) {
+    const profile = await this.getMe(userId);
+    const [predictionCount, eventRegistrations] = await Promise.all([
+      this.prisma.prediction.count({ where: { userId } }),
+      this.prisma.eventRegistration.count({ where: { userId } }),
+    ]);
+
+    return {
+      exportedAt: new Date().toISOString(),
+      profile,
+      activity: {
+        predictions: predictionCount,
+        eventRegistrations,
+      },
+      notice:
+        'Personal data export from RedLeb Hub. For deletion requests, contact the OLSC Lebanon committee.',
+    };
+  }
+
   async updateMe(userId: string, dto: UpdateProfileDto) {
     const nextOlscId = dto.olscId === undefined ? undefined : normalizeMemberId(dto.olscId);
     const nextLfcId = dto.lfcId === undefined ? undefined : normalizeMemberId(dto.lfcId);

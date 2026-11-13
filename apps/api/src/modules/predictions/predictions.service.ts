@@ -853,6 +853,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
             firstName: true,
             lastName: true,
             avatarUrl: true,
+            hideFromLeaderboard: true,
           },
         },
       },
@@ -860,20 +861,21 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
 
     if (snapshots.length) {
       const latestCreatedAt = snapshots[0].createdAt.getTime();
+      const visible = snapshots
+        .filter((item) => item.createdAt.getTime() === latestCreatedAt)
+        .filter((item) => !item.user.hideFromLeaderboard);
       return {
         type,
-        items: snapshots
-          .filter((item) => item.createdAt.getTime() === latestCreatedAt)
-          .map((item) => ({
-            rank: item.rank,
-            userId: item.userId,
-            fullName: `${item.user.firstName} ${item.user.lastName}`,
-            avatarUrl: item.user.avatarUrl,
-            totalPoints: item.totalPoints,
-            predictionCount: item.predictionCount,
-            exactScoreCount: item.exactScoreCount,
-            accuracyRate: item.accuracyRate,
-          })),
+        items: visible.map((item, index) => ({
+          rank: index + 1,
+          userId: item.userId,
+          fullName: `${item.user.firstName} ${item.user.lastName}`.trim(),
+          avatarUrl: item.user.avatarUrl,
+          totalPoints: item.totalPoints,
+          predictionCount: item.predictionCount,
+          exactScoreCount: item.exactScoreCount,
+          accuracyRate: item.accuracyRate,
+        })),
       };
     }
 
@@ -883,21 +885,41 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async getAdminDashboard() {
-    const [users, activeMembers, pendingInvites, predictions, upcomingMatches, events] =
-      await Promise.all([
-        this.prisma.user.count(),
-        this.prisma.membership.count({ where: { status: MembershipStatus.ACTIVE } }),
-        this.prisma.user.count({ where: { platformAccountStatus: PlatformAccountStatus.INVITED } }),
-        this.prisma.prediction.count(),
-        this.prisma.match.count({ where: { status: MatchStatus.UPCOMING } }),
-        this.prisma.event.count(),
-      ]);
+    const inactiveSince = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const [
+      users,
+      activeMembers,
+      pendingInvites,
+      inactiveMembers,
+      pendingApplications,
+      predictions,
+      upcomingMatches,
+      events,
+    ] = await Promise.all([
+      this.prisma.user.count(),
+      this.prisma.membership.count({ where: { status: MembershipStatus.ACTIVE } }),
+      this.prisma.user.count({ where: { platformAccountStatus: PlatformAccountStatus.INVITED } }),
+      this.prisma.user.count({
+        where: {
+          platformAccountStatus: PlatformAccountStatus.ACTIVE,
+          OR: [{ lastSeenAt: null }, { lastSeenAt: { lt: inactiveSince } }],
+        },
+      }),
+      this.prisma.membershipApplication.count({ where: { status: 'PENDING' } }),
+      this.prisma.prediction.count(),
+      this.prisma.match.count({ where: { status: MatchStatus.UPCOMING } }),
+      this.prisma.event.count(),
+    ]);
 
     return {
       members: {
         total: users,
         activeMemberships: activeMembers,
         pendingInvites,
+        inactive30Days: inactiveMembers,
+      },
+      applications: {
+        pending: pendingApplications,
       },
       predictions: {
         total: predictions,
@@ -970,6 +992,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
         firstName: true,
         lastName: true,
         avatarUrl: true,
+        hideFromLeaderboard: true,
       },
     });
 
@@ -979,6 +1002,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     return grouped
       .map((item) => {
         const user = userMap.get(item.userId);
+        if (user?.hideFromLeaderboard) return null;
         const predictionCount = item._count._all;
         const exactScoreCount = exactMap.get(item.userId) ?? 0;
         const totalPoints = item._sum.totalPoints ?? 0;
@@ -995,6 +1019,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
             : 0,
         };
       })
+      .filter((row): row is NonNullable<typeof row> => row !== null)
       .sort((a, b) => b.totalPoints - a.totalPoints)
       .map((item, index) => ({ ...item, rank: index + 1 }));
   }

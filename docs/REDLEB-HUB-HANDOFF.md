@@ -1,43 +1,38 @@
-# RedLeb Hub — overnight handoff (feat/redleb-hub)
+# RedLeb Hub — handoff (feat/redleb-hub)
 
-This branch implements **Phase 0** fully and a **pragmatic slice of Phases 1A–1** plus foundations for later phases. The original master prompt spans many months; items below mark what is **done**, **partial**, or **deferred**.
+Branch **`feat/redleb-hub`** on GitHub. **Not** every master-prompt item is done — see **`docs/REDLEB-MASTER-GAP.md`** and **`docs/REDLEB-PHASE-TRACKER.md`**.
 
-## Done (use tomorrow)
+## Ready for committee (high level)
 
-| Area | What you get |
-|------|----------------|
-| **Branding** | `RedLeb Hub` naming in HTML, PWA manifest, member/admin chrome; configurable logo via `GET /api/brand` + wordmark placeholder |
-| **Home** | New hero CTA → `/membership/apply`, highlight carousel (gallery), removed duplicate “Member Login” on home; footer/header single **Sign in** |
-| **Content** | Registry in `@kop/shared`, overrides API `GET /api/content/bundle`, admin **Texts & Labels** at `/admin/texts` with **revision history + one-step rollback** |
-| **Settings** | `SiteSetting` table — payment phone, WhatsApp, brand keys (no real numbers in repo) |
-| **Events** | `guestCount` 0–2 on registrations (API + community page) |
-| **Members** | XP/coins hidden in UI; XP/coin **awards disabled** in API; live goal feed removed; Match Hub no LIVE timeline |
-| **Safety** | `assert-local-db.mjs`, Jest + API e2e, Playwright smoke scaffold |
-| **IDs** | UI label **ALLRED SUPPORT ID** (DB column `lfcId` unchanged); import still accepts `lfc id` header |
+| Area | What works |
+|------|------------|
+| **Public** | RedLeb branding, home carousel, single Sign in, events (+ waitlist, `.ics`, guests), EN/عربي switch |
+| **Members** | 5-tab mobile app, card + QR, predictions (toggle in settings), leaderboard privacy opt-out, directory opt-in, notifications + push subscribe (needs VAPID) |
+| **Admin** | Dashboard (incl. inactive 30d, applications), texts + rollback, settings, audit, moderation, event QR check-in, newsletter draft/schedule, RedLeb Dispatch builder |
+| **Safety** | Local DB guard, migrations additive, e2e tests, CI + `check:strings` |
 
-## Partial / next sprints
-
-See **`docs/REDLEB-PHASE-TRACKER.md`** for live status.
-
-- **Phase 1A**: Registry ~30+ keys (member home/matches/leaderboard added); most UI strings still in CMS/components — extend registry + codemod
-- **Phase 3**: `/admin/settings` + brand image upload; ConfirmProvider; logo sharp/manifest still TODO
-- **Tooling**: ESLint flat config at repo root; Playwright starts API+web via `scripts/playwright-serve.mjs`
-- **Phases 4–8**: Incremental — not complete per master prompt
-
-## Local commands
+## Local setup
 
 ```powershell
+npm ci
 npm run prisma:migrate
 npm run prisma:seed
-# optional demo user + news/event for Playwright:
-$env:SEED_E2E_FIXTURES="true"; npm run prisma:seed
 npm run dev:api
 npm run dev:web
 npm run build
-npm run test
 npm run test:api:e2e
 ```
 
-## Branche
+Optional: `SEED_E2E_FIXTURES=true npm run prisma:seed` for Playwright member routes.
 
-Branch **`feat/redleb-hub`** is on GitHub (`origin/feat/redleb-hub`). Open a PR to merge into `main` when ready.
+## Production checklist
+
+- Run all pending Prisma migrations on staging/prod DB (never seed prod with default password).
+- Set strong `SEED_*` only on local; prod super-admin via invitation.
+- Configure SMTP, optional Cloudinary, `VAPID_*` if push enabled + `features.pushEnabled=true` in site settings.
+- HTTPS required for PWA push.
+- Open PR: https://github.com/zaherMotairek/lfc-apk/pull/new/feat/redleb-hub
+
+## Still open (honest)
+
+Phases **1A** (full string registry / nav editors), **2** (Lighthouse, card hero polish), **3** (scheduled CMS publish, panic restore), **6** (email blast to members), **8** (fill Arabic copy in admin texts). Estimate **weeks** of committee + dev time for 100 % of the original prompt.

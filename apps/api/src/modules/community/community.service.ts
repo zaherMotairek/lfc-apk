@@ -9,6 +9,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 import { MembershipCardsService } from '../members/membership-cards.service';
+import { PushDispatchService } from '../../common/services/push-dispatch.service';
 import {
   AddNewsCommentDto,
   RegisterEventDto,
@@ -22,7 +23,14 @@ export class CommunityService {
     private readonly auditService: AuditService,
     private readonly siteSettingsService: SiteSettingsService,
     private readonly membershipCardsService: MembershipCardsService,
+    private readonly pushDispatch: PushDispatchService,
   ) {}
+
+  private firePush(userId: string, title: string, message: string) {
+    void this.pushDispatch
+      .sendToUser(userId, { title, body: message })
+      .catch(() => undefined);
+  }
 
   async getCommunityFeed(limit = 30) {
     const [latestNews, latestEvents, latestAchievements] = await Promise.all([
@@ -170,17 +178,21 @@ export class CommunityService {
       },
     });
 
+    const eventTitle =
+      status === 'WAITLISTED' ? 'Added to waitlist' : 'Event registration confirmed';
+    const eventMessage =
+      status === 'WAITLISTED'
+        ? `You are waitlisted for ${event.title}.`
+        : `You are registered for ${event.title}.`;
     await this.prisma.notification.create({
       data: {
         userId,
         type: 'EVENT_UPDATE',
-        title: status === 'WAITLISTED' ? 'Added to waitlist' : 'Event registration confirmed',
-        message:
-          status === 'WAITLISTED'
-            ? `You are waitlisted for ${event.title}.`
-            : `You are registered for ${event.title}.`,
+        title: eventTitle,
+        message: eventMessage,
       },
     });
+    this.firePush(userId, eventTitle, eventMessage);
 
     await this.auditService.log({
       actorUserId: userId,
@@ -325,11 +337,19 @@ export class CommunityService {
         },
       }),
       this.prisma.leaderboardSnapshot.findMany({
-        where: { type: 'overall' },
+        where: { type: 'overall', user: { hideFromLeaderboard: false } },
         orderBy: [{ periodEnd: 'desc' }, { rank: 'asc' }],
         take: 10,
         include: {
-          user: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              avatarUrl: true,
+              hideFromLeaderboard: true,
+            },
+          },
         },
       }),
       this.prisma.userAchievement.findMany({

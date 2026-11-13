@@ -474,6 +474,35 @@ export function ProfilePage() {
       </div>
 
       <div className="kop-card p-6">
+        <h3 className="mb-1 font-bold text-ink">Your data</h3>
+        <p className="mb-4 text-sm text-black/50">
+          Download a JSON copy of your profile and activity summary.
+        </p>
+        <button
+          type="button"
+          className="kop-btn-secondary !text-sm"
+          onClick={async () => {
+            try {
+              const data = await apiRequest<Record<string, unknown>>('/users/me/export', {
+                token: accessToken,
+              });
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'redleb-hub-my-data.json';
+              a.click();
+              URL.revokeObjectURL(url);
+            } catch {
+              setError('Unable to export data.');
+            }
+          }}
+        >
+          Download my data
+        </button>
+      </div>
+
+      <div className="kop-card p-6">
         <h3 className="mb-1 font-bold text-ink">Change password</h3>
         <p className="mb-4 text-sm text-black/50">
           Update your login password. Works for members and admin accounts.
