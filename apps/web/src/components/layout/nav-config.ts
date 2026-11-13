@@ -6,16 +6,28 @@ export type NavItem = {
   external?: boolean;
 };
 
-export const PUBLIC_NAV: NavItem[] = [
-  { to: '/about', label: 'About' },
-  { to: '/committee', label: 'Committee' },
-  { to: '/events', label: 'Events' },
-  { to: '/news', label: 'News' },
-  { to: '/newsletter', label: 'Newsletter' },
-  { to: '/gallery', label: 'Gallery' },
-  { to: '/membership', label: 'Membership' },
-  { to: '/contact', label: 'Contact' },
+export type PublicNavSpec = {
+  to: string;
+  contentKey: string;
+  defaultLabel: string;
+};
+
+/** Public site nav — labels editable via content registry (`nav.public.*`). */
+export const PUBLIC_NAV_SPECS: PublicNavSpec[] = [
+  { to: '/about', contentKey: 'nav.public.about', defaultLabel: 'About' },
+  { to: '/committee', contentKey: 'nav.public.committee', defaultLabel: 'Committee' },
+  { to: '/events', contentKey: 'nav.public.events', defaultLabel: 'Events' },
+  { to: '/news', contentKey: 'nav.public.news', defaultLabel: 'News' },
+  { to: '/newsletter', contentKey: 'nav.public.newsletter', defaultLabel: 'Newsletter' },
+  { to: '/gallery', contentKey: 'nav.public.gallery', defaultLabel: 'Gallery' },
+  { to: '/membership', contentKey: 'nav.public.membership', defaultLabel: 'Membership' },
+  { to: '/contact', contentKey: 'nav.public.contact', defaultLabel: 'Contact' },
 ];
+
+export const PUBLIC_NAV: NavItem[] = PUBLIC_NAV_SPECS.map((spec) => ({
+  to: spec.to,
+  label: spec.defaultLabel,
+}));
 
 export const MEMBER_NAV: NavItem[] = [
   { to: '/app', label: 'Home', icon: '🏠', end: true },
