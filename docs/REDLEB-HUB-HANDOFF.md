@@ -70,8 +70,20 @@ Push on localhost: set `VITE_ENABLE_SW=true` in `apps/web/.env.local`, build or 
 
 - **HTTPS required** for PWA push. Service worker registers automatically on **production builds** (`npm run build` + static host).
 
-- Merge checklist: **`docs/REDLEB-PR-READY.md`**
-- Open PR: https://github.com/zaherMotairek/lfc-apk/pull/new/feat/redleb-hub
+- Merge checklist: **`docs/REDLEB-PR-READY.md`** · PR text: **`docs/REDLEB-PR-BODY.md`**
+- Open PR: https://github.com/zaherMotairek/lfc-apk/compare/main...feat/redleb-hub
+
+## Playwright (auth)
+
+```powershell
+$env:SEED_E2E_FIXTURES="true"; npm run prisma:seed -w @kop/api
+$env:CI="true"
+$env:E2E_ADMIN_PASSWORD="ChangeMeNow123!"
+$env:E2E_MEMBER_PASSWORD="E2eMember123!"
+npm run test:e2e:auth
+```
+
+Playwright starts API (`/api/health`) then Vite; auth tests reuse one login via `e2e/auth.setup.ts` (avoids API login throttle).
 
 
 
