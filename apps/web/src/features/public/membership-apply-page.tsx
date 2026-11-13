@@ -7,6 +7,7 @@ import { EditableText } from '../cms/editable-text';
 import { getCtaContent } from '../cms/get-cta-content';
 import { InlineEditToolbar } from '../cms/inline-edit-toolbar';
 import { CmsInlineEditProvider, useCmsInlineEdit } from '../cms/use-cms-inline-edit';
+import { useContent } from '../content/content-provider';
 
 type PackageType = 'LIGHT' | 'FULL';
 
@@ -42,7 +43,11 @@ const DEFAULT_APPLY_PAYMENT = {
 
 function MembershipApplyPageContent() {
   const { getSection, updateContent } = useCmsInlineEdit();
-  const applyPage = getCtaContent(getSection, 'applyPage', DEFAULT_APPLY_PAGE);
+  const applyTitleDefault = useContent('membership.apply.title', DEFAULT_APPLY_PAGE.title);
+  const applyPage = getCtaContent(getSection, 'applyPage', {
+    ...DEFAULT_APPLY_PAGE,
+    title: applyTitleDefault,
+  });
   const applyPayment = getCtaContent(getSection, 'applyPayment', DEFAULT_APPLY_PAYMENT);
   const siteSettingsQuery = useQuery({
     queryKey: ['site-settings-public'],

@@ -46,6 +46,7 @@ export const ADMIN_NAV: NavItem[] = [
   { to: '/admin/cms', label: 'CMS Pages', icon: '📝' },
   { to: '/admin/texts', label: 'Texts & Labels', icon: '✏️' },
   { to: '/admin/settings', label: 'Site settings', icon: '⚙️' },
+  { to: '/admin/design', label: 'Design', icon: '🎨' },
 ];
 
 /** Bottom tab bar on mobile admin — Newsletter must stay visible here. */

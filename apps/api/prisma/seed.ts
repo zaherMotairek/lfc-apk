@@ -331,7 +331,7 @@ async function seedCmsPages() {
                 ? 'Contact Committee'
                 : page.code === CmsPageCode.ABOUT
                   ? 'Join the Kop'
-                  : 'Explore',
+                  : 'Become a member',
           },
         },
       });
@@ -361,7 +361,7 @@ async function seedCmsPages() {
 
     if (page.code === CmsPageCode.ABOUT) {
       const aboutBody =
-        'OLSC Lebanon was built for one reason: to bring Liverpool supporters across Lebanon together under one official banner.\n\nWe are not just fans who watch a game on a screen. We are a community that shows up — for every kick-off, every last-minute winner, every European night, and every moment that makes this club the greatest in the world.\n\nWhether you joined years ago with an official membership card in your wallet, or you are discovering the Kop for the first time, you belong here. Our committee organizes watch parties, community events, and member experiences that carry the same energy you would feel walking up Anfield Road.\n\nThe Kop Platform is our digital home — Match Hub predictions, live GOOOOAAAAAL alerts, your official membership card, community feed, and the leaderboard that crowns the King of the Kop each season.\n\nThis is Liverpool FC in Lebanon. This is us. This is OLSC Lebanon.';
+        'OLSC Lebanon was built for one reason: to bring Liverpool supporters across Lebanon together under one official banner.\n\nWe are not just fans who watch a game on a screen. We are a community that shows up — for every kick-off, every last-minute winner, every European night, and every moment that makes this club the greatest in the world.\n\nWhether you joined years ago with an official membership card in your wallet, or you are discovering the Kop for the first time, you belong here. Our committee organizes watch parties, community events, and member experiences that carry the same energy you would feel walking up Anfield Road.\n\nRedLeb Hub is our digital home — Match Hub predictions, your official membership card, community feed, and the leaderboard built on prediction points each season.\n\nThis is Liverpool FC in Lebanon. This is us. This is OLSC Lebanon.';
 
       const existingAboutRichText = await prisma.cmsSection.findFirst({
         where: {
@@ -469,12 +469,12 @@ async function seedCmsPages() {
           sortOrder: 6,
           content: {
             block: 'platform',
-            eyebrow: 'Kop Platform',
+            eyebrow: 'RedLeb Hub',
             title: 'Your digital Kop identity',
-            body: 'Official members get access to Match Hub predictions, live goal notifications, digital membership cards, community events, and the Hall of Fame — the full supporters club experience, built for OLSC Lebanon.',
+            body: 'Official members get access to Match Hub predictions, digital membership cards, community events, and the season leaderboard — the full supporters club experience, built for OLSC Lebanon.',
             features: [
-              '⚽ Match Hub & live GOOOOAAAAAL alerts',
-              '🏆 Season leaderboard & King of the Kop',
+              '⚽ Match Hub & season predictions',
+              '🏆 Leaderboard by prediction points',
               '🎫 Official digital membership card',
               '📣 Community feed & watch party events',
             ],
@@ -543,7 +543,7 @@ async function seedCmsPages() {
             isEnabled: true,
             content: {
               body:
-                'Official membership remains managed by the OLSC Lebanon committee. The Kop Platform provides digital tools for members who already hold official membership.\n\nIf you received a physical card in previous seasons, log in and upload a clear photo from the Digital Membership Card page. The committee can use it for faster verification at events alongside your QR code.',
+                'Official membership remains managed by the OLSC Lebanon committee. RedLeb Hub provides digital tools for members who already hold official membership.\n\nIf you received a physical card in previous seasons, sign in and upload a clear photo from the Digital Membership Card page. The committee can use it for faster verification at events alongside your QR code.',
             },
           },
         });
@@ -562,7 +562,7 @@ async function seedCmsPages() {
             eyebrow: 'Two paths',
             heading: 'New members & existing card holders',
             intro:
-              'Whether you are joining for the first time or you already have a printed OLSC card, the Kop Platform supports both journeys.',
+              'Whether you are joining for the first time or you already have a printed OLSC card, RedLeb Hub supports both journeys.',
             newTitle: 'New to the platform',
             newBody:
               'Request membership information or activate your account after committee approval.',
@@ -577,7 +577,7 @@ async function seedCmsPages() {
           content: {
             block: 'steps',
             eyebrow: 'How it works',
-            heading: 'From committee to Kop Platform',
+            heading: 'From committee to RedLeb Hub',
             items: [
               {
                 icon: '📋',
@@ -734,9 +734,9 @@ async function seedCmsPages() {
           },
           {
             name: 'Layla Gemayel',
-            role: 'Digital & Kop Platform',
+            role: 'Digital & RedLeb Hub',
             initials: 'LG',
-            bio: 'Oversees the Kop Platform — Match Hub, digital cards, community feed, and member digital experience.',
+            bio: 'Oversees RedLeb Hub — Match Hub, digital cards, community feed, and member digital experience.',
             email: 'digital@olsclebanon.com',
           },
         ],
@@ -766,7 +766,7 @@ async function seedCmsPages() {
 
     if (page.code === CmsPageCode.CONTACT) {
       const contactIntro =
-        'Have a question about membership, events, or the Kop Platform? The OLSC Lebanon committee is here to help. Reach out through any channel below — we aim to respond within a few business days.';
+        'Have a question about membership, events, or RedLeb Hub? The OLSC Lebanon committee is here to help. Reach out through any channel below — we aim to respond within a few business days.';
 
       const existingContactRichText = await prisma.cmsSection.findFirst({
         where: { pageId: cmsPage.id, type: CmsSectionType.RICH_TEXT },

@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useConfirm } from '../../components/ui/confirm-provider';
 
 type CmsSection = {
   id?: string;
@@ -56,6 +57,7 @@ function textValue(value: unknown) {
 
 export function AdminCmsPage() {
   const { accessToken } = useAuth();
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const [code, setCode] = useState<(typeof PAGES)[number]['code']>('HOME');
   const [draft, setDraft] = useState<CmsPage | null>(null);
@@ -122,8 +124,14 @@ export function AdminCmsPage() {
     });
   }
 
-  function removeSection(index: number) {
-    if (!window.confirm('Delete this section?')) return;
+  async function removeSection(index: number) {
+    const ok = await confirm({
+      title: 'Delete section',
+      message: 'Delete this section?',
+      danger: true,
+      confirmLabel: 'Delete',
+    });
+    if (!ok) return;
     setDraft((prev) => {
       if (!prev) return prev;
       return {

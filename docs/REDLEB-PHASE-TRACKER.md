@@ -2,11 +2,11 @@
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| 0 | Done | Tests, Playwright scaffold, local DB guard |
-| 1A | In progress | Registry + `/admin/texts` + bundle API; full string extraction not done |
-| 1 | ~80% | Home/branding/IDs/guests/live/XP; some public pages still old CMS copy in DB |
-| 2 | Started | 5-tab mobile bar; design tokens doc; no `/design` gallery yet |
-| 3 | Started | `/admin/settings` (tabs); ConfirmDialog component; CMS unchanged depth |
+| 0 | Done | Tests, Playwright, local DB guard, ESLint flat config, dual dev-server for e2e |
+| 1A | In progress | ~22 registry keys; login/apply/header/footer wired; codemod bulk still TODO |
+| 1 | ~88% | Item 12 (Member login) fixed on About/Membership; seed defaults refreshed; login uses BrandLogo |
+| 2 | Started | 5-tab mobile bar; `/admin/design` gallery; design tokens doc |
+| 3 | Started | Settings + logo upload API; ConfirmProvider on all admin deletes; CMS unchanged depth |
 | 4 | Partial | Guests + event register on detail; no QR check-in / invitation cards |
 | 5 | Partial | Via phase 1; no web push / directory |
 | 6 | Not started | Newsletter engine exists as-is |

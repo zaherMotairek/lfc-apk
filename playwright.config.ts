@@ -27,9 +27,10 @@ export default defineConfig({
   webServer: process.env.PLAYWRIGHT_SKIP_WEBSERVER
     ? undefined
     : {
-        command: 'npm run dev:web -w @kop/web',
+        command:
+          'npx concurrently -k -n web,api "npm run dev -w @kop/web" "npm run dev:api"',
         url: baseURL,
         reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
+        timeout: 300_000,
       },
 });

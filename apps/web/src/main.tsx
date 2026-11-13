@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './app/router';
 import { AuthProvider } from './features/auth/auth-context';
 import { ContentProvider } from './features/content/content-provider';
+import { ConfirmProvider } from './components/ui/confirm-provider';
 import { ApiError } from './lib/api';
 import './styles.css';
 
@@ -39,7 +40,9 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <AuthProvider>
           <ContentProvider>
-            <AppRouter />
+            <ConfirmProvider>
+              <AppRouter />
+            </ConfirmProvider>
           </ContentProvider>
         </AuthProvider>
       </BrowserRouter>

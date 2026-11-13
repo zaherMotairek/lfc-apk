@@ -1,9 +1,10 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
-import { apiRequest } from '../../lib/api';
+import { apiRequest, apiUploadFile } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
 import { SITE_SETTING_KEYS } from '../../lib/site-settings';
+import { resolveMediaUrl } from '../../lib/media-url';
 
 type SettingRow = {
   key: string;
@@ -12,6 +13,8 @@ type SettingRow = {
   description?: string | null;
   isOverridden: boolean;
 };
+
+const BRAND_IMAGE_KEYS = new Set(['brand.logoUrlLight', 'brand.logoUrlDark', 'brand.iconUrl']);
 
 const TABS: Array<{ id: string; label: string; keys: string[] }> = [
   {
@@ -46,6 +49,7 @@ export function AdminSiteSettingsPage() {
   const [tab, setTab] = useState('branding');
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<string | null>(null);
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null);
 
   const settingsQuery = useQuery({
     queryKey: ['admin-site-settings'],
@@ -75,6 +79,24 @@ export function AdminSiteSettingsPage() {
     },
     onError: (err) => setMessage(err instanceof Error ? err.message : 'Save failed'),
   });
+
+  async function onBrandUpload(key: string, file: File) {
+    setUploadingKey(key);
+    setMessage(null);
+    try {
+      const result = await apiUploadFile<{ url: string; message: string }>(
+        '/admin/site-settings/upload-brand-image',
+        file,
+        accessToken,
+      );
+      setDraft((prev) => ({ ...prev, [key]: result.url }));
+      setMessage(result.message);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setUploadingKey(null);
+    }
+  }
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -111,19 +133,46 @@ export function AdminSiteSettingsPage() {
       </div>
 
       <form onSubmit={onSubmit} className="kop-card space-y-4 p-5">
-        {rows.map((row) => (
-          <label key={row.key} className="block text-sm font-medium">
-            {row.description ?? row.key}
-            <input
-              className="kop-input mt-1 font-mono text-xs"
-              value={draft[row.key] ?? row.value}
-              onChange={(e) => setDraft((p) => ({ ...p, [row.key]: e.target.value }))}
-            />
-            {row.isOverridden ? (
-              <span className="mt-1 block text-xs text-black/45">Default: {row.defaultValue}</span>
-            ) : null}
-          </label>
-        ))}
+        {rows.map((row) => {
+          const value = draft[row.key] ?? row.value;
+          const isImage = BRAND_IMAGE_KEYS.has(row.key);
+          return (
+            <div key={row.key} className="block text-sm font-medium">
+              <span>{row.description ?? row.key}</span>
+              {isImage && value ? (
+                <img
+                  src={resolveMediaUrl(value)}
+                  alt=""
+                  className="mt-2 h-14 max-w-[200px] object-contain"
+                />
+              ) : null}
+              <input
+                className="kop-input mt-1 font-mono text-xs"
+                value={value}
+                onChange={(e) => setDraft((p) => ({ ...p, [row.key]: e.target.value }))}
+              />
+              {isImage ? (
+                <label className="mt-2 inline-block cursor-pointer text-xs font-semibold text-lfc-red">
+                  {uploadingKey === row.key ? 'Uploading…' : 'Upload image'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    disabled={Boolean(uploadingKey)}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) void onBrandUpload(row.key, file);
+                      e.target.value = '';
+                    }}
+                  />
+                </label>
+              ) : null}
+              {row.isOverridden ? (
+                <span className="mt-1 block text-xs text-black/45">Default: {row.defaultValue}</span>
+              ) : null}
+            </div>
+          );
+        })}
         {settingsQuery.isLoading ? <p className="text-sm text-black/45">Loading…</p> : null}
         <button type="submit" className="kop-btn-primary" disabled={saveMutation.isPending || !rows.length}>
           Save {activeTab.label}

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useConfirm } from '../../components/ui/confirm-provider';
 
 type ApplicationStatus = 'PENDING' | 'PAYMENT_CONFIRMED' | 'APPROVED' | 'REJECTED';
 type PackageType = 'LIGHT' | 'FULL';
@@ -74,6 +75,7 @@ function downloadCsv(filename: string, content: string) {
 
 export function AdminApplicationsPage() {
   const { accessToken } = useAuth();
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'ALL'>('ALL');
@@ -337,9 +339,15 @@ export function AdminApplicationsPage() {
                   type="button"
                   className="text-xs font-semibold text-lfc-red"
                   onClick={() => {
-                    if (window.confirm(`Delete ${item.fullName}?`)) {
-                      deleteMutation.mutate(item.id);
-                    }
+                    void (async () => {
+                      const ok = await confirm({
+                        title: 'Delete application',
+                        message: `Delete ${item.fullName}?`,
+                        danger: true,
+                        confirmLabel: 'Delete',
+                      });
+                      if (ok) deleteMutation.mutate(item.id);
+                    })();
                   }}
                 >
                   Delete application

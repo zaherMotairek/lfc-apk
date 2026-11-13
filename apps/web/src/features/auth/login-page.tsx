@@ -2,8 +2,16 @@ import { FormEvent, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './auth-context';
 import { isAdminRole } from '../../components/layout/nav-config';
+import { BrandLogo } from '../../components/ui/brand-logo';
+import { useContent } from '../content/content-provider';
 
 export function LoginPage() {
+  const loginTitle = useContent('auth.login.title', 'Sign in to RedLeb Hub');
+  const loginSubtitle = useContent(
+    'auth.login.subtitle',
+    'Sign in to predict matches, join events, and manage your OLSC Lebanon digital experience.',
+  );
+  const formHeading = useContent('auth.login.formHeading', 'Sign in');
   const { login, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,13 +69,11 @@ export function LoginPage() {
         {/* Brand panel */}
         <div className="kop-gradient-hero flex flex-col justify-between p-8 text-white md:p-10">
           <div>
-            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-lg font-black">
-              OL
+            <div className="mb-6">
+              <BrandLogo variant="light" subtitle="" to="/" />
             </div>
-            <h1 className="text-3xl font-extrabold leading-tight">Welcome back, Kop</h1>
-            <p className="mt-4 text-sm leading-relaxed text-white/75">
-              Sign in to predict matches, join events, and manage your OLSC Lebanon digital experience.
-            </p>
+            <h1 className="text-3xl font-extrabold leading-tight">{loginTitle}</h1>
+            <p className="mt-4 text-sm leading-relaxed text-white/75">{loginSubtitle}</p>
           </div>
           <div className="mt-8 hidden border-t border-white/15 pt-6 text-xs text-white/50 md:block">
             You'll Never Walk Alone · OLSC Lebanon
@@ -76,7 +82,7 @@ export function LoginPage() {
 
         {/* Form panel */}
         <div className="bg-surface p-8 md:p-10">
-          <h2 className="text-2xl font-extrabold text-ink">Sign in</h2>
+          <h2 className="text-2xl font-extrabold text-ink">{formHeading}</h2>
           <p className="mt-2 text-sm text-black/55">
             Sign in with your username (e.g. <span className="font-semibold">test</span>) — not the full
             email.

@@ -4,6 +4,7 @@ import { BrandLogo } from '../components/ui/brand-logo';
 import { InstallAppBanner } from '../components/ui/install-app-banner';
 import { PageBackBar } from '../components/ui/page-back-bar';
 import { useAuth } from '../features/auth/auth-context';
+import { useContent } from '../features/content/content-provider';
 import { isAdminRole, PUBLIC_NAV } from '../components/layout/nav-config';
 
 function publicBackFallback(pathname: string) {
@@ -24,6 +25,10 @@ function publicBackFallback(pathname: string) {
 export function PublicLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, user } = useAuth();
+  const headerRibbon = useContent('public.header.ribbon', 'OLSC Lebanon · RedLeb Hub');
+  const becomeMemberLabel = useContent('nav.becomeMember', 'Become a member');
+  const signInLabel = useContent('nav.signIn', 'Sign in');
+  const membersFooterHeading = useContent('footer.membersHeading', 'Members');
   const isAdmin = isAdminRole(user?.roles);
   const location = useLocation();
   const loginTarget = {
@@ -41,7 +46,7 @@ export function PublicLayout() {
       <header className="sticky top-0 z-50 border-b border-white/10 kop-gradient-dark text-white shadow-xl">
         <div className="flex items-center justify-end gap-2 border-b border-white/10 bg-lfc-red px-4 py-1.5">
           <span className="mr-auto hidden text-[10px] font-semibold uppercase tracking-widest text-white/80 sm:inline">
-            OLSC Lebanon · RedLeb Hub
+            {headerRibbon}
           </span>
           <InstallAppBanner variant="compact" />
         </div>
@@ -76,10 +81,10 @@ export function PublicLayout() {
             ) : (
               <>
                 <Link to="/membership/apply" className="kop-btn-ghost !text-sm">
-                  Become a member
+                  {becomeMemberLabel}
                 </Link>
                 <Link to={loginTarget} state={loginState} className="kop-btn-ghost ml-2 !py-2.5 !text-sm">
-                  Sign in
+                  {signInLabel}
                 </Link>
               </>
             )}
@@ -147,7 +152,7 @@ export function PublicLayout() {
                     className="kop-btn-primary mt-2 text-center"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Become a member
+                    {becomeMemberLabel}
                   </Link>
                   <Link
                     to={loginTarget}
@@ -155,7 +160,7 @@ export function PublicLayout() {
                     className="kop-btn-secondary mt-2 text-center !border-white/20 !bg-white/10 !text-white"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Sign in
+                    {signInLabel}
                   </Link>
                 </>
               )}
@@ -194,7 +199,7 @@ export function PublicLayout() {
             </div>
           </div>
           <div>
-            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">Members</div>
+            <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/40">{membersFooterHeading}</div>
                         <div className="flex flex-col gap-2 text-sm text-white/70">
               {isAuthenticated ? (
                 <>
@@ -213,10 +218,10 @@ export function PublicLayout() {
               ) : (
                 <>
                   <Link to="/membership/apply" className="hover:text-white">
-                    Become a member
+                    {becomeMemberLabel}
                   </Link>
                   <Link to={loginTarget} state={loginState} className="hover:text-white">
-                    Sign in
+                    {signInLabel}
                   </Link>
                 </>
               )}

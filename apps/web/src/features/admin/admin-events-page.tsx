@@ -8,6 +8,7 @@ import {
   startUnchangedForMin,
 } from '../../lib/datetime-local';
 import { PageHeader } from '../../components/ui/page-header';
+import { useConfirm } from '../../components/ui/confirm-provider';
 
 type AdminEventItem = {
   id: string;
@@ -61,6 +62,7 @@ function toDatetimeLocal(value?: string | null) {
 
 export function AdminEventsPage() {
   const { accessToken } = useAuth();
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const [form, setForm] = useState(EMPTY_FORM);
   const [message, setMessage] = useState<string | null>(null);
@@ -204,14 +206,14 @@ export function AdminEventsPage() {
     URL.revokeObjectURL(url);
   }
 
-  function askDelete(item: AdminEventItem) {
-    if (
-      window.confirm(
-        `Delete "${item.title}"? All registrations will also be deleted. This cannot be undone.`,
-      )
-    ) {
-      deleteMutation.mutate(item.id);
-    }
+  async function askDelete(item: AdminEventItem) {
+    const ok = await confirm({
+      title: 'Delete event',
+      message: `Delete "${item.title}"? All registrations will also be deleted. This cannot be undone.`,
+      danger: true,
+      confirmLabel: 'Delete',
+    });
+    if (ok) deleteMutation.mutate(item.id);
   }
 
   return (

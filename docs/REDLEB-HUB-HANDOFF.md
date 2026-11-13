@@ -20,7 +20,8 @@ This branch implements **Phase 0** fully and a **pragmatic slice of Phases 1A–
 See **`docs/REDLEB-PHASE-TRACKER.md`** for live status.
 
 - **Phase 1A**: Registry has ~12 keys; most UI strings still in CMS/components — extend registry + codemod
-- **Phase 3**: `/admin/settings` (branding/contact/payment text fields); logo upload + sharp sizes still TODO
+- **Phase 3**: `/admin/settings` + brand image upload; ConfirmProvider; logo sharp/manifest still TODO
+- **Tooling**: ESLint flat config at repo root; Playwright starts API+web via `scripts/playwright-serve.mjs`
 - **Phases 4–8**: Incremental — not complete per master prompt
 
 ## Local commands

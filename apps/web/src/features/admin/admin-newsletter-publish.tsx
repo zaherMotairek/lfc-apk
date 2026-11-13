@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest, apiUploadForm } from '../../lib/api';
+import { useConfirm } from '../../components/ui/confirm-provider';
 
 type AdminNewsletter = {
   id: string;
@@ -17,6 +18,7 @@ type AdminNewsletter = {
 
 export function AdminNewsletterPublish() {
   const { accessToken } = useAuth();
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [issueNumber, setIssueNumber] = useState('1');
@@ -163,9 +165,15 @@ export function AdminNewsletterPublish() {
                 type="button"
                 className="kop-btn-secondary !border-lfc-red/25 !px-3 !py-1.5 !text-xs !text-lfc-red"
                 onClick={() => {
-                  if (window.confirm(`Remove "${item.title}" from the website?`)) {
-                    deleteMutation.mutate(item.id);
-                  }
+                  void (async () => {
+                    const ok = await confirm({
+                      title: 'Remove issue',
+                      message: `Remove "${item.title}" from the website?`,
+                      danger: true,
+                      confirmLabel: 'Remove',
+                    });
+                    if (ok) deleteMutation.mutate(item.id);
+                  })();
                 }}
               >
                 Delete

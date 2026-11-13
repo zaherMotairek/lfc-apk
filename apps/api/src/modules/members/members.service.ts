@@ -661,14 +661,21 @@ export class MembersService {
       throw new NotFoundException('User not found');
     }
 
-    const [loginCount, predictionCount, eventRegistrations, commentCount] = await Promise.all([
-      this.prisma.loginEvent.count({ where: { userId } }),
-      this.prisma.prediction.count({ where: { userId } }),
-      this.prisma.eventRegistration.count({
-        where: { userId, status: { not: RegistrationStatus.CANCELED } },
-      }),
-      this.prisma.comment.count({ where: { userId } }),
-    ]);
+    const [loginCount, predictionCount, eventRegistrations, commentCount, recentLogins] =
+      await Promise.all([
+        this.prisma.loginEvent.count({ where: { userId } }),
+        this.prisma.prediction.count({ where: { userId } }),
+        this.prisma.eventRegistration.count({
+          where: { userId, status: { not: RegistrationStatus.CANCELED } },
+        }),
+        this.prisma.comment.count({ where: { userId } }),
+        this.prisma.loginEvent.findMany({
+          where: { userId },
+          orderBy: { createdAt: 'desc' },
+          take: 12,
+          select: { id: true, createdAt: true },
+        }),
+      ]);
 
     return {
       user,
@@ -676,6 +683,7 @@ export class MembersService {
       predictionCount,
       eventRegistrations,
       commentCount,
+      recentLogins,
     };
   }
 }

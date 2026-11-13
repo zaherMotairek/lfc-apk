@@ -4,4 +4,4 @@
 - **Type**: Plus Jakarta Sans (loaded in `index.html`)
 - **Components**: `kop-btn-*`, `kop-card`, `kop-input`, badges — migrate ad-hoc styles here over time
 - **Mobile**: 44px targets, safe-area padding on member/admin tab bars
-- **Dev gallery**: planned at `/design` (not routed yet)
+- **Dev gallery**: `/admin/design` (admin route)

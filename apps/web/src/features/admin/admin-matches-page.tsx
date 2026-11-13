@@ -4,6 +4,7 @@ import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { isDatetimeLocalInPast, minDatetimeLocal } from '../../lib/datetime-local';
 import { PageHeader } from '../../components/ui/page-header';
+import { useConfirm } from '../../components/ui/confirm-provider';
 
 type LiverpoolSquadPlayer = {
   number: number;
@@ -133,6 +134,7 @@ function nextWinningOutcome(home: number, away: number) {
 
 export function AdminMatchesPage() {
   const { accessToken } = useAuth();
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const { data: matches, isLoading } = useQuery({
     queryKey: ['matches'],
@@ -229,7 +231,13 @@ export function AdminMatchesPage() {
   }
 
   async function deleteMatch(match: AdminMatchItem) {
-    if (!window.confirm(`Delete match vs ${match.opponent}? This cannot be undone.`)) return;
+    const ok = await confirm({
+      title: 'Delete match',
+      message: `Delete match vs ${match.opponent}? This cannot be undone.`,
+      danger: true,
+      confirmLabel: 'Delete',
+    });
+    if (!ok) return;
     setMessage(null);
     try {
       const result = await apiRequest<{ message: string }>(`/matches/${match.id}`, {

@@ -5,7 +5,7 @@ export class ApiRootController {
   @Get()
   root() {
     return {
-      message: 'Kop Platform API — OLSC Lebanon',
+      message: 'RedLeb Hub API — OLSC Lebanon',
       status: 'ok',
       docs: {
         health: '/api/health',
