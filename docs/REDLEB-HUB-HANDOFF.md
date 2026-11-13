@@ -20,7 +20,7 @@ Branch **`feat/redleb-hub`** on GitHub. **Not** every master-prompt item is done
 
 | **Admin** | Dashboard, texts + panic restore, settings + push broadcast, audit, moderation, event QR check-in, newsletter schedule + member emails |
 
-| **Safety** | Local DB guard, migrations additive, e2e tests, CI + `check:strings`, Playwright smoke + i18n RTL |
+| **Safety** | Local DB guard, migrations additive, e2e tests, CI + strict `check:strings`, Playwright smoke/auth, Lighthouse |
 
 
 

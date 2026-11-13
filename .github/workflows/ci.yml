@@ -39,6 +39,9 @@ jobs:
       - run: npm run test
       - run: npm run test:api:e2e
       - run: npm run check:strings
+        env:
+          CHECK_STRINGS_STRICT: '1'
+          CI: true
 
   playwright-smoke:
     runs-on: ubuntu-latest

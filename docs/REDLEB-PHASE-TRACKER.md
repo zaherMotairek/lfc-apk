@@ -1,16 +1,18 @@
 # RedLeb Hub — phase tracker (honest)
 
+Branch: **`feat/redleb-hub`** · Last sync: merge-ready sprint.
+
 | Phase | Status | Notes |
 |-------|--------|-------|
-| 0 | Done | Tests, Playwright, local DB guard, ESLint flat config, dual dev-server for e2e |
-| 1A | In progress | Registry keys; ar presets; panic restore; codemod bulk still TODO |
-| 1 | ~92% | Dynamic PWA manifest from `/api/brand/manifest.webmanifest`; brand.version bump on save |
-| 3 | In progress | Moderation, audit, feature flags API, check-in QR, ConfirmProvider |
-| 4 | Partial | Guests, waitlist UI, invitation share card, `.ics`, QR check-in |
-| 2 | In progress | Code-split admin/newsletter; font preload; offline SW |
-| 5 | ~95% | Push + SW prod register, offline shell, admin broadcast |
-| 6 | ~85% | Draft/schedule/publish, cron auto-publish, member email blast + resend |
-| 7 | Partial | CI workflow + ops/privacy docs |
-| 8 | In progress | ar bundle defaults; import presets in /admin/texts |
+| 0 | Done | Playwright smoke/auth, API e2e, local DB guard, Lighthouse job |
+| 1A | ~90% | ~100 registry keys; nav order; strict `check:strings` in CI; bulk codemod optional |
+| 1 | ~95% | RedLeb branding, single Sign in, guests, no live alerts by default |
+| 2 | ~90% | Admin lazy chunks, offline SW + registry, Lighthouse smoke |
+| 3 | ~88% | Dashboard registry, audit, moderation, settings tabs |
+| 4 | ~90% | Guests, waitlist, `.ics`, invitation card, QR check-in |
+| 5 | ~95% | Push + broadcast; directory opt-in |
+| 6 | ~90% | Newsletter schedule, member email blast |
+| 7 | ~90% | CI matrix; handoff + launch docs |
+| 8 | ~85% | ar presets; committee review of copy still manual |
 
-Update this file as phases complete. Branch: `feat/redleb-hub`.
+**Merge:** open PR from `feat/redleb-hub` → `main`; no further sprints required for committee launch.

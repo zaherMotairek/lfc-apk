@@ -1,26 +1,28 @@
 ## Summary
 
-RedLeb Hub delivers the OLSC Lebanon committee platform on branch `feat/redleb-hub`: public site + member app (PWA), admin control center, editable content registry (EN/ar), events, predictions, newsletter workflow, push notifications, and operational safety (audit, migrations, CI).
+RedLeb Hub on **`feat/redleb-hub`**: OLSC Lebanon public site, member PWA, and committee admin — editable copy (EN + عربي), events, predictions-first Match Hub, newsletter workflow, push, and production safety (audit, migrations, CI).
 
 ### Highlights
 
-- **Branding & i18n**: Dynamic manifest, EN/عربي switch, RTL, registry-backed nav labels (public + member), panic restore + Arabic presets in `/admin/texts`
-- **Members**: Digital card + QR, directory opt-in, leaderboard privacy, push subscribe, data export
-- **Admin**: Dashboard metrics, moderation, event QR check-in, newsletter schedule + member emails, push broadcast, site settings, audit log
-- **Tech**: Service worker for offline + push (prod), admin route code-splitting, Playwright smoke + auth in CI, API e2e (11 tests)
+- **Content**: ~100 registry keys, panic restore, Arabic import presets; nav labels + order/hide (public, member, admin) via Site settings → Navigation + Texts
+- **Members**: Digital card, QR, directory opt-in, leaderboard privacy, push (VAPID), offline shell (EN/ar)
+- **Admin**: Dashboard + quick links in registry, moderation, QR check-in, newsletter schedule + member emails, push broadcast, feature flags (`matchLiveEnabled` default **off**)
+- **CI**: build + API e2e (11), `check:strings`, Playwright smoke/auth, Lighthouse on `offline.html`
 
-### Not in scope (honest)
+### Honest gaps
 
-Full master-prompt closure: admin nav reorder, 100 % string codemod, Lighthouse budget in CI. See `docs/REDLEB-MASTER-GAP.md`.
+No full page-block drag CMS, no 100 % string codemod. See `docs/REDLEB-MASTER-GAP.md`.
 
 ## Test plan
 
-- [ ] `npm ci && npm run build && npm run test:api:e2e`
-- [ ] `npm run test:e2e:smoke` (public + i18n)
-- [ ] `npm run test:e2e:auth` with `SEED_E2E_FIXTURES=true` seed and matching passwords
-- [ ] Staging: SMTP, optional VAPID, migrations `20261113120000`–`20261113150000`
-- [ ] Committee sign-off on Arabic copy in Admin → Texts
+- [ ] `npm ci && npm run build && npm run test:api:e2e && npm run check:strings`
+- [ ] `npm run test:e2e:smoke` and `npm run test:e2e:auth` (seed: `SEED_E2E_FIXTURES=true`, passwords per CI)
+- [ ] `npm run lighthouse:smoke`
+- [ ] Staging: migrations `20261113120000`–`20261113150000`, SMTP, optional VAPID
+- [ ] Committee: Arabic in Admin → Texts; brand in Site settings
 
-## Deploy notes
+## Deploy
 
-Handoff: `docs/REDLEB-HUB-HANDOFF.md` · Merge checklist: `docs/REDLEB-PR-READY.md` · Launch: `LAUNCH-CHECKLIST.md`
+`docs/REDLEB-HUB-HANDOFF.md` · `docs/REDLEB-PR-READY.md` · `LAUNCH-CHECKLIST.md`
+
+**Compare:** https://github.com/zaherMotairek/lfc-apk/compare/main...feat/redleb-hub

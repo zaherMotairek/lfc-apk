@@ -11,13 +11,13 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 | 0.1 | Playwright smoke + baseline captures | ✅ CI smoke + auth jobs; desktop/mobile projects |
 | 0.2 | Jest API characterization + e2e flows | ✅ |
 | 0.3 | Repo hygiene, SiteSetting, assert-local-db | ✅ |
-| 0.4 | Phase report | 🟡 Handoff + this doc |
+| 0.4 | Phase report | ✅ Handoff + PR-READY + PHASE-TRACKER + this doc |
 
 ## Phase 1A — Editable foundation
 
 | ID | Item | Status |
 |----|------|--------|
-| 1A.1 | Content registry + useContent/T | 🟡 ~35 keys; bulk codemod ⬜ |
+| 1A.1 | Content registry + useContent/T | 🟡 ~100 keys; bulk codemod ⬜ |
 | 1A.2 | Overrides + revisions + bundle API | ✅ |
 | 1A.3 | Admin Texts + inline CMS edit | 🟡 Texts ✅; inline 🟡 |
 | 1A.4 | CTA/link editor | 🟡 Header/footer CTAs in registry |
@@ -27,7 +27,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 | 1A.8 | Theme editor live preview | 🟡 Brand colours in settings |
 | 1A.9 | Panic restore all content | ✅ Per-language panic + per-key rollback |
 | 1A.10 | ar language slots | 🟡 Bundled ar defaults + import presets; committee review ⬜ |
-| 1A.11 | Lint/script no hardcoded strings | 🟡 `scripts/check-user-facing-strings.mjs` |
+| 1A.11 | Lint/script no hardcoded strings | ✅ `check:strings` scans public/member/auth/admin/layouts; fails in CI |
 
 ## Phase 1 — Committee (1–19)
 
