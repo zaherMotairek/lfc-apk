@@ -7,6 +7,7 @@ import {
   Put,
   UploadedFile,
   UseGuards,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -18,6 +19,7 @@ import { PermissionCode } from '@kop/shared';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { MediaStorageService } from '../../common/services/media-storage.service';
 import { SiteSettingsService } from './site-settings.service';
+import { BrandAssetService } from './brand-asset.service';
 import { UpdateSiteSettingsDto } from './dto/update-site-settings.dto';
 
 @Controller()
@@ -25,6 +27,7 @@ export class SiteSettingsController {
   constructor(
     private readonly siteSettingsService: SiteSettingsService,
     private readonly mediaStorageService: MediaStorageService,
+    private readonly brandAssetService: BrandAssetService,
   ) {}
 
   @Get('site-settings/public')
@@ -57,6 +60,7 @@ export class SiteSettingsController {
   )
   uploadBrandImage(
     @UploadedFile() file: Express.Multer.File,
+    @Query('slot') slot: string | undefined,
     @CurrentUser() user: { id: string },
   ) {
     if (!file) {
@@ -65,6 +69,15 @@ export class SiteSettingsController {
     if (!file.mimetype?.startsWith('image/')) {
       throw new BadRequestException('Only image files are allowed');
     }
+    const slotNorm = (slot ?? '').toLowerCase();
+    if (slotNorm === 'icon' || slotNorm === 'brand.iconurl') {
+      return this.brandAssetService.generatePwaIconsFromUpload(user.id, file).then((urls) => ({
+        url: urls.iconUrl,
+        sizes: urls,
+        message: 'Brand icon uploaded with PWA sizes.',
+      }));
+    }
+
     return this.mediaStorageService
       .uploadBrandAsset(user.id, file)
       .then((url) => ({ url, message: 'Brand image uploaded.' }));

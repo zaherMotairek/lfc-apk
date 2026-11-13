@@ -4,6 +4,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { useAuth } from '../auth/auth-context';
 import { useContent } from '../content/content-provider';
+import { fetchPublicSiteSettings } from '../../lib/site-settings';
 
 type EventDetail = {
   id: string;
@@ -51,6 +52,15 @@ export function EventDetailPage() {
   const guestNamesLabel = useContent('events.guests.namesLabel', 'Guest names (optional)');
   const apiBase = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
   const calendarUrl = `${apiBase}/events/${id}/calendar.ics`;
+
+  const siteSettingsQuery = useQuery({
+    queryKey: ['site-settings-public'],
+    queryFn: fetchPublicSiteSettings,
+  });
+  const maxGuests = Math.min(
+    2,
+    Math.max(0, Number(siteSettingsQuery.data?.['features.guestsMax'] ?? '2') || 2),
+  );
 
   const registerMutation = useMutation({
     mutationFn: () =>
@@ -263,8 +273,8 @@ export function EventDetailPage() {
                           onChange={(e) => setGuestCount(Number(e.target.value))}
                         >
                           <option value={0}>Just me</option>
-                          <option value={1}>Me + 1 guest</option>
-                          <option value={2}>Me + 2 guests</option>
+                          {maxGuests >= 1 ? <option value={1}>Me + 1 guest</option> : null}
+                          {maxGuests >= 2 ? <option value={2}>Me + 2 guests</option> : null}
                         </select>
                       </label>
                       {guestCount > 0 ? (

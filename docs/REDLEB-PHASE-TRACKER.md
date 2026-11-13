@@ -5,8 +5,8 @@
 | 0 | Done | Tests, Playwright, local DB guard, ESLint flat config, dual dev-server for e2e |
 | 1A | In progress | ~35 keys; lang bundle en/ar; string check script; codemod bulk still TODO |
 | 1 | ~92% | Dynamic PWA manifest from `/api/brand/manifest.webmanifest`; brand.version bump on save |
-| 3 | Started | Settings tabs (features/social), audit log UI, committee guide, ConfirmProvider |
-| 4 | Partial | Guests + names; public `.ics` calendar download |
+| 3 | In progress | Moderation, audit, feature flags API, check-in QR, ConfirmProvider |
+| 4 | Partial | Guests + dynamic max; `.ics`; QR staff check-in |
 | 2 | Started | 5-tab mobile bar; `/admin/design` gallery; design tokens doc |
 | 5 | Partial | Via phase 1; no web push / directory |
 | 6 | Not started | Newsletter engine exists as-is |

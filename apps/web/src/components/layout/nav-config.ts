@@ -43,6 +43,8 @@ export const ADMIN_NAV: NavItem[] = [
   { to: '/admin/newsletter', label: 'Newsletter', icon: '🗞️' },
   { to: '/admin/news', label: 'News', icon: '📰' },
   { to: '/admin/events', label: 'Events', icon: '📅' },
+  { to: '/admin/check-in', label: 'Event check-in', icon: '✅' },
+  { to: '/admin/moderation', label: 'Moderation', icon: '🛡️' },
   { to: '/admin/cms', label: 'CMS Pages', icon: '📝' },
   { to: '/admin/texts', label: 'Texts & Labels', icon: '✏️' },
   { to: '/admin/settings', label: 'Site settings', icon: '⚙️' },

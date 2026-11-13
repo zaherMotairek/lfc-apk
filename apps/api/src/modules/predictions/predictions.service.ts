@@ -16,6 +16,7 @@ import {
 import { LIVERPOOL_SQUAD_2025_26, PREDICTION_SCORING } from '@kop/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
+import { SiteSettingsService } from '../site-settings/site-settings.service';
 import {
   calculatePredictionPoints,
   isLiverpoolMatch,
@@ -44,6 +45,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
+    private readonly siteSettingsService: SiteSettingsService,
   ) {}
 
   onModuleInit() {
@@ -638,6 +640,11 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async submitPrediction(userId: string, dto: SubmitPredictionDto) {
+    const predictionsOn = await this.siteSettingsService.arePredictionsEnabled();
+    if (!predictionsOn) {
+      throw new BadRequestException('Match predictions are temporarily disabled.');
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {

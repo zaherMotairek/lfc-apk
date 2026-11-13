@@ -97,8 +97,10 @@ export function AdminSiteSettingsPage() {
     setUploadingKey(key);
     setMessage(null);
     try {
+      const slot =
+        key === 'brand.iconUrl' ? '?slot=icon' : '';
       const result = await apiUploadFile<{ url: string; message: string }>(
-        '/admin/site-settings/upload-brand-image',
+        `/admin/site-settings/upload-brand-image${slot}`,
         file,
         accessToken,
       );

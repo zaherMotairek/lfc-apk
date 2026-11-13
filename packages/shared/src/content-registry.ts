@@ -268,6 +268,38 @@ export const CONTENT_REGISTRY: ContentRegistryEntry[] = [
     area: 'Member app',
     description: 'Leaderboard intro line.',
   },
+  {
+    key: 'member.card.title',
+    defaultEn: 'Digital membership card',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Membership card page title.',
+  },
+  {
+    key: 'member.notifications.title',
+    defaultEn: 'Notifications',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Notifications page title.',
+  },
+  {
+    key: 'member.hall.title',
+    defaultEn: 'Hall of Fame',
+    type: 'text',
+    maxLength: 80,
+    area: 'Member app',
+    description: 'Hall of fame page title.',
+  },
+  {
+    key: 'member.hall.subtitle',
+    defaultEn: 'Prediction legends and community milestones.',
+    type: 'text',
+    maxLength: 200,
+    area: 'Member app',
+    description: 'Hall of fame intro.',
+  },
 ];
 
 export const CONTENT_DEFAULTS_EN: Record<string, string> = Object.fromEntries(

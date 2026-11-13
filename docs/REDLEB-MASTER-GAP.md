@@ -33,7 +33,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 
 | # | Item | Status |
 |---|------|--------|
-| 1 | Configurable brand + manifest | 🟡 Upload + dynamic manifest; sharp multi-size ⬜ |
+| 1 | Configurable brand + manifest | 🟡 Upload + dynamic manifest; sharp PWA sizes on icon upload ✅ |
 | 2 | RedLeb naming | 🟡 UI/seed; internal package names unchanged (OK) |
 | 3–11 | Home copy + carousel + single Sign in | 🟡 |
 | 12 | No duplicate Member Login | ✅ |

@@ -7,6 +7,8 @@ import { MatchStatus, NewsStatus, RegistrationStatus } from '@prisma/client';
 import { isEventPast } from '../../common/utils/event.utils';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
+import { SiteSettingsService } from '../site-settings/site-settings.service';
+import { MembershipCardsService } from '../members/membership-cards.service';
 import {
   AddNewsCommentDto,
   RegisterEventDto,
@@ -18,6 +20,8 @@ export class CommunityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
+    private readonly siteSettingsService: SiteSettingsService,
+    private readonly membershipCardsService: MembershipCardsService,
   ) {}
 
   async getCommunityFeed(limit = 30) {
@@ -105,9 +109,10 @@ export class CommunityService {
   }
 
   async registerToEvent(eventId: string, userId: string, dto: RegisterEventDto) {
+    const maxGuests = await this.siteSettingsService.getMaxGuests();
     const guestCount = dto.guestCount ?? 0;
-    if (guestCount < 0 || guestCount > 2) {
-      throw new BadRequestException('guestCount must be between 0 and 2');
+    if (guestCount < 0 || guestCount > maxGuests) {
+      throw new BadRequestException(`guestCount must be between 0 and ${maxGuests}`);
     }
 
     const event = await this.prisma.event.findUnique({
@@ -246,7 +251,7 @@ export class CommunityService {
   async listNewsComments(newsId: string) {
     await this.ensureNewsExists(newsId);
     return this.prisma.comment.findMany({
-      where: { newsArticleId: newsId },
+      where: { newsArticleId: newsId, isHidden: false },
       orderBy: { createdAt: 'asc' },
       include: {
         user: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
@@ -341,6 +346,99 @@ export class CommunityService {
       currentKingOfTheKop: king,
       topPredictors,
       recentAchievements,
+    };
+  }
+
+  async listRecentCommentsForAdmin(limit = 80) {
+    const take = Math.min(Math.max(limit, 1), 200);
+    return this.prisma.comment.findMany({
+      take,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: { select: { id: true, firstName: true, lastName: true, email: true } },
+        newsArticle: { select: { id: true, title: true, slug: true } },
+      },
+    });
+  }
+
+  async hideComment(commentId: string, actorUserId: string) {
+    const comment = await this.prisma.comment.findUnique({ where: { id: commentId } });
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+    await this.prisma.comment.update({
+      where: { id: commentId },
+      data: { isHidden: true },
+    });
+    await this.auditService.log({
+      actorUserId,
+      action: 'HIDE_NEWS_COMMENT',
+      entityType: 'COMMENT',
+      entityId: commentId,
+    });
+    return { message: 'Comment hidden from members.' };
+  }
+
+  async deleteComment(commentId: string, actorUserId: string) {
+    const comment = await this.prisma.comment.findUnique({ where: { id: commentId } });
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+    await this.prisma.comment.delete({ where: { id: commentId } });
+    await this.auditService.log({
+      actorUserId,
+      action: 'DELETE_NEWS_COMMENT',
+      entityType: 'COMMENT',
+      entityId: commentId,
+    });
+    return { message: 'Comment deleted.' };
+  }
+
+  async staffEventCheckIn(eventId: string, qrToken: string, staffUserId: string) {
+    const event = await this.prisma.event.findUnique({ where: { id: eventId } });
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    const verify = await this.membershipCardsService.verifyCard(qrToken.trim(), staffUserId, eventId);
+    if (verify.result !== 'VALID' || !('member' in verify)) {
+      return verify;
+    }
+
+    const card = await this.prisma.membershipCard.findUnique({
+      where: { qrSecureToken: qrToken.trim() },
+      select: { userId: true },
+    });
+    if (!card) {
+      return verify;
+    }
+
+    const registration = await this.prisma.eventRegistration.findUnique({
+      where: { userId_eventId: { userId: card.userId, eventId } },
+    });
+
+    if (registration && registration.status !== RegistrationStatus.CANCELED) {
+      await this.prisma.eventRegistration.update({
+        where: { id: registration.id },
+        data: {
+          status: RegistrationStatus.ATTENDED,
+          attendanceMarkedAt: new Date(),
+        },
+      });
+    }
+
+    await this.auditService.log({
+      actorUserId: staffUserId,
+      action: 'EVENT_QR_CHECK_IN',
+      entityType: 'EVENT',
+      entityId: eventId,
+      metadata: { memberUserId: card.userId, qrResult: verify.result },
+    });
+
+    return {
+      ...verify,
+      attendanceMarked: Boolean(registration),
+      guests: registration?.guestCount ?? 0,
     };
   }
 

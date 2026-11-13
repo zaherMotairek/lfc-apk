@@ -57,6 +57,20 @@ export class MediaStorageService {
     return this.uploadImage(userId, file, 'brand', folder);
   }
 
+  async uploadBrandBuffer(
+    userId: string,
+    buffer: Buffer,
+    label: string,
+    mimeType: string,
+  ): Promise<string> {
+    const file = {
+      buffer,
+      mimetype: mimeType,
+      originalname: `${label}.png`,
+    } as Express.Multer.File;
+    return this.uploadBrandAsset(userId, file);
+  }
+
   async uploadNewsletterPdf(
     userId: string,
     file: Express.Multer.File,

@@ -42,6 +42,8 @@ import { AdminSiteSettingsPage } from '../features/admin/admin-site-settings-pag
 import { AdminDesignPage } from '../features/admin/admin-design-page';
 import { AdminAuditLogPage } from '../features/admin/admin-audit-log-page';
 import { AdminGuidePage } from '../features/admin/admin-guide-page';
+import { AdminModerationPage } from '../features/admin/admin-moderation-page';
+import { AdminCheckInPage } from '../features/admin/admin-check-in-page';
 import { NewsletterListPage } from '../features/public/newsletter-list-page';
 import { NewsletterDetailPage } from '../features/public/newsletter-detail-page';
 
@@ -95,6 +97,8 @@ export function AppRouter() {
           <Route path="design" element={<AdminDesignPage />} />
           <Route path="guide" element={<AdminGuidePage />} />
           <Route path="audit" element={<AdminAuditLogPage />} />
+          <Route path="moderation" element={<AdminModerationPage />} />
+          <Route path="check-in" element={<AdminCheckInPage />} />
           <Route path="news" element={<AdminNewsPage />} />
           <Route path="events" element={<AdminEventsPage />} />
           <Route path="matches" element={<AdminMatchesPage />} />

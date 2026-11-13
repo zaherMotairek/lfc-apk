@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useContent } from '../content/content-provider';
 
 type HallOfFameResponse = {
   currentKingOfTheKop: null | {
@@ -23,6 +24,8 @@ type HallOfFameResponse = {
 };
 
 export function HallOfFamePage() {
+  const hallTitle = useContent('member.hall.title', 'Hall of Fame');
+  const hallSubtitle = useContent('member.hall.subtitle', 'Prediction legends and community milestones.');
   const { data, isLoading, error } = useQuery({
     queryKey: ['hall-of-fame'],
     queryFn: () => apiRequest<HallOfFameResponse>('/hall-of-fame'),
@@ -49,8 +52,8 @@ export function HallOfFamePage() {
     <section className="space-y-8">
       <PageHeader
         eyebrow="Legends"
-        title="Hall of Fame"
-        description="Celebrating the best predictors and achievements in the OLSC Lebanon Kop."
+        title={hallTitle}
+        description={hallSubtitle}
       />
 
       <div className="kop-gradient-hero relative overflow-hidden rounded-3xl p-8 text-white shadow-xl">

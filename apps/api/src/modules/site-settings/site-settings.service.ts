@@ -4,6 +4,7 @@ import { AuditService } from '../../common/services/audit.service';
 import {
   PUBLIC_SITE_SETTING_KEYS,
   SITE_SETTING_DEFAULTS,
+  SITE_SETTING_KEYS,
   type SiteSettingKey,
 } from './site-settings.constants';
 import { UpdateSiteSettingsDto } from './dto/update-site-settings.dto';
@@ -14,6 +15,19 @@ export class SiteSettingsService {
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
   ) {}
+
+  async getMaxGuests(): Promise<number> {
+    const settings = await this.getPublicSettings();
+    const parsed = Number(settings[SITE_SETTING_KEYS.featuresGuestsMax] ?? '2');
+    if (!Number.isFinite(parsed)) return 2;
+    return Math.min(2, Math.max(0, Math.floor(parsed)));
+  }
+
+  async arePredictionsEnabled(): Promise<boolean> {
+    const settings = await this.getPublicSettings();
+    const raw = settings['features.predictionsEnabled'] ?? 'true';
+    return raw !== 'false' && raw !== '0';
+  }
 
   async getPublicSettings(): Promise<Record<string, string>> {
     const rows = await this.prisma.siteSetting.findMany({
