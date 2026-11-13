@@ -147,15 +147,71 @@ export const ADMIN_MOBILE_TABS: NavItem[] = ADMIN_MOBILE_TAB_SPECS.map((spec) =>
   end: spec.end,
 }));
 
-export const ADMIN_QUICK_LINKS = [
-  { to: '/admin/applications', label: 'Membership applications', desc: 'Review 2026/27 form submissions' },
-  { to: '/admin/members', label: 'Manage users', desc: 'Search, edit and invite members' },
-  { to: '/admin/matches', label: 'Manage matches', desc: 'Create Liverpool matches & scores' },
-  { to: '/admin/news', label: 'Publish news', desc: 'Write club announcements' },
-  { to: '/admin/events', label: 'Create event', desc: 'Watch parties & meetups' },
-  { to: '/admin/cms', label: 'Edit CMS', desc: 'About, committee, membership pages' },
-  { to: '/admin/newsletter', label: 'Monthly newsletter', desc: 'RedLeb Dispatch PDF template' },
-  { to: '/app/community', label: 'View community', desc: 'See the member feed' },
+export type QuickLinkSpec = {
+  to: string;
+  labelKey: string;
+  descKey: string;
+  defaultLabel: string;
+  defaultDesc: string;
+};
+
+export const ADMIN_QUICK_LINK_SPECS: QuickLinkSpec[] = [
+  {
+    to: '/admin/applications',
+    labelKey: 'admin.quick.applications.label',
+    descKey: 'admin.quick.applications.desc',
+    defaultLabel: 'Membership applications',
+    defaultDesc: 'Review 2026/27 form submissions',
+  },
+  {
+    to: '/admin/members',
+    labelKey: 'admin.quick.members.label',
+    descKey: 'admin.quick.members.desc',
+    defaultLabel: 'Manage users',
+    defaultDesc: 'Search, edit and invite members',
+  },
+  {
+    to: '/admin/matches',
+    labelKey: 'admin.quick.matches.label',
+    descKey: 'admin.quick.matches.desc',
+    defaultLabel: 'Manage matches',
+    defaultDesc: 'Create Liverpool matches & scores',
+  },
+  {
+    to: '/admin/news',
+    labelKey: 'admin.quick.news.label',
+    descKey: 'admin.quick.news.desc',
+    defaultLabel: 'Publish news',
+    defaultDesc: 'Write club announcements',
+  },
+  {
+    to: '/admin/events',
+    labelKey: 'admin.quick.events.label',
+    descKey: 'admin.quick.events.desc',
+    defaultLabel: 'Create event',
+    defaultDesc: 'Watch parties & meetups',
+  },
+  {
+    to: '/admin/cms',
+    labelKey: 'admin.quick.cms.label',
+    descKey: 'admin.quick.cms.desc',
+    defaultLabel: 'Edit CMS',
+    defaultDesc: 'About, committee, membership pages',
+  },
+  {
+    to: '/admin/newsletter',
+    labelKey: 'admin.quick.newsletter.label',
+    descKey: 'admin.quick.newsletter.desc',
+    defaultLabel: 'Monthly newsletter',
+    defaultDesc: 'RedLeb Dispatch PDF template',
+  },
+  {
+    to: '/app/community',
+    labelKey: 'admin.quick.community.label',
+    descKey: 'admin.quick.community.desc',
+    defaultLabel: 'View community',
+    defaultDesc: 'See the member feed',
+  },
 ];
 
 export function isAdminRole(roles: string[] | undefined): boolean {
