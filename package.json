@@ -10,7 +10,7 @@
   "scripts": {
     "dev:api": "npm run start:dev -w @kop/api",
     "dev:web": "npm run dev -w @kop/web",
-    "build": "npm run build -w @kop/shared && npm run build -w @kop/api && npm run build -w @kop/web",
+    "build": "npm run build -w @kop/shared && npm run prisma:generate -w @kop/api && npm run build -w @kop/api && npm run build -w @kop/web",
     "build:shared": "npm run build -w @kop/shared",
     "prisma:generate": "npm run prisma:generate -w @kop/api",
     "prisma:migrate": "npm run prisma:migrate -w @kop/api",
