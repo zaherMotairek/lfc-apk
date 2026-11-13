@@ -41,7 +41,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 | 14 | ALLRED SUPPORT ID | ✅ |
 | 15–17 | Last seen, login events, activity panel | ✅ |
 | 18 | No LIVE UI | 🟡 UI reduced; code remains |
-| 19 | Newsletter monthly workflow | ⬜ → Phase 6 |
+| 19 | Newsletter monthly workflow | 🟡 Member emails + schedule cron (Phase 6) |
 
 ## Phases 2–8
 

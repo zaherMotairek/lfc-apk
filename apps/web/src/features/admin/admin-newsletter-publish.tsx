@@ -16,6 +16,7 @@ type AdminNewsletter = {
   isPublished: boolean;
   publishedAt?: string | null;
   scheduledPublishAt?: string | null;
+  memberEmailsSentAt?: string | null;
 };
 
 export function AdminNewsletterPublish() {
@@ -71,6 +72,19 @@ export function AdminNewsletterPublish() {
       void queryClient.invalidateQueries({ queryKey: ['admin-newsletters'] });
       void queryClient.invalidateQueries({ queryKey: ['public-newsletters'] });
     },
+  });
+
+  const notifyMutation = useMutation({
+    mutationFn: (id: string) =>
+      apiRequest<{ message: string }>(`/admin/newsletters/${id}/notify-members`, {
+        method: 'POST',
+        token: accessToken,
+      }),
+    onSuccess: (res) => {
+      setMessage(res.message);
+      void queryClient.invalidateQueries({ queryKey: ['admin-newsletters'] });
+    },
+    onError: (err) => setMessage(err instanceof Error ? err.message : 'Email notify failed'),
   });
 
   const deleteMutation = useMutation({
@@ -203,6 +217,11 @@ export function AdminNewsletterPublish() {
                 {item.scheduledPublishAt
                   ? ` · Scheduled ${new Date(item.scheduledPublishAt).toLocaleString()}`
                   : ''}
+                {item.memberEmailsSentAt
+                  ? ` · Member emails ${new Date(item.memberEmailsSentAt).toLocaleString()}`
+                  : item.isPublished
+                    ? ' · Member emails pending'
+                    : ''}
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -215,13 +234,32 @@ export function AdminNewsletterPublish() {
                   Publish now
                 </button>
               ) : (
-                <Link
-                  to={`/newsletter/${item.slug}`}
-                  className="kop-btn-secondary !px-3 !py-1.5 !text-xs"
-                  target="_blank"
-                >
-                  View
-                </Link>
+                <>
+                  <Link
+                    to={`/newsletter/${item.slug}`}
+                    className="kop-btn-secondary !px-3 !py-1.5 !text-xs"
+                    target="_blank"
+                  >
+                    View
+                  </Link>
+                  <button
+                    type="button"
+                    className="kop-btn-secondary !px-3 !py-1.5 !text-xs"
+                    disabled={notifyMutation.isPending}
+                    onClick={() => {
+                      void (async () => {
+                        const ok = await confirm({
+                          title: 'Email members',
+                          message: `Send "${item.title}" to all active members?`,
+                          confirmLabel: 'Send emails',
+                        });
+                        if (ok) notifyMutation.mutate(item.id);
+                      })();
+                    }}
+                  >
+                    Email members
+                  </button>
+                </>
               )}
               <button
                 type="button"

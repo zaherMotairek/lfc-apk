@@ -29,7 +29,8 @@ Optional: `SEED_E2E_FIXTURES=true npm run prisma:seed` for Playwright member rou
 
 - Run all pending Prisma migrations on staging/prod DB (never seed prod with default password).
 - Set strong `SEED_*` only on local; prod super-admin via invitation.
-- Configure SMTP, optional Cloudinary, `VAPID_*` if push enabled + `features.pushEnabled=true` in site settings.
+- Configure SMTP (member dispatch emails on publish), optional Cloudinary, `VAPID_*` if push enabled + `features.pushEnabled=true` in site settings.
+- Optional: `NEWSLETTER_MEMBER_EMAILS=false` to disable blast emails.
 - HTTPS required for PWA push.
 - Open PR: https://github.com/zaherMotairek/lfc-apk/pull/new/feat/redleb-hub
 

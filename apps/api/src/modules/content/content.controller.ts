@@ -296,6 +296,16 @@ export class ContentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions(PermissionCode.MANAGE_CONTENT)
+  @Post('admin/newsletters/:id/notify-members')
+  notifyNewsletterMembers(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.contentService.notifyNewsletterMembers(id, user.id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionCode.MANAGE_CONTENT)
   @Post('admin/gallery/albums')
   createAlbum(
     @Body() dto: CreateMediaAlbumDto,
