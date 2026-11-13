@@ -40,7 +40,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 | 13 | Guests 0–2 + admin/CSV | ✅ |
 | 14 | ALLRED SUPPORT ID | ✅ |
 | 15–17 | Last seen, login events, activity panel | ✅ |
-| 18 | No LIVE UI | 🟡 Member celebration overlay removed; admin LIVE panel gated off |
+| 18 | No LIVE UI | ✅ Default `features.matchLiveEnabled=false`; no auto kick-off alerts; admin live APIs gated |
 | 19 | Newsletter monthly workflow | 🟡 Member emails + schedule cron (Phase 6) |
 
 ## Phases 2–8

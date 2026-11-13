@@ -46,7 +46,12 @@ const TABS: Array<{ id: string; label: string; keys: string[] }> = [
   {
     id: 'features',
     label: 'Features',
-    keys: ['features.predictionsEnabled', 'features.guestsMax', 'features.pushEnabled'],
+    keys: [
+      'features.predictionsEnabled',
+      'features.matchLiveEnabled',
+      'features.guestsMax',
+      'features.pushEnabled',
+    ],
   },
   {
     id: 'social',

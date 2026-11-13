@@ -29,6 +29,12 @@ export class SiteSettingsService {
     return raw !== 'false' && raw !== '0';
   }
 
+  async areMatchLiveAlertsEnabled(): Promise<boolean> {
+    const settings = await this.getPublicSettings();
+    const raw = settings[SITE_SETTING_KEYS.featuresMatchLive] ?? 'false';
+    return raw === 'true' || raw === '1';
+  }
+
   async getPublicSettings(): Promise<Record<string, string>> {
     const rows = await this.prisma.siteSetting.findMany({
       where: { key: { in: [...PUBLIC_SITE_SETTING_KEYS] } },

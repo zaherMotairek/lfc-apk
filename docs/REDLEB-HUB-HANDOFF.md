@@ -67,6 +67,7 @@ Push on localhost: set `VITE_ENABLE_SW=true` in `apps/web/.env.local`, build or 
 - Configure SMTP (member dispatch emails on publish), optional Cloudinary, `VAPID_*` if push enabled + `features.pushEnabled=true` in site settings.
 
 - Optional: `NEWSLETTER_MEMBER_EMAILS=false` to disable blast emails.
+- Match Hub is **prediction-first**: `features.matchLiveEnabled` defaults to **false** (no auto kick-off or goal blast). Set `true` only if the committee wants TV-style live alerts.
 
 - **HTTPS required** for PWA push. Service worker registers automatically on **production builds** (`npm run build` + static host). Offline shell: `offline.html` + registry keys `offline.*` (Texts); build writes `offline-copy.json` for EN/ar.
 

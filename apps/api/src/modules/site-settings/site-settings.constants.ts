@@ -16,6 +16,7 @@ export const SITE_SETTING_KEYS = {
   featuresPredictions: 'features.predictionsEnabled',
   featuresGuestsMax: 'features.guestsMax',
   featuresPush: 'features.pushEnabled',
+  featuresMatchLive: 'features.matchLiveEnabled',
   socialInstagram: 'social.instagram',
   socialFacebook: 'social.facebook',
   socialX: 'social.x',
@@ -99,6 +100,11 @@ export const SITE_SETTING_DEFAULTS: Record<SiteSettingKey, SettingDefault> = {
     [SITE_SETTING_KEYS.featuresPush]: {
       value: 'false',
       description: 'Enable web push notifications (requires HTTPS).',
+    },
+    [SITE_SETTING_KEYS.featuresMatchLive]: {
+      value: 'false',
+      description:
+        'Kick-off auto-LIVE, goal alerts, and live admin updates. Keep off for prediction-only Match Hub.',
     },
     [SITE_SETTING_KEYS.socialInstagram]: {
       value: '',

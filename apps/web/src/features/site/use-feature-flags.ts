@@ -17,6 +17,7 @@ export function useFeatureFlags() {
     isLoading: query.isLoading,
     predictionsEnabled: map['features.predictionsEnabled'] !== 'false',
     pushEnabled: map['features.pushEnabled'] === 'true',
+    matchLiveEnabled: map['features.matchLiveEnabled'] === 'true',
     guestsMax: Math.min(2, Math.max(0, Number(map['features.guestsMax'] ?? '2') || 2)),
     settings: map,
   };

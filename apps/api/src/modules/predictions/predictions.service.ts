@@ -276,6 +276,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async setMatchLive(matchId: string, actorUserId: string) {
+    await this.assertMatchLiveAlertsEnabled();
     const match = await this.prisma.match.findUnique({ where: { id: matchId } });
     if (!match) {
       throw new NotFoundException('Match not found');
@@ -301,6 +302,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async recordGoal(matchId: string, dto: RecordGoalDto, actorUserId: string) {
+    await this.assertMatchLiveAlertsEnabled();
     const match = await this.prisma.match.findUnique({ where: { id: matchId } });
     if (!match) {
       throw new NotFoundException('Match not found');
@@ -424,6 +426,7 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async sendLiveUpdate(matchId: string, dto: LiveMatchUpdateDto, actorUserId: string) {
+    await this.assertMatchLiveAlertsEnabled();
     const match = await this.prisma.match.findUnique({ where: { id: matchId } });
     if (!match) {
       throw new NotFoundException('Match not found');
@@ -527,6 +530,9 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
   }
 
   private async autoStartDueMatches() {
+    if (!(await this.siteSettingsService.areMatchLiveAlertsEnabled())) {
+      return;
+    }
     const now = new Date();
     const windowStart = liveKickoffWindowStart(now);
     const dueMatches = await this.prisma.match.findMany({
@@ -609,6 +615,15 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     return liveMatch;
   }
 
+  private async assertMatchLiveAlertsEnabled() {
+    const on = await this.siteSettingsService.areMatchLiveAlertsEnabled();
+    if (!on) {
+      throw new BadRequestException(
+        'Match live alerts are disabled (Site settings → Features → matchLiveEnabled).',
+      );
+    }
+  }
+
   private async broadcastMatchNotification(input: {
     type: string;
     title: string;
@@ -616,6 +631,9 @@ export class PredictionsService implements OnModuleInit, OnModuleDestroy {
     actionUrl: string;
     metadata?: Record<string, unknown>;
   }) {
+    if (!(await this.siteSettingsService.areMatchLiveAlertsEnabled())) {
+      return;
+    }
     const activeUsers = await this.prisma.user.findMany({
       where: { platformAccountStatus: PlatformAccountStatus.ACTIVE },
       select: { id: true },

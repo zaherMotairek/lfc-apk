@@ -954,6 +954,11 @@ const E2E_SITE_SETTINGS: Array<{ key: string; value: string; description: string
   { key: 'features.predictionsEnabled', value: 'true', description: 'Enable Match Hub predictions.' },
   { key: 'features.guestsMax', value: '2', description: 'Max guests per registration.' },
   { key: 'features.pushEnabled', value: 'false', description: 'Web push notifications.' },
+  {
+    key: 'features.matchLiveEnabled',
+    value: 'false',
+    description: 'Auto LIVE kick-off and live match member alerts.',
+  },
   { key: 'social.instagram', value: '', description: 'Instagram URL.' },
   { key: 'social.facebook', value: '', description: 'Facebook URL.' },
   { key: 'social.x', value: '', description: 'X profile URL.' },
