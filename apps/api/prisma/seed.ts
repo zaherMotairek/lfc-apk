@@ -980,6 +980,18 @@ const E2E_SITE_SETTINGS: Array<{ key: string; value: string; description: string
     value: '/app,/app/matches,/app/community,/app/membership-card,/app/profile',
     description: 'Member mobile tabs order.',
   },
+  {
+    key: 'nav.admin.order',
+    value:
+      '/admin,/admin/applications,/admin/members,/admin/matches,/admin/newsletter,/admin/news,/admin/events,/admin/check-in,/admin/moderation,/admin/cms,/admin/texts,/admin/settings,/admin/design,/admin/guide,/admin/audit',
+    description: 'Admin sidebar nav order.',
+  },
+  { key: 'nav.admin.hidden', value: '', description: 'Admin nav paths to hide.' },
+  {
+    key: 'nav.admin.tabOrder',
+    value: '/admin,/admin/members,/admin/matches,/admin/newsletter,/admin/news',
+    description: 'Admin mobile tabs order.',
+  },
 ];
 
 async function seedSiteSettings() {

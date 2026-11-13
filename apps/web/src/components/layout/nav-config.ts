@@ -76,32 +76,76 @@ export const MEMBER_EXTRA_NAV: NavItem[] = MEMBER_EXTRA_NAV_SPECS.map((spec) => 
   icon: spec.icon,
 }));
 
-export const ADMIN_NAV: NavItem[] = [
-  { to: '/admin', label: 'Dashboard', icon: '📊', end: true },
-  { to: '/admin/applications', label: 'Applications', icon: '📋' },
-  { to: '/admin/members', label: 'Users', icon: '👥' },
-  { to: '/admin/matches', label: 'Matches', icon: '⚽' },
-  { to: '/admin/newsletter', label: 'Newsletter', icon: '🗞️' },
-  { to: '/admin/news', label: 'News', icon: '📰' },
-  { to: '/admin/events', label: 'Events', icon: '📅' },
-  { to: '/admin/check-in', label: 'Event check-in', icon: '✅' },
-  { to: '/admin/moderation', label: 'Moderation', icon: '🛡️' },
-  { to: '/admin/cms', label: 'CMS Pages', icon: '📝' },
-  { to: '/admin/texts', label: 'Texts & Labels', icon: '✏️' },
-  { to: '/admin/settings', label: 'Site settings', icon: '⚙️' },
-  { to: '/admin/design', label: 'Design', icon: '🎨' },
-  { to: '/admin/guide', label: 'Guide', icon: '📖' },
-  { to: '/admin/audit', label: 'Audit log', icon: '📜' },
+export const ADMIN_NAV_SPECS: MemberNavSpec[] = [
+  { to: '/admin', contentKey: 'nav.admin.dashboard', defaultLabel: 'Dashboard', icon: '📊', end: true },
+  {
+    to: '/admin/applications',
+    contentKey: 'nav.admin.applications',
+    defaultLabel: 'Applications',
+    icon: '📋',
+  },
+  { to: '/admin/members', contentKey: 'nav.admin.members', defaultLabel: 'Users', icon: '👥' },
+  { to: '/admin/matches', contentKey: 'nav.admin.matches', defaultLabel: 'Matches', icon: '⚽' },
+  {
+    to: '/admin/newsletter',
+    contentKey: 'nav.admin.newsletter',
+    defaultLabel: 'Newsletter',
+    icon: '🗞️',
+  },
+  { to: '/admin/news', contentKey: 'nav.admin.news', defaultLabel: 'News', icon: '📰' },
+  { to: '/admin/events', contentKey: 'nav.admin.events', defaultLabel: 'Events', icon: '📅' },
+  {
+    to: '/admin/check-in',
+    contentKey: 'nav.admin.checkIn',
+    defaultLabel: 'Event check-in',
+    icon: '✅',
+  },
+  {
+    to: '/admin/moderation',
+    contentKey: 'nav.admin.moderation',
+    defaultLabel: 'Moderation',
+    icon: '🛡️',
+  },
+  { to: '/admin/cms', contentKey: 'nav.admin.cms', defaultLabel: 'CMS Pages', icon: '📝' },
+  { to: '/admin/texts', contentKey: 'nav.admin.texts', defaultLabel: 'Texts & Labels', icon: '✏️' },
+  {
+    to: '/admin/settings',
+    contentKey: 'nav.admin.settings',
+    defaultLabel: 'Site settings',
+    icon: '⚙️',
+  },
+  { to: '/admin/design', contentKey: 'nav.admin.design', defaultLabel: 'Design', icon: '🎨' },
+  { to: '/admin/guide', contentKey: 'nav.admin.guide', defaultLabel: 'Guide', icon: '📖' },
+  { to: '/admin/audit', contentKey: 'nav.admin.audit', defaultLabel: 'Audit log', icon: '📜' },
 ];
 
-/** Bottom tab bar on mobile admin — Newsletter must stay visible here. */
-export const ADMIN_MOBILE_TABS: NavItem[] = [
-  { to: '/admin', label: 'Dashboard', icon: '📊', end: true },
-  { to: '/admin/members', label: 'Users', icon: '👥' },
-  { to: '/admin/matches', label: 'Matches', icon: '⚽' },
-  { to: '/admin/newsletter', label: 'Newsletter', icon: '🗞️' },
-  { to: '/admin/news', label: 'News', icon: '📰' },
+/** Bottom tab bar on mobile admin — reorder via site settings but keep newsletter reachable. */
+export const ADMIN_MOBILE_TAB_SPECS: MemberNavSpec[] = [
+  { to: '/admin', contentKey: 'nav.admin.tab.dashboard', defaultLabel: 'Dashboard', icon: '📊', end: true },
+  { to: '/admin/members', contentKey: 'nav.admin.tab.members', defaultLabel: 'Users', icon: '👥' },
+  { to: '/admin/matches', contentKey: 'nav.admin.tab.matches', defaultLabel: 'Matches', icon: '⚽' },
+  {
+    to: '/admin/newsletter',
+    contentKey: 'nav.admin.tab.newsletter',
+    defaultLabel: 'Newsletter',
+    icon: '🗞️',
+  },
+  { to: '/admin/news', contentKey: 'nav.admin.tab.news', defaultLabel: 'News', icon: '📰' },
 ];
+
+export const ADMIN_NAV: NavItem[] = ADMIN_NAV_SPECS.map((spec) => ({
+  to: spec.to,
+  label: spec.defaultLabel,
+  icon: spec.icon,
+  end: spec.end,
+}));
+
+export const ADMIN_MOBILE_TABS: NavItem[] = ADMIN_MOBILE_TAB_SPECS.map((spec) => ({
+  to: spec.to,
+  label: spec.defaultLabel,
+  icon: spec.icon,
+  end: spec.end,
+}));
 
 export const ADMIN_QUICK_LINKS = [
   { to: '/admin/applications', label: 'Membership applications', desc: 'Review 2026/27 form submissions' },

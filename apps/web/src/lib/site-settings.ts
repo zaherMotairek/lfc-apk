@@ -24,4 +24,7 @@ export const SITE_SETTING_KEYS = {
   navMemberMainOrder: 'nav.member.mainOrder',
   navMemberExtraOrder: 'nav.member.extraOrder',
   navMemberTabOrder: 'nav.member.tabOrder',
+  navAdminOrder: 'nav.admin.order',
+  navAdminHidden: 'nav.admin.hidden',
+  navAdminTabOrder: 'nav.admin.tabOrder',
 } as const;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../features/auth/auth-context';
-import { ADMIN_MOBILE_TABS, ADMIN_NAV } from '../components/layout/nav-config';
+import { useAdminNav } from '../components/layout/use-admin-nav';
 import { InstallAppBanner } from '../components/ui/install-app-banner';
 import { PageBackBar } from '../components/ui/page-back-bar';
 import {
@@ -15,44 +15,45 @@ import {
 export function AdminLayout() {
   const { user, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const nav = useAdminNav();
 
   return (
     <div className="min-h-screen bg-paper pb-[calc(5rem+env(safe-area-inset-bottom))] md:grid md:grid-cols-[260px_1fr] md:pb-0">
       <MobileDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        title="Admin Panel"
-        subtitle="OLSC Lebanon Committee"
-        items={ADMIN_NAV}
+        title={nav.shellTitle}
+        subtitle={nav.shellSubtitle}
+        items={nav.sidebarNav}
         footer={
           <>
-            <NavFooterLink to="/app">← Member App</NavFooterLink>
-            <NavFooterLink to="/">← Public website</NavFooterLink>
+            <NavFooterLink to="/app">{nav.footerMember}</NavFooterLink>
+            <NavFooterLink to="/">{nav.footerPublic}</NavFooterLink>
             <button
               type="button"
               onClick={() => { logout(); setDrawerOpen(false); }}
               className="mt-1 block w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
             >
-              Logout
+              {nav.logoutLabel}
             </button>
           </>
         }
       />
       <div className="hidden md:block">
         <SidebarNav
-          title="Admin Panel"
-          subtitle="OLSC Lebanon Committee"
-          items={ADMIN_NAV}
+          title={nav.shellTitle}
+          subtitle={nav.shellSubtitle}
+          items={nav.sidebarNav}
           footer={
             <>
-              <NavFooterLink to="/app">← Member App</NavFooterLink>
-              <NavFooterLink to="/">← Public website</NavFooterLink>
+              <NavFooterLink to="/app">{nav.footerMember}</NavFooterLink>
+              <NavFooterLink to="/">{nav.footerPublic}</NavFooterLink>
               <button
                 type="button"
                 onClick={logout}
                 className="mt-1 block w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
               >
-                Logout
+                {nav.logoutLabel}
               </button>
             </>
           }
@@ -60,7 +61,7 @@ export function AdminLayout() {
       </div>
 
       <div className="min-w-0">
-        <HorizontalNav items={ADMIN_NAV} />
+        <HorizontalNav items={nav.sidebarNav} />
 
         <header className="sticky top-0 z-10 flex items-center justify-between border-b border-black/5 bg-surface/95 px-4 py-3 backdrop-blur md:px-6 md:py-4">
           <div className="flex items-center gap-3">
@@ -78,21 +79,21 @@ export function AdminLayout() {
             </button>
             <div>
               <div className="text-xs font-semibold uppercase tracking-widest text-black/40 md:hidden">
-                Admin Panel
+                {nav.shellTitle}
               </div>
               <div className="text-sm font-medium text-black/70">
                 {user?.firstName} {user?.lastName}
-                <span className="hidden md:inline"> · Committee Control Center</span>
+                <span className="hidden md:inline"> · {nav.headerTagline}</span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <InstallAppBanner variant="compact" />
             <Link to="/app" className="kop-btn-secondary !py-2 !text-xs">
-              Member App
+              {nav.memberAppShort}
             </Link>
             <button type="button" onClick={logout} className="kop-btn-secondary !py-2 !text-xs">
-              Logout
+              {nav.logoutLabel}
             </button>
           </div>
         </header>
@@ -103,7 +104,7 @@ export function AdminLayout() {
         </main>
       </div>
 
-      <MobileTabBar items={ADMIN_MOBILE_TABS} />
+      <MobileTabBar items={nav.mobileTabs} />
     </div>
   );
 }

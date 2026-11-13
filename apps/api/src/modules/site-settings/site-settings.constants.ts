@@ -24,6 +24,9 @@ export const SITE_SETTING_KEYS = {
   navMemberMainOrder: 'nav.member.mainOrder',
   navMemberExtraOrder: 'nav.member.extraOrder',
   navMemberTabOrder: 'nav.member.tabOrder',
+  navAdminOrder: 'nav.admin.order',
+  navAdminHidden: 'nav.admin.hidden',
+  navAdminTabOrder: 'nav.admin.tabOrder',
 } as const;
 
 export type SiteSettingKey = (typeof SITE_SETTING_KEYS)[keyof typeof SITE_SETTING_KEYS];
@@ -130,5 +133,18 @@ export const SITE_SETTING_DEFAULTS: Record<SiteSettingKey, SettingDefault> = {
     [SITE_SETTING_KEYS.navMemberTabOrder]: {
       value: '/app,/app/matches,/app/community,/app/membership-card,/app/profile',
       description: 'Member mobile bottom tabs order (comma-separated paths).',
+    },
+    [SITE_SETTING_KEYS.navAdminOrder]: {
+      value:
+        '/admin,/admin/applications,/admin/members,/admin/matches,/admin/newsletter,/admin/news,/admin/events,/admin/check-in,/admin/moderation,/admin/cms,/admin/texts,/admin/settings,/admin/design,/admin/guide,/admin/audit',
+      description: 'Admin sidebar nav order (comma-separated paths).',
+    },
+    [SITE_SETTING_KEYS.navAdminHidden]: {
+      value: '',
+      description: 'Admin nav paths to hide (comma-separated, e.g. /admin/guide).',
+    },
+    [SITE_SETTING_KEYS.navAdminTabOrder]: {
+      value: '/admin,/admin/members,/admin/matches,/admin/newsletter,/admin/news',
+      description: 'Admin mobile bottom tabs order (comma-separated paths).',
     },
   };

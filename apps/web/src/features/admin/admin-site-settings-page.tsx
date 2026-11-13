@@ -62,6 +62,9 @@ const TABS: Array<{ id: string; label: string; keys: string[] }> = [
       SITE_SETTING_KEYS.navMemberMainOrder,
       SITE_SETTING_KEYS.navMemberExtraOrder,
       SITE_SETTING_KEYS.navMemberTabOrder,
+      SITE_SETTING_KEYS.navAdminOrder,
+      SITE_SETTING_KEYS.navAdminHidden,
+      SITE_SETTING_KEYS.navAdminTabOrder,
     ],
   },
 ];
@@ -72,6 +75,9 @@ const MULTILINE_SETTING_KEYS = new Set<string>([
   SITE_SETTING_KEYS.navMemberMainOrder,
   SITE_SETTING_KEYS.navMemberExtraOrder,
   SITE_SETTING_KEYS.navMemberTabOrder,
+  SITE_SETTING_KEYS.navAdminOrder,
+  SITE_SETTING_KEYS.navAdminHidden,
+  SITE_SETTING_KEYS.navAdminTabOrder,
 ]);
 
 export function AdminSiteSettingsPage() {
