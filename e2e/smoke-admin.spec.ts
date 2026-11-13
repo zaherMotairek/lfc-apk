@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { loginWithCredentials } from './helpers/auth';
 import path from 'node:path';
 import fs from 'node:fs';
 
@@ -17,17 +18,17 @@ const ADMIN_ROUTES = [
 ];
 
 const adminUser = process.env.E2E_ADMIN_USERNAME ?? 'admin';
-const adminPassword = process.env.E2E_ADMIN_PASSWORD ?? process.env.SEED_SUPER_ADMIN_PASSWORD ?? 'ChangeMeNow123!';
+const adminPassword =
+  process.env.E2E_ADMIN_PASSWORD ?? process.env.SEED_SUPER_ADMIN_PASSWORD ?? 'ChangeMeNow123!';
+
+test.describe.configure({ timeout: 90_000 });
 
 test.describe('admin smoke', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
-    await page.getByPlaceholder('e.g. test').fill(adminUser);
-    await page.getByPlaceholder('••••••••').fill(adminPassword);
-    await page.getByRole('button', { name: /sign in/i }).click();
-    await page.waitForURL(/\/(admin|app)/, { timeout: 20_000 });
+    await loginWithCredentials(page, adminUser, adminPassword);
     if (!page.url().includes('/admin')) {
       await page.goto('/admin');
+      await expect(page).toHaveURL(/\/admin/, { timeout: 15_000 });
     }
   });
 

@@ -39,3 +39,78 @@ jobs:
       - run: npm run test
       - run: npm run test:api:e2e
       - run: npm run check:strings
+
+  playwright-smoke:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: kop_platform
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      CI: true
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/kop_platform?schema=public
+      JWT_ACCESS_SECRET: ci-access-secret-minimum-32-characters-long
+      JWT_REFRESH_SECRET: ci-refresh-secret-minimum-32-characters-long
+      SEED_SUPER_ADMIN_PASSWORD: ChangeMeNow123!
+      SEED_E2E_FIXTURES: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @kop/shared
+      - run: npm run prisma:migrate:deploy -w @kop/api
+      - run: npm run prisma:seed -w @kop/api
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e:smoke
+
+  playwright-auth:
+    runs-on: ubuntu-latest
+    needs: playwright-smoke
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: kop_platform
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      CI: true
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/kop_platform?schema=public
+      JWT_ACCESS_SECRET: ci-access-secret-minimum-32-characters-long
+      JWT_REFRESH_SECRET: ci-refresh-secret-minimum-32-characters-long
+      SEED_SUPER_ADMIN_PASSWORD: ChangeMeNow123!
+      SEED_E2E_FIXTURES: true
+      E2E_MEMBER_PASSWORD: E2eMember123!
+      E2E_ADMIN_PASSWORD: ChangeMeNow123!
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @kop/shared
+      - run: npm run prisma:migrate:deploy -w @kop/api
+      - run: npm run prisma:seed -w @kop/api
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e:auth

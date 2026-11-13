@@ -8,7 +8,7 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 
 | ID | Item | Status |
 |----|------|--------|
-| 0.1 | Playwright smoke + baseline captures | 🟡 Desktop/mobile projects; i18n RTL smoke added |
+| 0.1 | Playwright smoke + baseline captures | ✅ CI smoke + auth jobs; desktop/mobile projects |
 | 0.2 | Jest API characterization + e2e flows | ✅ |
 | 0.3 | Repo hygiene, SiteSetting, assert-local-db | ✅ |
 | 0.4 | Phase report | 🟡 Handoff + this doc |

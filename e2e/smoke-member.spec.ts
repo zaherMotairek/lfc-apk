@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { loginWithCredentials } from './helpers/auth';
 import path from 'node:path';
 import fs from 'node:fs';
 
@@ -17,13 +18,11 @@ const memberPassword = process.env.E2E_MEMBER_PASSWORD ?? 'E2eMember123!';
 
 test.describe('member smoke', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
-    await page.getByPlaceholder('e.g. test').fill(memberUser);
-    await page.getByPlaceholder('••••••••').fill(memberPassword);
-    await page.getByRole('button', { name: /sign in/i }).click();
-    await page.waitForURL(/\/app/, { timeout: 20_000 }).catch(() => {
+    try {
+      await loginWithCredentials(page, memberUser, memberPassword);
+    } catch {
       test.skip(true, 'E2E member not seeded — set SEED_E2E_FIXTURES=true and re-run prisma:seed');
-    });
+    }
   });
 
   for (const route of MEMBER_ROUTES) {

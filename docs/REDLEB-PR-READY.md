@@ -10,10 +10,13 @@ npm run prisma:migrate:deploy -w @kop/api
 npm run build
 npm run test:api:e2e
 npm run check:strings
-npm run test:e2e
+npm run test:e2e:smoke
+npm run test:e2e:auth
 ```
 
-Playwright needs API + web running, or CI with `PLAYWRIGHT_SKIP_WEBSERVER` unset.
+Playwright starts API + web automatically (see `playwright.config.ts`). For member/admin auth smokes, seed with `SEED_E2E_FIXTURES=true` first locally.
+
+GitHub Actions runs `test:e2e:smoke` and `test:e2e:auth` on every PR.
 
 ## Committee sign-off
 
