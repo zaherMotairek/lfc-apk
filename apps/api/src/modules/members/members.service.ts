@@ -41,6 +41,31 @@ export class MembersService {
     private readonly membershipCardsService: MembershipCardsService,
   ) {}
 
+  async listDirectoryMembers() {
+    const users = await this.prisma.user.findMany({
+      where: {
+        listedInDirectory: true,
+        platformAccountStatus: PlatformAccountStatus.ACTIVE,
+      },
+      orderBy: [{ createdAt: 'desc' }],
+      take: 200,
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        avatarUrl: true,
+        city: true,
+        favoritePlayer: true,
+        createdAt: true,
+      },
+    });
+    return users.map((user) => ({
+      ...user,
+      displayName: `${user.firstName} ${user.lastName}`.trim(),
+      memberSince: user.createdAt,
+    }));
+  }
+
   async listMembers() {
     const [users, roster] = await Promise.all([
       this.prisma.user.findMany({

@@ -4,6 +4,7 @@ import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
 import { useToast } from '../../components/ui/toast-provider';
+import { useLanguage } from '../content/language-provider';
 
 type TextRow = {
   key: string;
@@ -16,6 +17,7 @@ type TextRow = {
 
 export function AdminTextsPage() {
   const showToast = useToast();
+  const { lang } = useLanguage();
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState('');
@@ -25,8 +27,8 @@ export function AdminTextsPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   const textsQuery = useQuery({
-    queryKey: ['admin-content-texts'],
-    queryFn: () => apiRequest<TextRow[]>('/admin/content/texts?lang=en', { token: accessToken }),
+    queryKey: ['admin-content-texts', lang],
+    queryFn: () => apiRequest<TextRow[]>(`/admin/content/texts?lang=${lang}`, { token: accessToken }),
     enabled: Boolean(accessToken),
   });
 
@@ -60,7 +62,7 @@ export function AdminTextsPage() {
       apiRequest<{ message: string }>('/admin/content/texts', {
         method: 'PUT',
         token: accessToken,
-        body: { ...body, language: 'en' },
+        body: { ...body, language: lang },
       }),
     onSuccess: (res) => {
       setMessage(res.message);
@@ -77,7 +79,7 @@ export function AdminTextsPage() {
       apiRequest<{ message: string }>('/admin/content/texts/rollback', {
         method: 'POST',
         token: accessToken,
-        body: { key, language: 'en' },
+        body: { key, language: lang },
       }),
     onSuccess: (res) => {
       setMessage(res.message);
@@ -93,7 +95,7 @@ export function AdminTextsPage() {
     queryFn: () =>
       apiRequest<
         Array<{ id: string; valueBefore: string | null; valueAfter: string; createdAt: string }>
-      >(`/admin/content/texts/revisions?key=${encodeURIComponent(editingKey!)}&lang=en`, {
+      >(`/admin/content/texts/revisions?key=${encodeURIComponent(editingKey!)}&lang=${lang}`, {
         token: accessToken,
       }),
     enabled: Boolean(accessToken && editingKey),
@@ -102,7 +104,7 @@ export function AdminTextsPage() {
   const resetMutation = useMutation({
     mutationFn: (key: string) =>
       apiRequest<{ message: string }>(
-        `/admin/content/texts?key=${encodeURIComponent(key)}&lang=en`,
+        `/admin/content/texts?key=${encodeURIComponent(key)}&lang=${lang}`,
         { method: 'DELETE', token: accessToken },
       ),
     onSuccess: (res) => {

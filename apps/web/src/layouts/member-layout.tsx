@@ -11,14 +11,7 @@ import {
   NavFooterLink,
   SidebarNav,
 } from '../components/layout/sidebar-nav';
-
-const mobileTabs = [
-  { to: '/app', label: 'Home', icon: '🏠', end: true },
-  { to: '/app/matches', label: 'Matches', icon: '⚽' },
-  { to: '/app/community', label: 'Community', icon: '📣' },
-  { to: '/app/membership-card', label: 'Card', icon: '🎫' },
-  { to: '/app/profile', label: 'Profile', icon: '👤' },
-];
+import { useFeatureFlags } from '../features/site/use-feature-flags';
 
 function memberBackFallback(pathname: string) {
   if (/^\/app\/matches\/[^/]+$/.test(pathname)) {
@@ -29,8 +22,17 @@ function memberBackFallback(pathname: string) {
 
 export function MemberLayout() {
   const { user, logout } = useAuth();
+  const { predictionsEnabled } = useFeatureFlags();
   const isAdmin = isAdminRole(user?.roles);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const mobileTabs = [
+    { to: '/app', label: 'Home', icon: '🏠', end: true },
+    ...(predictionsEnabled ? [{ to: '/app/matches', label: 'Matches', icon: '⚽' as const }] : []),
+    { to: '/app/community', label: 'Community', icon: '📣' as const },
+    { to: '/app/membership-card', label: 'Card', icon: '🎫' as const },
+    { to: '/app/profile', label: 'Profile', icon: '👤' as const },
+  ];
 
   const sidebarItems = [
     ...MEMBER_NAV,

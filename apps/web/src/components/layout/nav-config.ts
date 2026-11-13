@@ -25,6 +25,7 @@ export const MEMBER_NAV: NavItem[] = [
   { to: '/app/notifications', label: 'Notifications', icon: '🔔' },
   { to: '/app/hall-of-fame', label: 'Hall of Fame', icon: '👑' },
   { to: '/app/profile', label: 'My Profile', icon: '👤' },
+  { to: '/app/members', label: 'Member directory', icon: '📖' },
   { to: '/app/membership-card', label: 'Membership Card', icon: '🎫' },
 ];
 

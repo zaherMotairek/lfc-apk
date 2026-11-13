@@ -4,6 +4,7 @@ import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
 import { useContent } from '../content/content-provider';
 import { EmptyState } from '../../components/ui/interactive-chips';
+import { PushNotificationsPanel } from '../notifications/push-notifications-panel';
 
 type NotificationItem = {
   id: string;
@@ -71,6 +72,8 @@ export function NotificationsPage() {
             : 'In-app alerts for matches, events, and achievements.'
         }
       />
+
+      <PushNotificationsPanel />
 
       <div className="space-y-3">
         {notificationsQuery.isLoading ? (

@@ -107,6 +107,9 @@ export class UsersService {
       avatarUrl: user.avatarUrl,
       phoneNumber: user.phoneNumber,
       favoritePlayer: user.favoritePlayer,
+      city: user.city,
+      listedInDirectory: user.listedInDirectory,
+      hideFromLeaderboard: user.hideFromLeaderboard,
       olscId: user.olscId,
       lfcId: user.lfcId,
       platformAccountStatus: user.platformAccountStatus,
@@ -159,6 +162,13 @@ export class UsersService {
           dto.phoneNumber === undefined ? undefined : normalizePhoneNumber(dto.phoneNumber),
         favoritePlayer: dto.favoritePlayer,
         avatarUrl: dto.avatarUrl,
+        city: dto.city === undefined ? undefined : dto.city?.trim() || null,
+        ...(dto.listedInDirectory !== undefined
+          ? { listedInDirectory: dto.listedInDirectory }
+          : {}),
+        ...(dto.hideFromLeaderboard !== undefined
+          ? { hideFromLeaderboard: dto.hideFromLeaderboard }
+          : {}),
         ...(dto.olscId !== undefined ? { olscId: nextOlscId } : {}),
         ...(dto.lfcId !== undefined ? { lfcId: nextLfcId } : {}),
       },

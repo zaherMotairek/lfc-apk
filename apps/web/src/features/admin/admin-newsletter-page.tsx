@@ -6,6 +6,7 @@ import { apiUploadFile } from '../../lib/api';
 import { RedlebDispatch } from './newsletter/redleb-dispatch';
 import { REDLEB_DISPATCH_CSS } from './newsletter/newsletter-styles';
 import { AdminNewsletterPublish } from './admin-newsletter-publish';
+import { NewsletterContentPicker } from './newsletter-content-picker';
 import {
   createEmptyNewsletter,
   emptyPhoto,
@@ -412,6 +413,13 @@ export function AdminNewsletterPage() {
       </div>
 
       <AdminNewsletterPublish />
+
+      <NewsletterContentPicker
+        onPick={(text) => {
+          void navigator.clipboard?.writeText(text);
+          setMessage('Copied to clipboard — paste into a newsletter field.');
+        }}
+      />
 
       <div className={previewOpen ? 'grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]' : 'grid gap-6'}>
         <div className="space-y-6">

@@ -29,6 +29,7 @@ import { LeaderboardPage } from '../features/members/leaderboard-page';
 import { CommunityPage } from '../features/members/community-page';
 import { NotificationsPage } from '../features/members/notifications-page';
 import { HallOfFamePage } from '../features/members/hall-of-fame-page';
+import { MembersDirectoryPage } from '../features/members/members-directory-page';
 import { AdminDashboardPage } from '../features/admin/admin-dashboard-page';
 import { AdminMembersPage } from '../features/admin/admin-members-page';
 import { AdminApplicationsPage } from '../features/admin/admin-applications-page';
@@ -81,6 +82,7 @@ export function AppRouter() {
           <Route path="matches/:id" element={<MatchHubPage />} />
           <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="community" element={<CommunityPage />} />
+          <Route path="members" element={<MembersDirectoryPage />} />
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="hall-of-fame" element={<HallOfFamePage />} />
         </Route>

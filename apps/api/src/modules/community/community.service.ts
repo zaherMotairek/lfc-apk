@@ -394,6 +394,58 @@ export class CommunityService {
     return { message: 'Comment deleted.' };
   }
 
+  getPushConfig() {
+    const publicKey = process.env.VAPID_PUBLIC_KEY?.trim() || null;
+    return {
+      publicKey,
+      supported: Boolean(publicKey),
+    };
+  }
+
+  async registerPushSubscription(
+    userId: string,
+    body: { endpoint: string; keys: { p256dh: string; auth: string } },
+  ) {
+    const pushOn = await this.siteSettingsService.getPublicSettings();
+    if (pushOn['features.pushEnabled'] === 'false') {
+      throw new BadRequestException('Push notifications are disabled.');
+    }
+    if (!body.endpoint?.trim() || !body.keys?.p256dh || !body.keys?.auth) {
+      throw new BadRequestException('Invalid push subscription payload');
+    }
+
+    const row = await this.prisma.pushSubscription.upsert({
+      where: { endpoint: body.endpoint.trim() },
+      create: {
+        userId,
+        endpoint: body.endpoint.trim(),
+        p256dh: body.keys.p256dh,
+        auth: body.keys.auth,
+      },
+      update: {
+        userId,
+        p256dh: body.keys.p256dh,
+        auth: body.keys.auth,
+      },
+    });
+
+    await this.auditService.log({
+      actorUserId: userId,
+      action: 'REGISTER_PUSH_SUBSCRIPTION',
+      entityType: 'PUSH_SUBSCRIPTION',
+      entityId: row.id,
+    });
+
+    return { message: 'Push subscription saved.' };
+  }
+
+  async unregisterPushSubscription(userId: string, endpoint: string) {
+    await this.prisma.pushSubscription.deleteMany({
+      where: { userId, endpoint: endpoint.trim() },
+    });
+    return { message: 'Push subscription removed.' };
+  }
+
   async staffEventCheckIn(eventId: string, qrToken: string, staffUserId: string) {
     const event = await this.prisma.event.findUnique({ where: { id: eventId } });
     if (!event) {

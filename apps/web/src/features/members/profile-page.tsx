@@ -14,6 +14,9 @@ type ProfileResponse = {
   avatarUrl?: string | null;
   phoneNumber?: string | null;
   favoritePlayer?: string | null;
+  city?: string | null;
+  listedInDirectory?: boolean;
+  hideFromLeaderboard?: boolean;
   olscId?: string | null;
   lfcId?: string | null;
   platformAccountStatus: string;
@@ -80,8 +83,13 @@ export function ProfilePage() {
     lastName: '',
     phoneNumber: '',
     favoritePlayer: '',
+    city: '',
     olscId: '',
     lfcId: '',
+  });
+  const [privacy, setPrivacy] = useState({
+    listedInDirectory: false,
+    hideFromLeaderboard: false,
   });
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -108,8 +116,13 @@ export function ProfilePage() {
             lastName: result.lastName,
             phoneNumber: result.phoneNumber ?? '',
             favoritePlayer: result.favoritePlayer ?? '',
+            city: result.city ?? '',
             olscId: result.olscId ?? '',
             lfcId: result.lfcId ?? '',
+          });
+          setPrivacy({
+            listedInDirectory: Boolean(result.listedInDirectory),
+            hideFromLeaderboard: Boolean(result.hideFromLeaderboard),
           });
         }
       } catch (err) {
@@ -134,7 +147,7 @@ export function ProfilePage() {
       const result = await apiRequest<{ message: string }>('/users/me', {
         method: 'PUT',
         token: accessToken,
-        body: form,
+        body: { ...form, ...privacy },
       });
       setMessage(result.message);
       const refreshed = await apiRequest<ProfileResponse>('/users/me', { token: accessToken });
@@ -144,8 +157,13 @@ export function ProfilePage() {
         lastName: refreshed.lastName,
         phoneNumber: refreshed.phoneNumber ?? '',
         favoritePlayer: refreshed.favoritePlayer ?? '',
+        city: refreshed.city ?? '',
         olscId: refreshed.olscId ?? '',
         lfcId: refreshed.lfcId ?? '',
+      });
+      setPrivacy({
+        listedInDirectory: Boolean(refreshed.listedInDirectory),
+        hideFromLeaderboard: Boolean(refreshed.hideFromLeaderboard),
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Update failed');
@@ -398,6 +416,7 @@ export function ProfilePage() {
               ['lastName', 'Last name'],
               ['phoneNumber', 'Phone number'],
               ['favoritePlayer', 'Favorite Liverpool player'],
+              ['city', 'City / area'],
               ['olscId', 'OLSC ID'],
               ['lfcId', 'ALLRED SUPPORT ID'],
             ] as const
@@ -412,6 +431,29 @@ export function ProfilePage() {
               />
             </label>
           ))}
+          <fieldset className="space-y-2 md:col-span-2">
+            <legend className="text-sm font-bold text-ink">Privacy</legend>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={privacy.listedInDirectory}
+                onChange={(e) =>
+                  setPrivacy((p) => ({ ...p, listedInDirectory: e.target.checked }))
+                }
+              />
+              Show me in the member directory
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={privacy.hideFromLeaderboard}
+                onChange={(e) =>
+                  setPrivacy((p) => ({ ...p, hideFromLeaderboard: e.target.checked }))
+                }
+              />
+              Hide my name on the public leaderboard
+            </label>
+          </fieldset>
           <div className="md:col-span-2">
             <button type="submit" disabled={loading} className="kop-btn-primary">
               {loading ? 'Saving...' : 'Save profile'}

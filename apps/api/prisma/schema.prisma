@@ -161,6 +161,9 @@ model User {
   membershipCardUploadedAt DateTime?
   phoneNumber           String?
   favoritePlayer        String?
+  city                  String?
+  listedInDirectory     Boolean                @default(false)
+  hideFromLeaderboard   Boolean                @default(false)
   olscId                String?                @unique
   lfcId                 String?                @unique
   platformAccountStatus PlatformAccountStatus  @default(INVITED)
@@ -196,6 +199,7 @@ model User {
   reviewedMembershipApplications MembershipApplication[] @relation("MembershipApplicationReviewer")
   loginEvents           LoginEvent[]
   contentOverrides      ContentOverride[]
+  pushSubscriptions     PushSubscription[]
 
   @@index([platformAccountStatus])
   @@index([lastSeenAt])
@@ -771,6 +775,19 @@ model Notification {
   readAt    DateTime?
 
   @@index([userId, isRead, createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model AuditLog {

@@ -129,6 +129,11 @@ export class MembersController {
     return this.membersService.updateMembershipStatus(id, dto, user.id);
   }
 
+  @Get('members/directory')
+  listDirectory() {
+    return this.membersService.listDirectoryMembers();
+  }
+
   @Get('memberships/me/card')
   getMyCard(@CurrentUser() user: AuthenticatedUser) {
     return this.membershipCardsService.getMyActiveCard(user.id);
