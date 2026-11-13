@@ -19,4 +19,9 @@ export const SITE_SETTING_KEYS = {
   brandLogoLight: 'brand.logoUrlLight',
   brandLogoDark: 'brand.logoUrlDark',
   brandIcon: 'brand.iconUrl',
+  navPublicOrder: 'nav.public.order',
+  navPublicHidden: 'nav.public.hidden',
+  navMemberMainOrder: 'nav.member.mainOrder',
+  navMemberExtraOrder: 'nav.member.extraOrder',
+  navMemberTabOrder: 'nav.member.tabOrder',
 } as const;

@@ -19,6 +19,11 @@ export const SITE_SETTING_KEYS = {
   socialInstagram: 'social.instagram',
   socialFacebook: 'social.facebook',
   socialX: 'social.x',
+  navPublicOrder: 'nav.public.order',
+  navPublicHidden: 'nav.public.hidden',
+  navMemberMainOrder: 'nav.member.mainOrder',
+  navMemberExtraOrder: 'nav.member.extraOrder',
+  navMemberTabOrder: 'nav.member.tabOrder',
 } as const;
 
 export type SiteSettingKey = (typeof SITE_SETTING_KEYS)[keyof typeof SITE_SETTING_KEYS];
@@ -103,5 +108,27 @@ export const SITE_SETTING_DEFAULTS: Record<SiteSettingKey, SettingDefault> = {
     [SITE_SETTING_KEYS.socialX]: {
       value: '',
       description: 'X (Twitter) profile URL.',
+    },
+    [SITE_SETTING_KEYS.navPublicOrder]: {
+      value:
+        '/about,/committee,/events,/news,/newsletter,/gallery,/membership,/contact',
+      description: 'Public header nav order (comma-separated paths, e.g. /events,/news).',
+    },
+    [SITE_SETTING_KEYS.navPublicHidden]: {
+      value: '',
+      description: 'Public nav paths to hide (comma-separated, e.g. /gallery).',
+    },
+    [SITE_SETTING_KEYS.navMemberMainOrder]: {
+      value:
+        '/app,/app/matches,/app/leaderboard,/app/community,/app/notifications,/app/hall-of-fame,/app/profile,/app/members,/app/membership-card',
+      description: 'Member app drawer nav order (comma-separated paths).',
+    },
+    [SITE_SETTING_KEYS.navMemberExtraOrder]: {
+      value: '/news,/newsletter,/events,/gallery',
+      description: 'Member drawer “club links” order (comma-separated paths).',
+    },
+    [SITE_SETTING_KEYS.navMemberTabOrder]: {
+      value: '/app,/app/matches,/app/community,/app/membership-card,/app/profile',
+      description: 'Member mobile bottom tabs order (comma-separated paths).',
     },
   };

@@ -958,6 +958,28 @@ const E2E_SITE_SETTINGS: Array<{ key: string; value: string; description: string
   { key: 'social.facebook', value: '', description: 'Facebook URL.' },
   { key: 'social.x', value: '', description: 'X profile URL.' },
   { key: 'brand.version', value: '1', description: 'Brand asset version.' },
+  {
+    key: 'nav.public.order',
+    value: '/about,/committee,/events,/news,/newsletter,/gallery,/membership,/contact',
+    description: 'Public header nav order (comma-separated paths).',
+  },
+  { key: 'nav.public.hidden', value: '', description: 'Public nav paths to hide.' },
+  {
+    key: 'nav.member.mainOrder',
+    value:
+      '/app,/app/matches,/app/leaderboard,/app/community,/app/notifications,/app/hall-of-fame,/app/profile,/app/members,/app/membership-card',
+    description: 'Member drawer nav order.',
+  },
+  {
+    key: 'nav.member.extraOrder',
+    value: '/news,/newsletter,/events,/gallery',
+    description: 'Member extra links order.',
+  },
+  {
+    key: 'nav.member.tabOrder',
+    value: '/app,/app/matches,/app/community,/app/membership-card,/app/profile',
+    description: 'Member mobile tabs order.',
+  },
 ];
 
 async function seedSiteSettings() {

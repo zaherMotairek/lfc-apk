@@ -53,7 +53,26 @@ const TABS: Array<{ id: string; label: string; keys: string[] }> = [
     label: 'Social',
     keys: ['social.instagram', 'social.facebook', 'social.x'],
   },
+  {
+    id: 'navigation',
+    label: 'Navigation',
+    keys: [
+      SITE_SETTING_KEYS.navPublicOrder,
+      SITE_SETTING_KEYS.navPublicHidden,
+      SITE_SETTING_KEYS.navMemberMainOrder,
+      SITE_SETTING_KEYS.navMemberExtraOrder,
+      SITE_SETTING_KEYS.navMemberTabOrder,
+    ],
+  },
 ];
+
+const MULTILINE_SETTING_KEYS = new Set<string>([
+  SITE_SETTING_KEYS.navPublicOrder,
+  SITE_SETTING_KEYS.navPublicHidden,
+  SITE_SETTING_KEYS.navMemberMainOrder,
+  SITE_SETTING_KEYS.navMemberExtraOrder,
+  SITE_SETTING_KEYS.navMemberTabOrder,
+]);
 
 export function AdminSiteSettingsPage() {
   const showToast = useToast();
@@ -162,11 +181,20 @@ export function AdminSiteSettingsPage() {
                   className="mt-2 h-14 max-w-[200px] object-contain"
                 />
               ) : null}
-              <input
-                className="kop-input mt-1 font-mono text-xs"
-                value={value}
-                onChange={(e) => setDraft((p) => ({ ...p, [row.key]: e.target.value }))}
-              />
+              {MULTILINE_SETTING_KEYS.has(row.key) ? (
+                <textarea
+                  className="kop-input mt-1 min-h-[4.5rem] font-mono text-xs"
+                  rows={3}
+                  value={value}
+                  onChange={(e) => setDraft((p) => ({ ...p, [row.key]: e.target.value }))}
+                />
+              ) : (
+                <input
+                  className="kop-input mt-1 font-mono text-xs"
+                  value={value}
+                  onChange={(e) => setDraft((p) => ({ ...p, [row.key]: e.target.value }))}
+                />
+              )}
               {isImage ? (
                 <label className="mt-2 inline-block cursor-pointer text-xs font-semibold text-lfc-red">
                   {uploadingKey === row.key ? 'Uploading…' : 'Upload image'}
