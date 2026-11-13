@@ -313,3 +313,31 @@ export const CONTENT_REGISTRY: ContentRegistryEntry[] = [
 export const CONTENT_DEFAULTS_EN: Record<string, string> = Object.fromEntries(
   CONTENT_REGISTRY.map((entry) => [entry.key, entry.defaultEn]),
 );
+
+import { CONTENT_DEFAULTS_AR_PARTIAL } from './content-registry-ar';
+
+export const CONTENT_DEFAULTS_AR: Record<string, string> = {
+  ...CONTENT_DEFAULTS_EN,
+  ...CONTENT_DEFAULTS_AR_PARTIAL,
+};
+for (const entry of CONTENT_REGISTRY) {
+  if (!CONTENT_DEFAULTS_AR[entry.key]) {
+    CONTENT_DEFAULTS_AR[entry.key] = entry.defaultEn;
+  }
+}
+
+export function contentDefaultForKey(key: string, language = 'en'): string {
+  const lang = language.trim().toLowerCase() || 'en';
+  if (lang === 'ar') {
+    return CONTENT_DEFAULTS_AR[key] ?? CONTENT_DEFAULTS_EN[key] ?? '';
+  }
+  return CONTENT_DEFAULTS_EN[key] ?? '';
+}
+
+export function contentDefaultsForLanguage(language = 'en'): Record<string, string> {
+  const lang = language.trim().toLowerCase() || 'en';
+  if (lang === 'ar') {
+    return { ...CONTENT_DEFAULTS_EN, ...CONTENT_DEFAULTS_AR };
+  }
+  return { ...CONTENT_DEFAULTS_EN };
+}

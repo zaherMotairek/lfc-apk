@@ -18,3 +18,12 @@ self.addEventListener('notificationclick', (event) => {
     (event.notification.data && event.notification.data.url) || '/app/notifications';
   event.waitUntil(clients.openWindow(target));
 });
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.mode !== 'navigate') return;
+  event.respondWith(
+    fetch(event.request).catch(() =>
+      fetch('/offline.html').then((res) => res || new Response('Offline', { status: 503 })),
+    ),
+  );
+});

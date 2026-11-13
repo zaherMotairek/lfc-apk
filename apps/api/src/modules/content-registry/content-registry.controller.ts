@@ -66,4 +66,28 @@ export class ContentRegistryController {
       user.id,
     );
   }
+
+  @Post('admin/content/texts/panic-restore')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionCode.MANAGE_CONTENT)
+  panicRestore(
+    @Body() body: { language?: string; confirmPhrase: string },
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.contentRegistryService.panicRestoreDefaults({
+      language: body.language ?? 'en',
+      confirmPhrase: body.confirmPhrase ?? '',
+      actorUserId: user.id,
+    });
+  }
+
+  @Post('admin/content/texts/import-lang-defaults')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionCode.MANAGE_CONTENT)
+  importLangDefaults(
+    @Body() body: { language?: string },
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.contentRegistryService.importLanguageDefaults(body.language ?? 'ar', user.id);
+  }
 }

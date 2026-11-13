@@ -25,8 +25,8 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔮 optional / later
 | 1A.6 | Page block editor (drag/hide) | 🟡 CMS pages exist; not full block kit |
 | 1A.7 | Media library crop/resize | 🟡 Upload exists |
 | 1A.8 | Theme editor live preview | 🟡 Brand colours in settings |
-| 1A.9 | Panic restore all content | ⬜ Per-key rollback ✅ |
-| 1A.10 | ar language slots | 🟡 Bundle supports lang; UI switch in progress |
+| 1A.9 | Panic restore all content | ✅ Per-language panic + per-key rollback |
+| 1A.10 | ar language slots | 🟡 Bundled ar defaults + import presets; committee review ⬜ |
 | 1A.11 | Lint/script no hardcoded strings | 🟡 `scripts/check-user-facing-strings.mjs` |
 
 ## Phase 1 — Committee (1–19)

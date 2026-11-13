@@ -1,5 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CONTENT_DEFAULTS_EN, CONTENT_REGISTRY } from '@kop/shared';
+import {
+  CONTENT_REGISTRY,
+  contentDefaultForKey,
+  contentDefaultsForLanguage,
+} from '@kop/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
 
@@ -11,18 +15,18 @@ export class ContentRegistryService {
   ) {}
 
   async getBundle(lang = 'en') {
+    const language = lang.trim().toLowerCase() || 'en';
     const overrides = await this.prisma.contentOverride.findMany({
-      where: { language: lang },
+      where: { language },
     });
-    const map = new Map(overrides.map((row) => [row.key, row.value]));
 
-    const values: Record<string, string> = { ...CONTENT_DEFAULTS_EN };
+    const values: Record<string, string> = { ...contentDefaultsForLanguage(language) };
     for (const row of overrides) {
       values[row.key] = row.value;
     }
     for (const entry of CONTENT_REGISTRY) {
       if (!values[entry.key]) {
-        values[entry.key] = entry.defaultEn;
+        values[entry.key] = contentDefaultForKey(entry.key, language);
       }
     }
 
@@ -34,7 +38,7 @@ export class ContentRegistryService {
           );
 
     return {
-      lang,
+      lang: language,
       version,
       values,
       registry: CONTENT_REGISTRY,
@@ -50,17 +54,19 @@ export class ContentRegistryService {
   }
 
   async listAdminWithValues(lang = 'en') {
+    const language = lang.trim().toLowerCase() || 'en';
     const overrides = await this.prisma.contentOverride.findMany({
-      where: { language: lang },
+      where: { language },
     });
     const map = new Map(overrides.map((row) => [row.key, row]));
 
     return CONTENT_REGISTRY.map((entry) => {
       const row = map.get(entry.key);
+      const baseline = contentDefaultForKey(entry.key, language);
       return {
         ...entry,
-        currentValue: row?.value ?? entry.defaultEn,
-        defaultValue: entry.defaultEn,
+        currentValue: row?.value ?? baseline,
+        defaultValue: baseline,
         isOverridden: Boolean(row),
         updatedAt: row?.updatedAt ?? null,
       };
@@ -103,7 +109,7 @@ export class ContentRegistryService {
         data: {
           key: params.key,
           language: params.language,
-          valueBefore: existing?.value ?? entry.defaultEn,
+          valueBefore: existing?.value ?? contentDefaultForKey(params.key, params.language),
           valueAfter: params.value,
           actorUserId: params.actorUserId,
         },
@@ -140,7 +146,7 @@ export class ContentRegistryService {
           key,
           language,
           valueBefore: existing.value,
-          valueAfter: entry?.defaultEn ?? '',
+          valueAfter: contentDefaultForKey(key, language),
           actorUserId,
         },
       }),
@@ -184,5 +190,100 @@ export class ContentRegistryService {
       value: latest.valueBefore,
       actorUserId,
     });
+  }
+
+  async panicRestoreDefaults(params: {
+    language: string;
+    confirmPhrase: string;
+    actorUserId: string;
+  }) {
+    if (params.confirmPhrase.trim() !== 'RESTORE DEFAULTS') {
+      throw new BadRequestException('Type RESTORE DEFAULTS to confirm.');
+    }
+
+    const language = params.language.trim().toLowerCase() || 'en';
+    const overrides = await this.prisma.contentOverride.findMany({ where: { language } });
+    if (!overrides.length) {
+      return { message: 'No overrides to remove.', removed: 0 };
+    }
+
+    await this.prisma.$transaction([
+      ...overrides.map((row) =>
+        this.prisma.contentRevision.create({
+          data: {
+            key: row.key,
+            language,
+            valueBefore: row.value,
+            valueAfter: contentDefaultForKey(row.key, language),
+            actorUserId: params.actorUserId,
+          },
+        }),
+      ),
+      this.prisma.contentOverride.deleteMany({ where: { language } }),
+    ]);
+
+    await this.auditService.log({
+      actorUserId: params.actorUserId,
+      action: 'PANIC_RESTORE_CONTENT',
+      entityType: 'CONTENT',
+      entityId: language,
+      metadata: { language, removed: overrides.length },
+    });
+
+    return {
+      message: `All ${overrides.length} text override(s) for “${language}” were reset to defaults.`,
+      removed: overrides.length,
+    };
+  }
+
+  async importLanguageDefaults(language: string, actorUserId: string) {
+    const lang = language.trim().toLowerCase() || 'en';
+    if (lang !== 'ar') {
+      throw new BadRequestException('Only Arabic (ar) preset import is available.');
+    }
+
+    let created = 0;
+    for (const entry of CONTENT_REGISTRY) {
+      const value = contentDefaultForKey(entry.key, lang);
+      const existing = await this.prisma.contentOverride.findUnique({
+        where: { key_language: { key: entry.key, language: lang } },
+      });
+      if (existing) continue;
+
+      await this.prisma.contentOverride.create({
+        data: {
+          key: entry.key,
+          language: lang,
+          value,
+          updatedById: actorUserId,
+        },
+      });
+      await this.prisma.contentRevision.create({
+        data: {
+          key: entry.key,
+          language: lang,
+          valueBefore: contentDefaultForKey(entry.key, 'en'),
+          valueAfter: value,
+          actorUserId,
+        },
+      });
+      created += 1;
+    }
+
+    await this.auditService.log({
+      actorUserId,
+      action: 'IMPORT_CONTENT_LANG_DEFAULTS',
+      entityType: 'CONTENT',
+      entityId: lang,
+      metadata: { created },
+    });
+
+    return {
+      message:
+        created > 0
+          ? `Imported ${created} Arabic preset(s). Edit any line in this list.`
+          : 'All Arabic keys already have overrides.',
+      created,
+    };
   }
 }

@@ -4,6 +4,7 @@ import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
 import { useToast } from '../../components/ui/toast-provider';
+import { useConfirm } from '../../components/ui/confirm-provider';
 import { useLanguage } from '../content/language-provider';
 
 type TextRow = {
@@ -17,6 +18,7 @@ type TextRow = {
 
 export function AdminTextsPage() {
   const showToast = useToast();
+  const confirm = useConfirm();
   const { lang } = useLanguage();
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
@@ -101,6 +103,38 @@ export function AdminTextsPage() {
     enabled: Boolean(accessToken && editingKey),
   });
 
+  const panicMutation = useMutation({
+    mutationFn: (confirmPhrase: string) =>
+      apiRequest<{ message: string }>('/admin/content/texts/panic-restore', {
+        method: 'POST',
+        token: accessToken,
+        body: { language: lang, confirmPhrase },
+      }),
+    onSuccess: (res) => {
+      setMessage(res.message);
+      showToast(res.message, 'success');
+      void queryClient.invalidateQueries({ queryKey: ['admin-content-texts'] });
+      void queryClient.invalidateQueries({ queryKey: ['content-bundle'] });
+    },
+    onError: (err) => showToast(err instanceof Error ? err.message : 'Restore failed', 'error'),
+  });
+
+  const importArMutation = useMutation({
+    mutationFn: () =>
+      apiRequest<{ message: string }>('/admin/content/texts/import-lang-defaults', {
+        method: 'POST',
+        token: accessToken,
+        body: { language: 'ar' },
+      }),
+    onSuccess: (res) => {
+      setMessage(res.message);
+      showToast(res.message, 'success');
+      void queryClient.invalidateQueries({ queryKey: ['admin-content-texts'] });
+      void queryClient.invalidateQueries({ queryKey: ['content-bundle'] });
+    },
+    onError: (err) => showToast(err instanceof Error ? err.message : 'Import failed', 'error'),
+  });
+
   const resetMutation = useMutation({
     mutationFn: (key: string) =>
       apiRequest<{ message: string }>(
@@ -131,7 +165,7 @@ export function AdminTextsPage() {
       <PageHeader
         eyebrow="Content"
         title="Texts & Labels"
-        description="Search and edit registry copy used across the public site and member app."
+        description={`Search and edit registry copy (editing language: ${lang === 'ar' ? 'العربية' : 'English'} — switch via site language toggle).`}
       />
 
       {message ? (
@@ -215,6 +249,57 @@ export function AdminTextsPage() {
             </table>
           </div>
         ))}
+      </div>
+
+      <div className="kop-card space-y-4 border border-black/10 p-5">
+        <h3 className="font-bold text-ink">Safety</h3>
+        {lang === 'ar' ? (
+          <p className="text-sm text-black/55">
+            Arabic strings are loaded from bundled presets until you save overrides here. You can
+            materialize every preset into the database for committee editing.
+          </p>
+        ) : null}
+        <div className="flex flex-wrap gap-2">
+          {lang === 'ar' ? (
+            <button
+              type="button"
+              className="kop-btn-secondary !text-sm"
+              disabled={importArMutation.isPending}
+              onClick={() => {
+                void (async () => {
+                  const ok = await confirm({
+                    title: 'Import Arabic presets',
+                    message: 'Create editable rows for every Arabic default not yet customized?',
+                    confirmLabel: 'Import',
+                  });
+                  if (ok) importArMutation.mutate();
+                })();
+              }}
+            >
+              Import Arabic presets
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className="kop-btn-secondary !border-lfc-red/30 !text-sm !text-lfc-red"
+            disabled={panicMutation.isPending}
+            onClick={() => {
+              void (async () => {
+                const ok = await confirm({
+                  title: 'Panic restore',
+                  message: `Remove ALL custom text overrides for “${lang}” and revert to defaults? You will type RESTORE DEFAULTS next.`,
+                  danger: true,
+                  confirmLabel: 'Continue',
+                });
+                if (!ok) return;
+                const phrase = window.prompt('Type RESTORE DEFAULTS to confirm:');
+                if (phrase) panicMutation.mutate(phrase);
+              })();
+            }}
+          >
+            Panic restore ({lang})
+          </button>
+        </div>
       </div>
 
       {editingKey ? (
