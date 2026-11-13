@@ -469,8 +469,15 @@ export class ContentService {
   }
 
   listPublishedNewsletters() {
+    const now = new Date();
     return this.prisma.newsletterIssue.findMany({
-      where: { isPublished: true },
+      where: {
+        isPublished: true,
+        AND: [
+          { OR: [{ publishedAt: null }, { publishedAt: { lte: now } }] },
+          { OR: [{ scheduledPublishAt: null }, { scheduledPublishAt: { lte: now } }] },
+        ],
+      },
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
       select: {
         id: true,
@@ -486,8 +493,16 @@ export class ContentService {
   }
 
   async getPublishedNewsletter(slug: string) {
+    const now = new Date();
     const issue = await this.prisma.newsletterIssue.findFirst({
-      where: { slug, isPublished: true },
+      where: {
+        slug,
+        isPublished: true,
+        AND: [
+          { OR: [{ publishedAt: null }, { publishedAt: { lte: now } }] },
+          { OR: [{ scheduledPublishAt: null }, { scheduledPublishAt: { lte: now } }] },
+        ],
+      },
     });
     if (!issue) {
       throw new NotFoundException('Newsletter not found');
@@ -508,6 +523,8 @@ export class ContentService {
       monthLabel: string;
       excerpt?: string;
       pdfUrl: string;
+      saveAsDraft?: boolean;
+      scheduledPublishAt?: Date | null;
     },
     actorUserId: string,
   ) {
@@ -533,6 +550,13 @@ export class ContentService {
       n += 1;
     }
 
+    const saveAsDraft = Boolean(input.saveAsDraft);
+    const scheduled =
+      input.scheduledPublishAt && !Number.isNaN(input.scheduledPublishAt.getTime())
+        ? input.scheduledPublishAt
+        : null;
+    const publishAt = saveAsDraft ? null : scheduled ?? new Date();
+
     const issue = await this.prisma.newsletterIssue.create({
       data: {
         title: input.title.trim(),
@@ -541,23 +565,67 @@ export class ContentService {
         monthLabel: input.monthLabel.trim(),
         excerpt: input.excerpt?.trim() || null,
         pdfUrl: input.pdfUrl,
-        isPublished: true,
-        publishedAt: new Date(),
+        isPublished: !saveAsDraft,
+        publishedAt: publishAt,
+        scheduledPublishAt: scheduled,
         createdById: actorUserId,
       },
     });
 
     await this.auditService.log({
       actorUserId,
-      action: 'PUBLISH_NEWSLETTER',
+      action: saveAsDraft ? 'DRAFT_NEWSLETTER' : 'PUBLISH_NEWSLETTER',
       entityType: 'NEWSLETTER_ISSUE',
       entityId: issue.id,
     });
 
     return {
-      message: 'Newsletter published on the public website.',
+      message: saveAsDraft
+        ? 'Newsletter saved as draft.'
+        : scheduled && scheduled > new Date()
+          ? 'Newsletter scheduled for publication.'
+          : 'Newsletter published on the public website.',
       issue,
     };
+  }
+
+  async updateNewsletterIssue(
+    id: string,
+    input: {
+      isPublished?: boolean;
+      publishedAt?: Date | null;
+      scheduledPublishAt?: Date | null;
+      title?: string;
+      excerpt?: string;
+    },
+    actorUserId: string,
+  ) {
+    const existing = await this.prisma.newsletterIssue.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException('Newsletter not found');
+    }
+
+    const issue = await this.prisma.newsletterIssue.update({
+      where: { id },
+      data: {
+        ...(input.isPublished !== undefined ? { isPublished: input.isPublished } : {}),
+        ...(input.publishedAt !== undefined ? { publishedAt: input.publishedAt } : {}),
+        ...(input.scheduledPublishAt !== undefined
+          ? { scheduledPublishAt: input.scheduledPublishAt }
+          : {}),
+        ...(input.title !== undefined ? { title: input.title.trim() } : {}),
+        ...(input.excerpt !== undefined ? { excerpt: input.excerpt?.trim() || null } : {}),
+      },
+    });
+
+    await this.auditService.log({
+      actorUserId,
+      action: input.isPublished === false ? 'UNPUBLISH_NEWSLETTER' : 'UPDATE_NEWSLETTER',
+      entityType: 'NEWSLETTER_ISSUE',
+      entityId: id,
+    });
+
+    return { message: 'Newsletter updated.', issue };
   }
 
   async deleteNewsletterIssue(id: string, actorUserId: string) {

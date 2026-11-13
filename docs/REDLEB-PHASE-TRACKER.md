@@ -6,10 +6,10 @@
 | 1A | In progress | ~35 keys; lang bundle en/ar; string check script; codemod bulk still TODO |
 | 1 | ~92% | Dynamic PWA manifest from `/api/brand/manifest.webmanifest`; brand.version bump on save |
 | 3 | In progress | Moderation, audit, feature flags API, check-in QR, ConfirmProvider |
-| 4 | Partial | Guests + dynamic max; `.ics`; QR staff check-in |
+| 4 | Partial | Guests, waitlist UI, invitation share card, `.ics`, QR check-in |
 | 2 | Started | 5-tab mobile bar; `/admin/design` gallery; design tokens doc |
 | 5 | Partial | Via phase 1; no web push / directory |
-| 6 | Not started | Newsletter engine exists as-is |
+| 6 | In progress | Draft, schedule, publish-now; builder + PDF unchanged |
 | 7 | Partial | CI workflow + ops/privacy docs |
 | 8 | Started | Language switch + RTL `dir`; Arabic overrides still to fill in admin |
 

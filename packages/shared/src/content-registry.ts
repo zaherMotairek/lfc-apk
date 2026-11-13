@@ -277,6 +277,14 @@ export const CONTENT_REGISTRY: ContentRegistryEntry[] = [
     description: 'Membership card page title.',
   },
   {
+    key: 'member.card.description',
+    defaultEn: 'Take a photo or upload your physical OLSC membership card here.',
+    type: 'text',
+    maxLength: 200,
+    area: 'Member app',
+    description: 'Membership card page intro.',
+  },
+  {
     key: 'member.notifications.title',
     defaultEn: 'Notifications',
     type: 'text',

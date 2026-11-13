@@ -807,9 +807,10 @@ model NewsletterIssue {
   monthLabel    String
   excerpt       String?
   pdfUrl        String
-  isPublished   Boolean   @default(true)
-  publishedAt   DateTime?
-  createdById   String?
+  isPublished         Boolean   @default(true)
+  publishedAt         DateTime?
+  scheduledPublishAt  DateTime?
+  createdById         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

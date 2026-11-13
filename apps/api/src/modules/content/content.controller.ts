@@ -216,6 +216,8 @@ export class ContentController {
       issueNumber?: string;
       monthLabel?: string;
       excerpt?: string;
+      saveAsDraft?: string;
+      scheduledPublishAt?: string;
     },
     @CurrentUser() user: AuthenticatedUser,
   ) {
@@ -228,6 +230,8 @@ export class ContentController {
       throw new BadRequestException('Only PDF files are allowed');
     }
     const pdfUrl = await this.mediaStorageService.uploadNewsletterPdf(user.id, file);
+    const scheduled =
+      body.scheduledPublishAt?.trim() ? new Date(body.scheduledPublishAt.trim()) : null;
     return this.contentService.createNewsletterIssue(
       {
         title: body.title ?? '',
@@ -235,6 +239,46 @@ export class ContentController {
         monthLabel: body.monthLabel ?? '',
         excerpt: body.excerpt,
         pdfUrl,
+        saveAsDraft: body.saveAsDraft === 'true' || body.saveAsDraft === '1',
+        scheduledPublishAt: scheduled,
+      },
+      user.id,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionCode.MANAGE_CONTENT)
+  @Put('admin/newsletters/:id')
+  updateNewsletter(
+    @Param('id') id: string,
+    @Body()
+    body: {
+      isPublished?: boolean;
+      publishedAt?: string | null;
+      scheduledPublishAt?: string | null;
+      title?: string;
+      excerpt?: string;
+    },
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.contentService.updateNewsletterIssue(
+      id,
+      {
+        isPublished: body.isPublished,
+        publishedAt:
+          body.publishedAt === undefined
+            ? undefined
+            : body.publishedAt
+              ? new Date(body.publishedAt)
+              : null,
+        scheduledPublishAt:
+          body.scheduledPublishAt === undefined
+            ? undefined
+            : body.scheduledPublishAt
+              ? new Date(body.scheduledPublishAt)
+              : null,
+        title: body.title,
+        excerpt: body.excerpt,
       },
       user.id,
     );

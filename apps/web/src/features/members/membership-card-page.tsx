@@ -5,6 +5,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
 import { PageHeader } from '../../components/ui/page-header';
+import { useContent } from '../content/content-provider';
 import { resolveMediaUrl } from '../../lib/media-url';
 
 type MembershipCard = {
@@ -46,6 +47,11 @@ function badgeLabel(badge: MembershipCard['membershipBadge']) {
 }
 
 export function MembershipCardPage() {
+  const cardTitle = useContent('member.card.title', 'Digital membership card');
+  const cardDescription = useContent(
+    'member.card.description',
+    'Take a photo or upload your physical OLSC membership card here.',
+  );
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -113,7 +119,7 @@ export function MembershipCardPage() {
   if (cardQuery.isFetching && !card) {
     return (
       <section className="space-y-6">
-        <PageHeader eyebrow="Membership" title="My card" description="Your OLSC Lebanon membership card photo." />
+        <PageHeader eyebrow="Membership" title={cardTitle} description={cardDescription} />
         <div className="kop-card animate-pulse p-8">
           <div className="mx-auto h-48 max-w-sm rounded-3xl bg-black/5" />
         </div>
@@ -123,11 +129,7 @@ export function MembershipCardPage() {
 
   return (
     <section className="mx-auto max-w-xl space-y-5">
-      <PageHeader
-        eyebrow="Membership"
-        title="My card"
-        description="Take a photo or upload your physical OLSC membership card here."
-      />
+      <PageHeader eyebrow="Membership" title={cardTitle} description={cardDescription} />
 
       {card ? (
         <div className="rounded-2xl border border-black/5 bg-white px-4 py-3 text-sm">

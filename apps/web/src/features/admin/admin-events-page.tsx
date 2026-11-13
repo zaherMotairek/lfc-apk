@@ -9,6 +9,7 @@ import {
 } from '../../lib/datetime-local';
 import { PageHeader } from '../../components/ui/page-header';
 import { useConfirm } from '../../components/ui/confirm-provider';
+import { EventInvitationShare } from './event-invitation-share';
 
 type AdminEventItem = {
   id: string;
@@ -386,6 +387,8 @@ export function AdminEventsPage() {
                   </div>
                 ))}
               </div>
+
+              <EventInvitationShare event={selectedEvent} />
 
               <div className="flex flex-wrap gap-2">
                 <button

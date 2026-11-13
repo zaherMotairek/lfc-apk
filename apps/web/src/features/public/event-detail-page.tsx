@@ -63,11 +63,15 @@ export function EventDetailPage() {
   );
 
   const registerMutation = useMutation({
-    mutationFn: () =>
+    mutationFn: ({ joinWaitlist = false }: { joinWaitlist?: boolean } = {}) =>
       apiRequest<{ message: string }>(`/events/${id}/register`, {
         method: 'POST',
         token: accessToken,
-        body: { guestCount, guestNames: guestNames.trim() || undefined },
+        body: {
+          guestCount,
+          guestNames: guestNames.trim() || undefined,
+          joinWaitlist: joinWaitlist || undefined,
+        },
       }),
     onSuccess: (res) => {
       setRegisterMessage(res.message);
@@ -262,7 +266,7 @@ export function EventDetailPage() {
                   )}
                 </div>
 
-                {!isPast && canRegister ? (
+                {!isPast && (canRegister || (isAuthenticated && spotsLeft === 0 && data.capacity)) ? (
                   isAuthenticated ? (
                     <div className="space-y-3">
                       <label className="block text-sm font-medium">
@@ -289,14 +293,25 @@ export function EventDetailPage() {
                           />
                         </label>
                       ) : null}
-                      <button
-                        type="button"
-                        className="kop-btn-primary w-full"
-                        disabled={registerMutation.isPending}
-                        onClick={() => registerMutation.mutate()}
-                      >
-                        {registerMutation.isPending ? 'Registering…' : 'Register for this event'}
-                      </button>
+                      {spotsLeft === 0 && data.capacity ? (
+                        <button
+                          type="button"
+                          className="kop-btn-primary w-full"
+                          disabled={registerMutation.isPending}
+                          onClick={() => registerMutation.mutate({ joinWaitlist: true })}
+                        >
+                          {registerMutation.isPending ? 'Joining…' : 'Join waitlist'}
+                        </button>
+                      ) : canRegister ? (
+                        <button
+                          type="button"
+                          className="kop-btn-primary w-full"
+                          disabled={registerMutation.isPending}
+                          onClick={() => registerMutation.mutate({})}
+                        >
+                          {registerMutation.isPending ? 'Registering…' : 'Register for this event'}
+                        </button>
+                      ) : null}
                       {registerMessage ? (
                         <p className="text-center text-xs text-pitch">{registerMessage}</p>
                       ) : null}
