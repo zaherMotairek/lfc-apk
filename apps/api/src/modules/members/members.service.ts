@@ -301,7 +301,7 @@ export class MembersService {
     if (nextLfcId && nextLfcId !== user.lfcId) {
       const existingLfc = await this.prisma.user.findUnique({ where: { lfcId: nextLfcId } });
       if (existingLfc) {
-        throw new ConflictException('This LFC ID is already linked to another account');
+        throw new ConflictException('This ALLRED SUPPORT ID is already linked to another account');
       }
     }
 
