@@ -31,7 +31,7 @@ function Invoke-Api($Method, $Path, $Body = $null, $Token = $null) {
   return Invoke-RestMethod @params
 }
 
-Write-Host '=== Kop Platform E2E Verification ===' -ForegroundColor Cyan
+Write-Host '=== RedLeb Hub E2E Verification ===' -ForegroundColor Cyan
 
 $adminLogin = Test-Step 'Admin login' {
   Invoke-Api POST '/auth/login' @{

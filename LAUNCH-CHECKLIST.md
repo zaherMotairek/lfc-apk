@@ -1,4 +1,4 @@
-# Checklist de lancement OLSC — Kop Platform
+# Checklist de lancement OLSC — RedLeb Hub
 
 Checklist pour passer du **MVP local** à un **lancement production** pour OLSC Lebanon.
 

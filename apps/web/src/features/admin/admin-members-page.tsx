@@ -296,8 +296,8 @@ export function AdminMembersPage() {
           <div>
             <h2 className="text-lg font-bold text-ink">Official members Excel</h2>
             <p className="mt-1 text-sm text-black/55">
-              Upload a CSV export of your Excel with columns: OLSC ID, LFC ID, Name, Phone Number,
-              Status.
+              Upload a CSV export of your Excel with columns: OLSC ID, ALLRED SUPPORT ID (legacy
+              header &quot;LFC ID&quot; still accepted), Name, Phone Number, Status.
             </p>
             <p className="mt-2 text-xs text-black/40">
               Roster loaded: {rosterQuery.data?.total ?? 0} members
@@ -361,7 +361,7 @@ export function AdminMembersPage() {
             <div className="text-sm font-semibold text-ink">
               {filteredMembers.length} user{filteredMembers.length === 1 ? '' : 's'}
             </div>
-            <p className="text-xs text-black/45">Search by name, email, phone, OLSC ID or LFC ID</p>
+            <p className="text-xs text-black/45">Search by name, email, phone, OLSC ID or ALLRED SUPPORT ID</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             <input

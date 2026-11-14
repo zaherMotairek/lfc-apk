@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
 import { apiRequest } from '../../lib/api';
@@ -27,6 +27,7 @@ export function AdminTextsPage() {
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
   const [message, setMessage] = useState<string | null>(null);
+  const editPanelRef = useRef<HTMLFormElement | null>(null);
 
   const textsQuery = useQuery({
     queryKey: ['admin-content-texts', lang],
@@ -153,6 +154,12 @@ export function AdminTextsPage() {
     setDraft(row.currentValue);
     setMessage(null);
   }
+
+  useEffect(() => {
+    if (editingKey) {
+      editPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [editingKey]);
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -303,41 +310,61 @@ export function AdminTextsPage() {
       </div>
 
       {editingKey ? (
-        <form onSubmit={onSubmit} className="kop-card space-y-3 p-5">
-          <h2 className="font-bold">Edit {editingKey}</h2>
-          <textarea className="kop-input min-h-28" value={draft} onChange={(e) => setDraft(e.target.value)} required />
-          <div className="flex flex-wrap gap-2">
-            <button type="submit" className="kop-btn-primary" disabled={saveMutation.isPending}>
-              Save
-            </button>
-            {editingKey && rows.find((r) => r.key === editingKey)?.isOverridden ? (
-              <button
-                type="button"
-                className="kop-btn-secondary"
-                disabled={rollbackMutation.isPending}
-                onClick={() => rollbackMutation.mutate(editingKey)}
-              >
-                Roll back once
+        <div
+          className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 p-4 sm:items-center"
+          role="presentation"
+          onClick={() => setEditingKey(null)}
+        >
+          <form
+            ref={editPanelRef}
+            onSubmit={onSubmit}
+            onClick={(e) => e.stopPropagation()}
+            className="kop-card max-h-[90vh] w-full max-w-lg space-y-3 overflow-y-auto p-5 shadow-xl"
+          >
+            <h2 className="font-bold">Edit {editingKey}</h2>
+            <p className="text-xs text-black/50">
+              Language: {lang === 'ar' ? 'العربية' : 'English'} — use the site language toggle to switch.
+            </p>
+            <textarea
+              className="kop-input min-h-28"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              required
+              autoFocus
+            />
+            <div className="flex flex-wrap gap-2">
+              <button type="submit" className="kop-btn-primary" disabled={saveMutation.isPending}>
+                Save
               </button>
-            ) : null}
-            <button type="button" className="kop-btn-secondary" onClick={() => setEditingKey(null)}>
-              Cancel
-            </button>
-          </div>
-          {revisionsQuery.data?.length ? (
-            <div className="border-t border-black/5 pt-3">
-              <div className="text-xs font-semibold uppercase tracking-wide text-black/40">Recent revisions</div>
-              <ul className="mt-2 max-h-40 space-y-2 overflow-y-auto text-xs text-black/55">
-                {revisionsQuery.data.map((rev) => (
-                  <li key={rev.id} className="rounded-lg bg-black/[0.03] px-3 py-2">
-                    <time>{new Date(rev.createdAt).toLocaleString()}</time>
-                    <div className="mt-1 text-black/70">→ {rev.valueAfter.slice(0, 120)}</div>
-                  </li>
-                ))}
-              </ul>
+              {editingKey && rows.find((r) => r.key === editingKey)?.isOverridden ? (
+                <button
+                  type="button"
+                  className="kop-btn-secondary"
+                  disabled={rollbackMutation.isPending}
+                  onClick={() => rollbackMutation.mutate(editingKey)}
+                >
+                  Roll back once
+                </button>
+              ) : null}
+              <button type="button" className="kop-btn-secondary" onClick={() => setEditingKey(null)}>
+                Cancel
+              </button>
             </div>
-          ) : null}
-        </form>
+            {revisionsQuery.data?.length ? (
+              <div className="border-t border-black/5 pt-3">
+                <div className="text-xs font-semibold uppercase tracking-wide text-black/40">Recent revisions</div>
+                <ul className="mt-2 max-h-40 space-y-2 overflow-y-auto text-xs text-black/55">
+                  {revisionsQuery.data.map((rev) => (
+                    <li key={rev.id} className="rounded-lg bg-black/[0.03] px-3 py-2">
+                      <time>{new Date(rev.createdAt).toLocaleString()}</time>
+                      <div className="mt-1 text-black/70">→ {rev.valueAfter.slice(0, 120)}</div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </form>
+        </div>
       ) : null}
     </section>
   );

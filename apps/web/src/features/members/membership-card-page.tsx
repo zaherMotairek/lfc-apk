@@ -152,7 +152,7 @@ export function MembershipCardPage() {
             </p>
           ) : (
             <p className="mt-2 text-xs text-black/55">
-              Add your OLSC ID or LFC ID in your profile so the committee can match you with the official roster.
+              Add your OLSC ID or ALLRED SUPPORT ID in your profile so the committee can match you with the official roster.
             </p>
           )}
         </div>
@@ -311,7 +311,7 @@ export function MembershipCardPage() {
       ) : null}
 
       <p className="text-center text-sm text-black/45">
-        Need to update your name or OLSC / LFC ID?{' '}
+        Need to update your name or OLSC / ALLRED SUPPORT ID?{' '}
         <Link to="/app/profile" className="font-semibold text-lfc-red">
           Open profile
         </Link>

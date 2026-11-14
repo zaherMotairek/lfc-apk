@@ -178,7 +178,7 @@ export class MembershipApplicationsService {
     });
 
     if (mode === 'roster') {
-      const header = ['OLSC ID', 'LFC ID', 'Name', 'Phone Number', 'Status'];
+      const header = ['OLSC ID', 'ALLRED SUPPORT ID', 'Name', 'Phone Number', 'Status'];
       const rows = applications.map((item) => [
         item.assignedOlscId ?? item.previousOlscId ?? '',
         item.lfcId ?? '',
@@ -203,7 +203,7 @@ export class MembershipApplicationsService {
       'Package',
       'Previous OLSC ID',
       'Official LFC Member',
-      'LFC ID',
+      'ALLRED SUPPORT ID',
       'Application Status',
       'Assigned OLSC ID',
       'Admin Notes',
