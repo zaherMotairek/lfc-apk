@@ -1,0 +1,29 @@
+{
+  "captured": [
+    "25-admin-members.png",
+    "23-admin-dashboard.png",
+    "24-admin-applications.png",
+    "27-admin-events.png",
+    "28-admin-matches.png",
+    "29-admin-news.png",
+    "30-admin-newsletter.png",
+    "31-admin-cms.png",
+    "33-admin-texts.png",
+    "34-admin-settings.png",
+    "35-admin-design.png"
+  ],
+  "missing": [
+    {
+      "file": "26-admin-member-activity.png",
+      "reason": "locator.click: Timeout 20000ms exceeded.\nCall log:\n  - waiting for locator('article, table tbody tr').filter({ hasText: /Jamie|e2e\\.member/i }).first().getByRole('button', { name: /^Edit$/i })\n"
+    },
+    {
+      "file": "31b-admin-cms-about-preview.png",
+      "reason": "page.waitForURL: Timeout 45000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    },
+    {
+      "file": "32-admin-inline-edit-mobile.png",
+      "reason": "page.waitForURL: Timeout 45000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    }
+  ]
+}
