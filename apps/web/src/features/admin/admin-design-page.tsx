@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { PageHeader } from '../../components/ui/page-header';
 
 const SWATCHES = [
@@ -14,8 +15,19 @@ export function AdminDesignPage() {
       <PageHeader
         eyebrow="Phase 2"
         title="Design system"
-        description="Reference for colours, buttons, and badges used across RedLeb Hub."
+        description="Visual reference only — committee edits live brand and colours in Site settings; copy in Texts & Labels."
       />
+
+      <div className="kop-card flex flex-wrap gap-2 p-4 text-sm">
+        <span className="text-black/55">To change the live site:</span>
+        <Link to="/admin/settings" className="font-semibold text-lfc-red underline-offset-2 hover:underline">
+          Site settings → Branding
+        </Link>
+        <span className="text-black/40">·</span>
+        <Link to="/admin/texts" className="font-semibold text-lfc-red underline-offset-2 hover:underline">
+          Texts & Labels
+        </Link>
+      </div>
 
       <div className="kop-card p-5">
         <h2 className="text-sm font-bold uppercase tracking-widest text-black/40">Colours</h2>

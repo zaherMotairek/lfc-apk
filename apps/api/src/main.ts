@@ -20,19 +20,33 @@ async function bootstrap() {
     crossOriginResourcePolicy: { policy: 'cross-origin' },
     frameguard: false,
   }));
-  app.setGlobalPrefix('api');
-  app.useStaticAssets(join(process.cwd(), 'uploads'), {
-    prefix: '/uploads',
-  });
-
   const appUrl = configService.get<string>('APP_URL') ?? 'http://localhost:5173';
   const extraOrigins = (configService.get<string>('CORS_ORIGINS') ?? '')
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
+  const corsOrigins = [appUrl, ...extraOrigins, 'http://localhost:5173', 'http://127.0.0.1:5173'];
+
+  app.setGlobalPrefix('api');
+  app.use('/uploads', (req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && corsOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+    }
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS');
+      res.sendStatus(204);
+      return;
+    }
+    next();
+  });
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads',
+  });
 
   app.enableCors({
-    origin: [appUrl, ...extraOrigins],
+    origin: corsOrigins,
     credentials: true,
   });
   app.useGlobalPipes(
