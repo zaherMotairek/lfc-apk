@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
+import type { NextFunction, Request, Response } from 'express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { isProduction, requireSecret } from './common/utils/environment';
@@ -28,7 +29,7 @@ async function bootstrap() {
   const corsOrigins = [appUrl, ...extraOrigins, 'http://localhost:5173', 'http://127.0.0.1:5173'];
 
   app.setGlobalPrefix('api');
-  app.use('/uploads', (req, res, next) => {
+  app.use('/uploads', (req: Request, res: Response, next: NextFunction) => {
     const origin = req.headers.origin;
     if (origin && corsOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);

@@ -27,7 +27,7 @@ export function AdminTextsPage() {
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
   const [message, setMessage] = useState<string | null>(null);
-  const editPanelRef = useRef<HTMLDivElement | null>(null);
+  const editPanelRef = useRef<HTMLFormElement | null>(null);
 
   const textsQuery = useQuery({
     queryKey: ['admin-content-texts', lang],
