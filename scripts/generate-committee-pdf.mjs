@@ -36,16 +36,17 @@ async function main() {
   });
 
   const pageCount = countPdfPages(pdf);
-  fs.mkdirSync(previewDir, { recursive: true });
-
-  await page.setViewportSize({ width: 794, height: 1123 });
   const sheets = await page.locator('.sheet').count();
-  for (let i = 0; i < sheets; i += 1) {
-    const el = page.locator('.sheet').nth(i);
-    await el.scrollIntoViewIfNeeded();
-    await page.screenshot({
-      path: path.join(previewDir, `page-${String(i + 1).padStart(2, '0')}.png`),
-    });
+  if (process.env.COMMITTEE_PDF_PREVIEW === '1') {
+    fs.mkdirSync(previewDir, { recursive: true });
+    await page.setViewportSize({ width: 794, height: 1123 });
+    for (let i = 0; i < sheets; i += 1) {
+      const el = page.locator('.sheet').nth(i);
+      await el.scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: path.join(previewDir, `page-${String(i + 1).padStart(2, '0')}.png`),
+      });
+    }
   }
 
   await browser.close();

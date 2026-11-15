@@ -11,6 +11,8 @@ apps/web/tsconfig.tsbuildinfo
 playwright-report
 test-results
 e2e/.auth/
+docs/committee-presentation/.auth/
+docs/committee-presentation/pdf-preview/
 e2e/baseline/**/*.png
 .turbo
 .vite

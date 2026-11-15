@@ -1,0 +1,178 @@
+{
+  "shots": {
+    "mem-home-top": {
+      "file": "mem-home-top.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Open your digital card",
+          "xPct": 251.87499999999997,
+          "yPct": 2.843601895734597
+        }
+      ],
+      "url": "http://localhost:5173/app"
+    },
+    "mem-home-mid": {
+      "file": "mem-home-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/app"
+    },
+    "mem-card": {
+      "file": "mem-card.png",
+      "markers": [],
+      "url": "http://localhost:5173/app/membership-card"
+    },
+    "mem-matches": {
+      "file": "mem-matches.png",
+      "markers": [],
+      "url": "http://localhost:5173/app/matches"
+    },
+    "mem-match-hub": {
+      "file": "mem-match-hub.png",
+      "markers": [],
+      "url": "http://localhost:5173/app/matches/cmuobaamu001ft8wgqoi69aun"
+    },
+    "mem-leaderboard": {
+      "file": "mem-leaderboard.png",
+      "markers": [],
+      "url": "http://localhost:5173/app/leaderboard"
+    },
+    "mem-community": {
+      "file": "mem-community.png",
+      "markers": [],
+      "url": "http://localhost:5173/app/community"
+    },
+    "mem-notifications": {
+      "file": "mem-notifications.png",
+      "markers": [],
+      "url": "http://localhost:5173/app/notifications"
+    },
+    "mem-profile": {
+      "file": "mem-profile.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Your details and ALLRED SUPPORT ID",
+          "xPct": 47.98076923076923,
+          "yPct": 9.47867298578199
+        }
+      ],
+      "url": "http://localhost:5173/app/profile"
+    },
+    "mem-hof": {
+      "file": "mem-hall-of-fame.png",
+      "markers": [],
+      "url": "http://localhost:5173/app/hall-of-fame"
+    },
+    "mem-events-list": {
+      "file": "mem-events-list.png",
+      "markers": [],
+      "url": "http://localhost:5173/events"
+    },
+    "mem-event-detail": {
+      "file": "mem-event-detail.png",
+      "markers": [],
+      "url": "http://localhost:5173/events/cmwgunqtf0000t8dgr87g2sz3"
+    },
+    "admin-dashboard": {
+      "file": "admin-dashboard.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Your starting point",
+          "xPct": 37.34971788194444,
+          "yPct": 17.944444444444443
+        }
+      ],
+      "url": "http://localhost:5173/admin"
+    },
+    "admin-applications": {
+      "file": "admin-applications.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/applications"
+    },
+    "admin-members": {
+      "file": "admin-members.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Find a member quickly",
+          "xPct": 72.58680555555556,
+          "yPct": 60.16666666666667
+        }
+      ],
+      "url": "http://localhost:5173/admin/members"
+    },
+    "admin-events": {
+      "file": "admin-events.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/events"
+    },
+    "admin-matches": {
+      "file": "admin-matches.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/matches"
+    },
+    "admin-news": {
+      "file": "admin-news.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/news"
+    },
+    "admin-newsletter": {
+      "file": "admin-newsletter.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/newsletter"
+    },
+    "admin-cms": {
+      "file": "admin-cms.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/cms"
+    },
+    "admin-texts": {
+      "file": "admin-texts.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/texts"
+    },
+    "admin-settings": {
+      "file": "admin-settings.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/settings"
+    },
+    "admin-design": {
+      "file": "admin-design.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/design"
+    },
+    "admin-moderation": {
+      "file": "admin-moderation.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/moderation"
+    },
+    "admin-audit": {
+      "file": "admin-audit.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/audit"
+    },
+    "admin-checkin": {
+      "file": "admin-checkin.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/check-in"
+    },
+    "admin-member-edit": {
+      "file": "admin-member-activity.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/members"
+    },
+    "admin-about-edit": {
+      "file": "admin-inline-edit-desktop.png",
+      "markers": [],
+      "url": "http://localhost:5173/about"
+    },
+    "admin-texts-mobile": {
+      "file": "admin-texts-mobile.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/texts"
+    }
+  },
+  "errors": []
+}

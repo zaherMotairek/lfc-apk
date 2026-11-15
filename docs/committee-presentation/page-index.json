@@ -1,0 +1,98 @@
+[
+  {
+    "slug": "mem-home",
+    "page": 1
+  },
+  {
+    "slug": "mem-card",
+    "page": 2
+  },
+  {
+    "slug": "mem-matches",
+    "page": 3
+  },
+  {
+    "slug": "mem-predict",
+    "page": 4
+  },
+  {
+    "slug": "mem-leaderboard",
+    "page": 5
+  },
+  {
+    "slug": "mem-community",
+    "page": 6
+  },
+  {
+    "slug": "mem-notifications",
+    "page": 7
+  },
+  {
+    "slug": "mem-profile",
+    "page": 8
+  },
+  {
+    "slug": "mem-events",
+    "page": 9
+  },
+  {
+    "slug": "mem-hof",
+    "page": 10
+  },
+  {
+    "slug": "admin-dash",
+    "page": 11
+  },
+  {
+    "slug": "admin-apps",
+    "page": 12
+  },
+  {
+    "slug": "admin-members",
+    "page": 13
+  },
+  {
+    "slug": "admin-activity",
+    "page": 14
+  },
+  {
+    "slug": "admin-events",
+    "page": 15
+  },
+  {
+    "slug": "admin-checkin",
+    "page": 16
+  },
+  {
+    "slug": "admin-matches",
+    "page": 17
+  },
+  {
+    "slug": "admin-news",
+    "page": 18
+  },
+  {
+    "slug": "admin-newsletter",
+    "page": 19
+  },
+  {
+    "slug": "admin-texts",
+    "page": 20
+  },
+  {
+    "slug": "admin-settings",
+    "page": 21
+  },
+  {
+    "slug": "admin-cms",
+    "page": 22
+  },
+  {
+    "slug": "admin-mod",
+    "page": 23
+  },
+  {
+    "slug": "admin-audit",
+    "page": 24
+  }
+]

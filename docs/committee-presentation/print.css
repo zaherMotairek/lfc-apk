@@ -256,8 +256,95 @@ table.status th {
   margin: 4px 0 0;
 }
 
+.guide-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.guide-shot {
+  min-width: 0;
+}
+
+.guide-text h3 {
+  margin-top: 8px;
+}
+
+.shot-frame {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.shot-frame img {
+  display: block;
+  width: 100%;
+}
+
+.marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #c8102e;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.legend {
+  font-size: 9.5pt;
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.tip,
+.heads-up {
+  font-size: 9.5pt;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+.tip {
+  background: #f5f9ff;
+  border-left: 3px solid #2563eb;
+}
+
+.heads-up {
+  background: #fff8f0;
+  border-left: 3px solid #ea580c;
+}
+
+.qa p {
+  font-size: 9.5pt;
+  margin: 6px 0;
+}
+
+.phone-wrap .phone {
+  margin: 0 auto;
+}
+
+.section-break {
+  display: none;
+}
+
+h2.section-break {
+  display: none;
+}
+
 @media print {
   .sheet {
     min-height: auto;
+  }
+  .guide-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
