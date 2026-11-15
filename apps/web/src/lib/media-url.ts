@@ -12,6 +12,9 @@ export function resolveMediaUrl(url: string | null | undefined): string {
         return url;
       }
       pathname = parsed.pathname;
+      if (import.meta.env.DEV) {
+        return pathname;
+      }
     } catch {
       return url;
     }

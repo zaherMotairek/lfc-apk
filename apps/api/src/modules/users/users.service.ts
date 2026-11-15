@@ -168,7 +168,7 @@ export class UsersService {
         where: { lfcId: nextLfcId, NOT: { id: userId } },
       });
       if (existingLfc) {
-        throw new ConflictException('This LFC ID is already linked to another account');
+        throw new ConflictException('This ALLRED SUPPORT ID is already linked to another account');
       }
     }
 

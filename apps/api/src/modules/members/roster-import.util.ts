@@ -67,7 +67,7 @@ function mapHeaderIndexes(headers: string[]) {
 
   return {
     olscId: find('olsc id', 'olsc', 'official member id', 'member id'),
-    lfcId: find('lfc id', 'lfc'),
+    lfcId: find('allred support id', 'allred', 'lfc id', 'lfc'),
     name: find('name', 'full name', 'member name'),
     phone: find('phone number', 'phone', 'mobile'),
     status: find('status'),

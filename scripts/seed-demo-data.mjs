@@ -105,11 +105,11 @@ async function main() {
   console.log('Creating news...');
   const newsItems = [
     {
-      title: 'Welcome to the Kop Platform',
-      slug: 'welcome-kop-platform',
+      title: 'Welcome to RedLeb Hub',
+      slug: 'welcome-redleb-hub',
       excerpt: 'OLSC Lebanon digital home is live for members.',
       content:
-        'YNWA.\n\nThe Kop Platform is now open for OLSC Lebanon members: Match Hub predictions, digital membership cards, events, and community updates — all in one place.',
+        'YNWA.\n\nRedLeb Hub is now open for OLSC Lebanon members: Match Hub predictions, digital membership cards, events, and community updates — all in one place.',
       status: 'PUBLISHED',
     },
     {
