@@ -315,7 +315,7 @@ export function ProfilePage() {
                     profile?.lfcId ? `ALLRED ${profile.lfcId}` : null,
                   ]
                     .filter(Boolean)
-                    .join(' · ') || 'Complete your profile and add OLSC / LFC IDs to match the roster'}
+                    .join(' · ') || 'Complete your profile and add OLSC / ALLRED SUPPORT IDs to match the roster'}
                 </p>
               )}
             </div>
@@ -377,7 +377,7 @@ export function ProfilePage() {
             <p className="mt-1 text-sm text-black/50">
               {activeMembership
                 ? `${activeMembership.officialMemberId} · ${activeMembership.seasonLabel}`
-                : 'Membership is detected automatically when your OLSC / LFC ID matches the official Excel roster.'}
+                : 'Membership is detected automatically when your OLSC / ALLRED SUPPORT ID matches the official Excel roster.'}
             </p>
           </div>
           <span className={`kop-badge ${activeMembership?.status === 'ACTIVE' ? 'kop-badge-green' : 'kop-badge-red'}`}>
