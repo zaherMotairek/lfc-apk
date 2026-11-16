@@ -1,5 +1,35 @@
 {
   "shots": {
+    "pub-home-top": {
+      "file": "pub-home-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
+    "pub-home-mid": {
+      "file": "pub-home-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
+    "pub-gallery": {
+      "file": "pub-gallery.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery"
+    },
+    "pub-gallery-album": {
+      "file": "pub-gallery-album.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery/cmwgunqvh0002t8dgxzkx4x6o"
+    },
+    "pub-apply-validation": {
+      "file": "pub-apply-validation.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership/apply"
+    },
+    "pub-lang-ar": {
+      "file": "pub-language-ar.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
     "mem-home-top": {
       "file": "mem-home-top.png",
       "markers": [
@@ -41,6 +71,18 @@
       "file": "mem-community.png",
       "markers": [],
       "url": "http://localhost:5173/app/community"
+    },
+    "mem-news-detail": {
+      "file": "mem-news-detail.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Comments from members",
+          "xPct": 50,
+          "yPct": 112.7962085308057
+        }
+      ],
+      "url": "http://localhost:5173/news/demo-kop-win"
     },
     "mem-notifications": {
       "file": "mem-notifications.png",
@@ -157,6 +199,11 @@
       "file": "admin-checkin.png",
       "markers": [],
       "url": "http://localhost:5173/admin/check-in"
+    },
+    "admin-confirm-dialog": {
+      "file": "admin-confirm-dialog.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/applications"
     },
     "admin-member-edit": {
       "file": "admin-member-activity.png",

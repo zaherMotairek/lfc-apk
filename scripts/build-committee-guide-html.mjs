@@ -110,6 +110,35 @@ function adminPage(id, title, shotKey, fallback, copy) {
   );
 }
 
+const visitorPages = [
+  guidePage('pub-home', 'Public home', 'pub-home-top', 'pub-home-top.png', {
+    see: 'Welcome message, news, and the path to membership.',
+    do: 'Browse as a guest before you apply or sign in.',
+    steps: ['Open the site on your phone.', 'Scroll for events and news.', 'Tap Become a member when you are ready.'],
+  }),
+  guidePage('pub-gallery', 'Gallery', 'pub-gallery', 'pub-gallery.png', {
+    see: 'Photo albums from events (demo placeholder images in this pack).',
+    do: 'Tap an album to flip through pictures.',
+    steps: ['Open Gallery from the menu.', 'Pick an album.', 'Swipe through photos.'],
+  }),
+  guidePage('pub-gallery-album', 'Inside an album', 'pub-gallery-album', 'pub-gallery-album.png', {
+    see: 'A grid of photos from a single event.',
+    do: 'Share memories after watch parties.',
+    steps: ['Open any album.', 'Tap a photo if a lightbox opens.', 'Go back to the site menu to explore more.'],
+  }),
+  guidePage('pub-apply', 'Application form checks', 'pub-apply-validation', 'pub-apply-validation.png', {
+    see: 'Required fields highlighted if you tap Submit too soon.',
+    do: 'Fill the form carefully so the committee can review faster.',
+    steps: ['Open Membership → Apply.', 'Complete every required field.', 'Tick the payment confirmation box, then submit.'],
+    headsUp: 'All names and numbers in this demo PDF are fictional.',
+  }),
+  guidePage('pub-lang', 'English ↔ Arabic', 'pub-lang-ar', 'pub-language-ar.png', {
+    see: 'The site flips to Arabic with right-to-left layout.',
+    do: 'Switch language any time from the header.',
+    steps: ['Use the language control at the top.', 'Pick العربية or English.', 'Browse again in your chosen language.'],
+  }),
+];
+
 const memberPages = [
   guidePage('mem-home', 'Member home', 'mem-home-top', 'mem-home-top.png', {
     see: 'Shortcuts to your card, matches, community, and events.',
@@ -145,6 +174,12 @@ const memberPages = [
     do: 'Tap an item to read the full story or sign up for an event.',
     steps: ['Open Community.', 'Tap any card to open details.', 'Register for events right from the feed when signed in.'],
   }),
+  guidePage('mem-news', 'News story + comments', 'mem-news-detail', 'mem-news-detail.png', {
+    see: 'Full article with likes and comments from members.',
+    do: 'Join the conversation after a match or announcement.',
+    steps: ['Open a story from Community or News.', 'Tap a reaction if you want.', 'Leave a short comment when signed in.'],
+    tip: 'The committee can hide rude comments from the moderation screen.',
+  }),
   guidePage('mem-notifications', 'Notifications', 'mem-notifications', 'mem-notifications.png', {
     see: 'Alerts about events, matches, and welcome messages.',
     do: 'Mark items as read and jump to the related page.',
@@ -175,6 +210,11 @@ const adminPages = [
     steps: ['Sign in with your committee account.', 'Use the shortcuts for news, events, or members.', 'Check counts before a busy matchday.'],
     good: 'Only people with the right role see sensitive areas like member records.',
     qa: [{ q: 'Can two admins work at once?', a: 'Yes — changes save straight away for everyone.' }],
+  }),
+  adminPage('admin-confirm', 'Confirmation dialog', 'admin-confirm-dialog', 'admin-confirm-dialog.png', {
+    for: 'A safety step before deletes or other risky actions.',
+    steps: ['Start an action (e.g. delete an application).', 'Read the message.', 'Tap Cancel if you change your mind — or confirm if you are sure.'],
+    good: 'Stops accidental taps when you are on a phone or in a hurry.',
   }),
   adminPage('admin-apps', 'Membership applications', 'admin-applications', 'admin-applications.png', {
     for: 'Review new join requests from the public form.',
@@ -380,7 +420,11 @@ const html = `<!DOCTYPE html>
 </head>
 <body>
 ${intro}
+<h2 class="section-break">For visitors</h2>
+${visitorPages.join('')}
+<h2 class="section-break">Member app</h2>
 ${memberPages.join('')}
+<h2 class="section-break">Admin panel</h2>
 ${adminPages.join('')}
 <script>
 document.querySelectorAll('.guide-sheet').forEach((s, i) => {

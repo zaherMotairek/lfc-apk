@@ -115,6 +115,40 @@ async function main() {
   const health = await fetch(`${BASE.replace('5173', '3000')}/api/health`).catch(() => null);
   if (!health?.ok) throw new Error('API not running on :3000');
 
+  const publicCtx = await browser.newContext(MOBILE);
+  const pub = await publicCtx.newPage();
+  console.log('Public (mobile)…');
+  await scrollCapture(pub, 'pub-home', 'pub-home', () => pub.goto(`${BASE}/`), []);
+  await capture(pub, 'pub-gallery', 'pub-gallery.png', () => pub.goto(`${BASE}/gallery`));
+  const galRes = await pub.request.get(`${BASE.replace('5173', '3000')}/api/gallery`);
+  let albumId = '';
+  if (galRes.ok()) {
+    const albums = await galRes.json();
+    const list = Array.isArray(albums) ? albums : [];
+    albumId = list.find((a) => a.title?.includes('Demo Kop'))?.id ?? list[0]?.id ?? '';
+  }
+  if (albumId) {
+    await capture(pub, 'pub-gallery-album', 'pub-gallery-album.png', () =>
+      pub.goto(`${BASE}/gallery/${albumId}`),
+    );
+  }
+  await capture(pub, 'pub-apply-validation', 'pub-apply-validation.png', async () => {
+    await pub.goto(`${BASE}/membership/apply`);
+    await pub.getByRole('button', { name: /Submit application/i }).click();
+    await pub.waitForTimeout(600);
+  });
+  await capture(pub, 'pub-lang-ar', 'pub-language-ar.png', async () => {
+    await pub.goto(`${BASE}/`);
+    const lang = pub.getByTestId('language-switcher');
+    if (await lang.isVisible().catch(() => false)) {
+      await lang.selectOption('ar');
+    } else {
+      await pub.locator('select').first().selectOption('ar').catch(() => {});
+    }
+    await pub.waitForTimeout(800);
+  });
+  await publicCtx.close();
+
   const memberCtx = await browser.newContext({ ...MOBILE, storageState: memberState });
   const member = await memberCtx.newPage();
 
@@ -147,6 +181,10 @@ async function main() {
   }
   await capture(member, 'mem-leaderboard', 'mem-leaderboard.png', () => member.goto(`${BASE}/app/leaderboard`));
   await capture(member, 'mem-community', 'mem-community.png', () => member.goto(`${BASE}/app/community`));
+  await capture(member, 'mem-news-detail', 'mem-news-detail.png', () => member.goto(`${BASE}/news/demo-kop-win`), {
+    markers: [{ sel: '.comment-thread, [class*="comment"]', label: 'Comments from members' }],
+    expectPath: '/news/',
+  });
   await capture(member, 'mem-notifications', 'mem-notifications.png', () => member.goto(`${BASE}/app/notifications`));
   await capture(member, 'mem-profile', 'mem-profile.png', () => member.goto(`${BASE}/app/profile`), {
     markers: [{ sel: 'input, label', label: 'Your details and ALLRED SUPPORT ID' }],
@@ -204,6 +242,14 @@ async function main() {
       { markers, expectPath: route },
     );
   }
+
+  await capture(admin, 'admin-confirm-dialog', 'admin-confirm-dialog.png', async () => {
+    await admin.goto(`${BASE}/admin/applications`);
+    await admin.waitForTimeout(1000);
+    await admin.getByRole('button', { name: /Casey Demo/i }).first().click();
+    await admin.getByText('Delete application').first().click();
+    await admin.getByRole('heading', { name: /Delete application/i }).waitFor({ timeout: 10_000 });
+  });
 
   await capture(
     admin,
