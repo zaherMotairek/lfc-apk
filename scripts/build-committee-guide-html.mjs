@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildWebsiteExpansion } from './build-committee-website-expansion.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(root, 'docs/committee-presentation');
@@ -40,7 +41,8 @@ function annotated(file, markers) {
   const legend = ms.length
     ? `<ol class="legend">${ms.map((m) => `<li><strong>${m.n}.</strong> ${m.label}</li>`).join('')}</ol>`
     : '';
-  const isMobile = file.includes('mem-') || file.includes('mobile');
+  const isMobile =
+    file.includes('mem-') || file.includes('mobile') || (file.startsWith('webpub-') && file.includes('-m'));
   const wrap = isMobile
     ? `<div class="phone-wrap"><div class="phone shot-frame"><img src="shots/${file}" alt="" />${dots}</div></div>`
     : `<div class="desk-wrap shot-frame"><img class="desktop-shot" src="shots/${file}" alt="" />${dots}</div>`;
@@ -426,8 +428,10 @@ ${visitorPages.join('')}
 ${memberPages.join('')}
 <h2 class="section-break">Admin panel</h2>
 ${adminPages.join('')}
+<h2 class="section-break">The public website &amp; editing guide</h2>
+${buildWebsiteExpansion({ nextId, shotFile, annotated, manifest, tip, headsUp })}
 <script>
-document.querySelectorAll('.guide-sheet').forEach((s, i) => {
+document.querySelectorAll('.guide-sheet, .website-sheet, .edit-guide-sheet, .inventory-sheet').forEach((s, i) => {
   const h = s.querySelector('h2');
   if (!h) return;
   const li = document.createElement('li');

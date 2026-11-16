@@ -1,0 +1,1317 @@
+{
+  "generatedAt": "2026-11-16T15:44:50.640Z",
+  "en": {
+    "brand.siteName": "RedLeb Hub",
+    "brand.tagline": "OLSC Lebanon digital home",
+    "home.hero.title": "Welcome to OLSC Lebanon – RedLeb Hub",
+    "home.hero.subtitle": "Your community hub for match predictions, events, news, and official digital membership.",
+    "home.hero.primaryCta": "Become a member",
+    "home.feed.heading": "Latest from us",
+    "home.feed.newsHeading": "Club News (OLSC announcements)",
+    "home.feed.eventsHeading": "Events (Gatherings & meetups)",
+    "home.bottom.title": "Interested in joining us?",
+    "home.bottom.body": "Let us cheer for the Reds together.",
+    "nav.signIn": "Sign in",
+    "label.allredSupportId": "ALLRED SUPPORT ID",
+    "nav.becomeMember": "Become a member",
+    "nav.public.about": "About",
+    "nav.public.committee": "Committee",
+    "nav.public.events": "Events",
+    "nav.public.news": "News",
+    "nav.public.newsletter": "Newsletter",
+    "nav.public.gallery": "Gallery",
+    "nav.public.membership": "Membership",
+    "nav.public.contact": "Contact",
+    "nav.memberApp": "Member App",
+    "nav.adminPanel": "Admin Panel",
+    "nav.account": "Account",
+    "nav.openMemberApp": "Open Member App",
+    "footer.siteHeading": "Site",
+    "footer.blurb": "The digital home of Liverpool FC supporters in Lebanon. Community, match predictions, and official membership — managed by the committee.",
+    "nav.member.home": "Home",
+    "nav.member.matchHub": "Match Hub",
+    "nav.member.leaderboard": "Leaderboard",
+    "nav.member.community": "Community Feed",
+    "nav.member.notifications": "Notifications",
+    "nav.member.hall": "Hall of Fame",
+    "nav.member.profile": "My Profile",
+    "nav.member.directory": "Member directory",
+    "nav.member.card": "Membership Card",
+    "nav.member.tab.home": "Home",
+    "nav.member.tab.matches": "Matches",
+    "nav.member.tab.community": "Community",
+    "nav.member.tab.card": "Card",
+    "nav.member.tab.profile": "Profile",
+    "nav.member.extra.news": "Club News",
+    "nav.member.extra.newsletter": "Newsletter",
+    "nav.member.extra.events": "Public Events",
+    "nav.member.extra.gallery": "Gallery",
+    "nav.member.shellTitle": "RedLeb Hub",
+    "nav.member.shellSubtitle": "OLSC Lebanon · Member App",
+    "nav.member.footerPublic": "← Public website",
+    "nav.member.logout": "Logout",
+    "nav.member.adminShort": "Admin",
+    "nav.admin.shellTitle": "Admin Panel",
+    "nav.admin.shellSubtitle": "OLSC Lebanon Committee",
+    "nav.admin.footerMember": "← Member App",
+    "nav.admin.footerPublic": "← Public website",
+    "nav.admin.logout": "Logout",
+    "nav.admin.headerTagline": "Committee Control Center",
+    "nav.admin.dashboard": "Dashboard",
+    "nav.admin.applications": "Applications",
+    "nav.admin.members": "Users",
+    "nav.admin.matches": "Matches",
+    "nav.admin.newsletter": "Newsletter",
+    "nav.admin.news": "News",
+    "nav.admin.events": "Events",
+    "nav.admin.checkIn": "Event check-in",
+    "nav.admin.moderation": "Moderation",
+    "nav.admin.cms": "CMS Pages",
+    "nav.admin.texts": "Texts & Labels",
+    "nav.admin.settings": "Site settings",
+    "nav.admin.design": "Design",
+    "nav.admin.guide": "Guide",
+    "nav.admin.audit": "Audit log",
+    "nav.admin.tab.dashboard": "Dashboard",
+    "nav.admin.tab.members": "Users",
+    "nav.admin.tab.matches": "Matches",
+    "nav.admin.tab.newsletter": "Newsletter",
+    "nav.admin.tab.news": "News",
+    "admin.dashboard.eyebrow": "Admin",
+    "admin.dashboard.title": "Dashboard",
+    "admin.dashboard.description": "Committee control center — all tools are in the sidebar and below.",
+    "admin.dashboard.loading": "Loading stats...",
+    "admin.dashboard.error": "Unable to load dashboard.",
+    "admin.dashboard.quickHeading": "Quick access — all admin tools",
+    "admin.dashboard.preview.title": "Member app preview",
+    "admin.dashboard.preview.body": "Test the member experience the same way supporters will see it.",
+    "admin.dashboard.stat.members.label": "Members",
+    "admin.dashboard.stat.members.hint": "{active} active · {invited} invited",
+    "admin.dashboard.stat.applications.label": "Applications",
+    "admin.dashboard.stat.applications.hint": "Pending review",
+    "admin.dashboard.stat.inactive.label": "Inactive 30d",
+    "admin.dashboard.stat.inactive.hint": "No recent login",
+    "admin.dashboard.stat.predictions.label": "Predictions",
+    "admin.dashboard.stat.predictions.hint": "Total submitted",
+    "admin.dashboard.stat.matches.label": "Upcoming matches",
+    "admin.dashboard.stat.matches.hint": "Open for predictions",
+    "admin.dashboard.stat.events.label": "Events",
+    "admin.dashboard.stat.events.hint": "Community events",
+    "admin.quick.applications.label": "Membership applications",
+    "admin.quick.applications.desc": "Review 2026/27 form submissions",
+    "admin.quick.members.label": "Manage users",
+    "admin.quick.members.desc": "Search, edit and invite members",
+    "admin.quick.matches.label": "Manage matches",
+    "admin.quick.matches.desc": "Create Liverpool matches & scores",
+    "admin.quick.news.label": "Publish news",
+    "admin.quick.news.desc": "Write club announcements",
+    "admin.quick.events.label": "Create event",
+    "admin.quick.events.desc": "Watch parties & meetups",
+    "admin.quick.cms.label": "Edit CMS",
+    "admin.quick.cms.desc": "About, committee, membership pages",
+    "admin.quick.newsletter.label": "Monthly newsletter",
+    "admin.quick.newsletter.desc": "RedLeb Dispatch PDF template",
+    "admin.quick.community.label": "View community",
+    "admin.quick.community.desc": "See the member feed",
+    "offline.title": "You're offline",
+    "offline.body": "RedLeb Hub needs a connection for live scores, events, and your membership tools. Check mobile data or Wi‑Fi, then try again.",
+    "offline.retry": "Try again",
+    "offline.ribbon": "OLSC Lebanon · RedLeb Hub",
+    "public.header.ribbon": "OLSC Lebanon · RedLeb Hub",
+    "auth.login.title": "Sign in to RedLeb Hub",
+    "membership.apply.title": "Apply for OLSC Lebanon membership",
+    "auth.login.subtitle": "Sign in to predict matches, join events, and manage your OLSC Lebanon digital experience.",
+    "auth.login.formHeading": "Sign in",
+    "footer.membersHeading": "Members",
+    "cta.becomeMember": "Become a member",
+    "cta.signIn": "Sign in",
+    "events.register.signInHint": "Sign in to register",
+    "events.guests.label": "Guests",
+    "events.guests.namesLabel": "Guest names (optional)",
+    "member.community.title": "Your Kop Feed",
+    "member.community.subtitle": "News, events, and achievements from your supporters club.",
+    "member.home.welcome": "Welcome back",
+    "member.home.subtitle": "Your weekly home for Liverpool match predictions, community events, and your official digital membership identity.",
+    "member.matches.title": "Choose a match",
+    "member.matches.description": "Tap a fixture, set your score, and submit your prediction before kickoff.",
+    "member.leaderboard.title": "Leaderboard",
+    "member.leaderboard.subtitle": "Overall ranking after Liverpool prediction scoring. Every match can change the order.",
+    "member.card.title": "Digital membership card",
+    "member.card.description": "Take a photo or upload your physical OLSC membership card here.",
+    "member.notifications.title": "Notifications",
+    "member.hall.title": "Hall of Fame",
+    "member.hall.subtitle": "Prediction legends and community milestones.",
+    "member.directory.title": "Member directory",
+    "member.directory.subtitle": "Supporters who chose to appear here. Update your profile to opt in or out.",
+    "member.directory.privacyCta": "Privacy settings →",
+    "member.card.qrHint": "Show this QR at watch parties for verification.",
+    "member.profile.title": "My Profile",
+    "member.profile.subtitle": "Your Kop identity, login details, stats, and membership info.",
+    "member.profile.privacyLegend": "Privacy"
+  },
+  "ar": {
+    "brand.siteName": "رد لب هب",
+    "brand.tagline": "المنزل الرقمي لجماهير ليفربول في لبنان",
+    "home.hero.title": "مرحبًا بكم في OLSC لبنان – رد لب هب",
+    "home.hero.subtitle": "مجتمعكم لتوقعات المباريات والفعاليات والأخبار والعضوية الرقمية الرسمية.",
+    "home.hero.primaryCta": "انضم كعضو",
+    "home.feed.heading": "آخر أخبارنا",
+    "home.feed.newsHeading": "أخبار النادي (إعلانات OLSC)",
+    "home.feed.eventsHeading": "الفعاليات (لقاءات وتجمعات)",
+    "home.bottom.title": "مهتم بالانضمام إلينا؟",
+    "home.bottom.body": "لنشجع الريدز معًا.",
+    "nav.signIn": "تسجيل الدخول",
+    "label.allredSupportId": "رقم دعم ALLRED",
+    "nav.becomeMember": "انضم كعضو",
+    "nav.public.about": "من نحن",
+    "nav.public.committee": "اللجنة",
+    "nav.public.events": "الفعاليات",
+    "nav.public.news": "الأخبار",
+    "nav.public.newsletter": "النشرة",
+    "nav.public.gallery": "المعرض",
+    "nav.public.membership": "العضوية",
+    "nav.public.contact": "اتصل بنا",
+    "nav.memberApp": "تطبيق الأعضاء",
+    "nav.adminPanel": "لوحة الإدارة",
+    "nav.account": "حسابي",
+    "nav.openMemberApp": "فتح تطبيق الأعضاء",
+    "footer.siteHeading": "الموقع",
+    "footer.blurb": "المنزل الرقمي لمشجعي ليفربول في لبنان. مجتمع، توقعات مباريات، وعضوية رسمية — بإدارة اللجنة.",
+    "nav.member.home": "الرئيسية",
+    "nav.member.matchHub": "مركز المباريات",
+    "nav.member.leaderboard": "المتصدرون",
+    "nav.member.community": "خلاصة المجتمع",
+    "nav.member.notifications": "الإشعارات",
+    "nav.member.hall": "قاعة المشاهير",
+    "nav.member.profile": "ملفي",
+    "nav.member.directory": "دليل الأعضاء",
+    "nav.member.card": "بطاقة العضوية",
+    "nav.member.tab.home": "الرئيسية",
+    "nav.member.tab.matches": "مباريات",
+    "nav.member.tab.community": "المجتمع",
+    "nav.member.tab.card": "البطاقة",
+    "nav.member.tab.profile": "الملف",
+    "nav.member.extra.news": "أخبار النادي",
+    "nav.member.extra.newsletter": "النشرة",
+    "nav.member.extra.events": "فعاليات عامة",
+    "nav.member.extra.gallery": "المعرض",
+    "nav.member.shellTitle": "رد لب هب",
+    "nav.member.shellSubtitle": "OLSC لبنان · تطبيق الأعضاء",
+    "nav.member.footerPublic": "← الموقع العام",
+    "nav.member.logout": "تسجيل الخروج",
+    "nav.member.adminShort": "إدارة",
+    "nav.admin.shellTitle": "لوحة الإدارة",
+    "nav.admin.shellSubtitle": "لجنة OLSC لبنان",
+    "nav.admin.footerMember": "← تطبيق الأعضاء",
+    "nav.admin.footerPublic": "← الموقع العام",
+    "nav.admin.logout": "تسجيل الخروج",
+    "nav.admin.headerTagline": "مركز تحكم اللجنة",
+    "nav.admin.dashboard": "لوحة القيادة",
+    "nav.admin.applications": "الطلبات",
+    "nav.admin.members": "المستخدمون",
+    "nav.admin.matches": "المباريات",
+    "nav.admin.newsletter": "النشرة",
+    "nav.admin.news": "الأخبار",
+    "nav.admin.events": "الفعاليات",
+    "nav.admin.checkIn": "تسجيل الحضور",
+    "nav.admin.moderation": "الإشراف",
+    "nav.admin.cms": "صفحات CMS",
+    "nav.admin.texts": "النصوص والتسميات",
+    "nav.admin.settings": "إعدادات الموقع",
+    "nav.admin.design": "التصميم",
+    "nav.admin.guide": "الدليل",
+    "nav.admin.audit": "سجل التدقيق",
+    "nav.admin.tab.dashboard": "الرئيسية",
+    "nav.admin.tab.members": "المستخدمون",
+    "nav.admin.tab.matches": "مباريات",
+    "nav.admin.tab.newsletter": "النشرة",
+    "nav.admin.tab.news": "أخبار",
+    "admin.dashboard.eyebrow": "الإدارة",
+    "admin.dashboard.title": "لوحة القيادة",
+    "admin.dashboard.description": "مركز تحكم اللجنة — كل الأدوات في الشريط الجانبي وأسفل الصفحة.",
+    "admin.dashboard.loading": "جاري تحميل الإحصاءات…",
+    "admin.dashboard.error": "تعذّر تحميل لوحة القيادة.",
+    "admin.dashboard.quickHeading": "وصول سريع — كل أدوات الإدارة",
+    "admin.dashboard.preview.title": "معاينة تطبيق الأعضاء",
+    "admin.dashboard.preview.body": "اختبر تجربة الأعضاء كما يراها المشجعون.",
+    "admin.dashboard.stat.members.label": "الأعضاء",
+    "admin.dashboard.stat.members.hint": "{active} نشط · {invited} مدعو",
+    "admin.dashboard.stat.applications.label": "الطلبات",
+    "admin.dashboard.stat.applications.hint": "بانتظار المراجعة",
+    "admin.dashboard.stat.inactive.label": "غير نشط 30 يومًا",
+    "admin.dashboard.stat.inactive.hint": "لا تسجيل دخول حديث",
+    "admin.dashboard.stat.predictions.label": "التوقعات",
+    "admin.dashboard.stat.predictions.hint": "إجمالي المرسل",
+    "admin.dashboard.stat.matches.label": "مباريات قادمة",
+    "admin.dashboard.stat.matches.hint": "مفتوح للتوقعات",
+    "admin.dashboard.stat.events.label": "الفعاليات",
+    "admin.dashboard.stat.events.hint": "فعاليات المجتمع",
+    "admin.quick.applications.label": "طلبات العضوية",
+    "admin.quick.applications.desc": "مراجعة نماذج 2026/27",
+    "admin.quick.members.label": "إدارة المستخدمين",
+    "admin.quick.members.desc": "بحث وتعديل ودعوة الأعضاء",
+    "admin.quick.matches.label": "إدارة المباريات",
+    "admin.quick.matches.desc": "إنشاء مباريات ليفربول والنتائج",
+    "admin.quick.news.label": "نشر الأخبار",
+    "admin.quick.news.desc": "إعلانات النادي",
+    "admin.quick.events.label": "إنشاء فعالية",
+    "admin.quick.events.desc": "حفلات المشاهدة واللقاءات",
+    "admin.quick.cms.label": "تحرير CMS",
+    "admin.quick.cms.desc": "صفحات من نحن واللجنة والعضوية",
+    "admin.quick.newsletter.label": "النشرة الشهرية",
+    "admin.quick.newsletter.desc": "قالب RedLeb Dispatch PDF",
+    "admin.quick.community.label": "عرض المجتمع",
+    "admin.quick.community.desc": "خلاصة الأعضاء",
+    "offline.title": "أنت غير متصل",
+    "offline.body": "يحتاج رد لب هب إلى اتصال للنتائج المباشرة والفعاليات وأدوات العضوية. تحقق من البيانات أو الواي فاي ثم أعد المحاولة.",
+    "offline.retry": "أعد المحاولة",
+    "offline.ribbon": "OLSC لبنان · رد لب هب",
+    "public.header.ribbon": "OLSC لبنان · رد لب هب",
+    "auth.login.title": "تسجيل الدخول إلى رد لب هب",
+    "membership.apply.title": "طلب عضوية OLSC لبنان",
+    "auth.login.subtitle": "سجّل الدخول لتوقع المباريات والانضمام للفعاليات وإدارة تجربتك الرقمية مع OLSC لبنان.",
+    "auth.login.formHeading": "تسجيل الدخول",
+    "footer.membersHeading": "الأعضاء",
+    "cta.becomeMember": "انضم كعضو",
+    "cta.signIn": "تسجيل الدخول",
+    "events.register.signInHint": "سجّل الدخول للتسجيل",
+    "events.guests.label": "الضيوف",
+    "events.guests.namesLabel": "أسماء الضيوف (اختياري)",
+    "member.community.title": "خلاصة الكوب",
+    "member.community.subtitle": "أخبار وفعاليات وإنجازات من نادي المشجعين.",
+    "member.home.welcome": "أهلاً بعودتك",
+    "member.home.subtitle": "موطنك الأسبوعي لتوقعات مباريات ليفربول وفعاليات المجتمع وهويتك الرقمية الرسمية.",
+    "member.matches.title": "اختر مباراة",
+    "member.matches.description": "اضغط على المباراة، حدّد النتيجة، وأرسل توقعك قبل انطلاق الصافرة.",
+    "member.leaderboard.title": "لوحة المتصدرين",
+    "member.leaderboard.subtitle": "الترتيب العام بعد احتساب نقاط توقعات ليفربول. كل مباراة قد تغيّر الترتيب.",
+    "member.card.title": "بطاقة العضوية الرقمية",
+    "member.card.description": "التقط صورة أو ارفع بطاقة OLSC الفعلية هنا.",
+    "member.notifications.title": "الإشعارات",
+    "member.hall.title": "قاعة المشاهير",
+    "member.hall.subtitle": "أساطير التوقعات وإنجازات المجتمع.",
+    "member.directory.title": "دليل الأعضاء",
+    "member.directory.subtitle": "المشجعون الذين اختاروا الظهور هنا. حدّث ملفك للانضمام أو إخفاء نفسك.",
+    "member.directory.privacyCta": "إعدادات الخصوصية ←",
+    "member.card.qrHint": "اعرض رمز QR هذا في لقاءات المشاهدة للتحقق.",
+    "member.profile.title": "ملفي الشخصي",
+    "member.profile.subtitle": "هويتك في الكوب، بيانات الدخول، الإحصاءات، ومعلومات العضوية.",
+    "member.profile.privacyLegend": "الخصوصية"
+  },
+  "cms": {
+    "ABOUT": {
+      "id": "cms3dpm7t002dt8d8ih1xoiab",
+      "code": "ABOUT",
+      "title": "About",
+      "slug": "/about",
+      "isPublished": true,
+      "createdAt": "2026-07-27T15:25:44.250Z",
+      "updatedAt": "2026-11-15T08:05:22.994Z",
+      "sections": [
+        {
+          "id": "cmwexvjmu0002t8x08dzafp5t",
+          "pageId": "cms3dpm7t002dt8d8ih1xoiab",
+          "type": "HERO",
+          "title": "We Are OLSC Lebanon",
+          "subtitle": "The official home of Liverpool FC supporters in Lebanon — where the Kop spirit lives, from Beirut to every corner of the country.",
+          "content": {
+            "primaryButtonLabel": "Join the Kop"
+          },
+          "imageUrl": null,
+          "sortOrder": 1,
+          "isEnabled": true,
+          "createdAt": "2026-11-13T12:14:30.439Z",
+          "updatedAt": "2026-11-15T08:05:23.003Z"
+        },
+        {
+          "id": "cmwexvjmu0003t8x0ghx7ztw8",
+          "pageId": "cms3dpm7t002dt8d8ih1xoiab",
+          "type": "RICH_TEXT",
+          "title": "Our story",
+          "subtitle": null,
+          "content": {
+            "body": "OLSC Lebanon was built for one reason: to bring Liverpool supporters across Lebanon together under one official banner.\n\nWe are not just fans who watch a game on a screen. We are a community that shows up — for every kick-off, every last-minute winner, every European night, and every moment that makes this club the greatest in the world.\n\nWhether you joined years ago with an official membership card in your wallet, or you are discovering the Kop for the first time, you belong here. Our committee organizes watch parties, community events, and member experiences that carry the same energy you would feel walking up Anfield Road.\n\nRedLeb Hub is our digital home — Match Hub predictions, your official membership card, community feed, and the leaderboard built on prediction points each season.\n\nThis is Liverpool FC in Lebanon. This is us. This is OLSC Lebanon.",
+            "storyEyebrow": "Our story",
+            "storyHeading": "More than a club. A family in Lebanon."
+          },
+          "imageUrl": null,
+          "sortOrder": 2,
+          "isEnabled": true,
+          "createdAt": "2026-11-13T12:14:30.439Z",
+          "updatedAt": "2026-11-15T08:05:23.017Z"
+        },
+        {
+          "id": "cmwexvjmv0004t8x09vrkjxcg",
+          "pageId": "cms3dpm7t002dt8d8ih1xoiab",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "block": "highlights",
+            "items": [
+              {
+                "label": "OLSC branch",
+                "value": "Official"
+              },
+              {
+                "label": "Nationwide community",
+                "value": "Lebanon"
+              },
+              {
+                "label": "Digital member platform",
+                "value": "Kop"
+              },
+              {
+                "label": "Forever united",
+                "value": "YNWA"
+              }
+            ]
+          },
+          "imageUrl": null,
+          "sortOrder": 3,
+          "isEnabled": true,
+          "createdAt": "2026-11-13T12:14:30.439Z",
+          "updatedAt": "2026-11-15T08:05:23.035Z"
+        },
+        {
+          "id": "cmwexvjmv0005t8x0v4qwjno5",
+          "pageId": "cms3dpm7t002dt8d8ih1xoiab",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "icon": "🎵",
+            "block": "quote",
+            "quote": "When you walk through a storm, hold your head up high…",
+            "quoteBody": "You'll Never Walk Alone echoes in every OLSC Lebanon watch party — a promise we keep to each other, season after season.",
+            "quoteFooter": "You'll Never Walk Alone"
+          },
+          "imageUrl": null,
+          "sortOrder": 4,
+          "isEnabled": true,
+          "createdAt": "2026-11-13T12:14:30.439Z",
+          "updatedAt": "2026-11-15T08:05:23.046Z"
+        },
+        {
+          "id": "cmwexvjmv0006t8x08zlm0j2k",
+          "pageId": "cms3dpm7t002dt8d8ih1xoiab",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "block": "pillars",
+            "items": [
+              {
+                "icon": "🔴",
+                "title": "Official & proud",
+                "description": "OLSC Lebanon is the official Liverpool Supporters Club branch in Lebanon — representing the Reds with passion, respect, and the highest LFC / OLSC standards."
+              },
+              {
+                "icon": "🤝",
+                "title": "One family, YNWA",
+                "description": "From Beirut to Tripoli, from watch parties to community events — we stand together through every high and every heartbreak. You’ll Never Walk Alone is not a slogan here. It’s who we are."
+              },
+              {
+                "icon": "⚽",
+                "title": "Matchday is sacred",
+                "description": "Every Liverpool match is a shared experience. Predictions, live goal alerts, leaderboard battles, and the roar of the Kop — even thousands of miles from Anfield."
+              },
+              {
+                "icon": "🇱🇧",
+                "title": "Lebanon in our DNA",
+                "description": "We are Lebanese. We are Liverpool. Two identities, one spirit — building a supporters community that is proud of where we come from and who we support."
+              }
+            ],
+            "eyebrow": "What we stand for",
+            "heading": "The Kop values — Lebanese edition"
+          },
+          "imageUrl": null,
+          "sortOrder": 5,
+          "isEnabled": true,
+          "createdAt": "2026-11-13T12:14:30.439Z",
+          "updatedAt": "2026-11-15T08:05:23.055Z"
+        },
+        {
+          "id": "cmwexvjmv0007t8x0h1vijveo",
+          "pageId": "cms3dpm7t002dt8d8ih1xoiab",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "body": "Official members get access to Match Hub predictions, digital membership cards, community events, and the season leaderboard — the full supporters club experience, built for OLSC Lebanon.",
+            "block": "platform",
+            "title": "Your digital Kop identity",
+            "eyebrow": "RedLeb Hub",
+            "features": [
+              "⚽ Match Hub & season predictions",
+              "🏆 Leaderboard by prediction points",
+              "🎫 Official digital membership card",
+              "📣 Community feed & watch party events"
+            ]
+          },
+          "imageUrl": null,
+          "sortOrder": 6,
+          "isEnabled": true,
+          "createdAt": "2026-11-13T12:14:30.439Z",
+          "updatedAt": "2026-11-15T08:05:23.065Z"
+        },
+        {
+          "id": "cmwexvjmv0008t8x0df5a5g0w",
+          "pageId": "cms3dpm7t002dt8d8ih1xoiab",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "body": "Whether you've supported Liverpool for decades or you're just starting your journey — OLSC Lebanon is your home. Official membership is managed by our committee.",
+            "block": "footer",
+            "title": "Ready to walk with us?"
+          },
+          "imageUrl": null,
+          "sortOrder": 7,
+          "isEnabled": true,
+          "createdAt": "2026-11-13T12:14:30.439Z",
+          "updatedAt": "2026-11-15T08:05:23.073Z"
+        }
+      ]
+    },
+    "COMMITTEE": {
+      "id": "cms3dpm7x002gt8d886plf8cx",
+      "code": "COMMITTEE",
+      "title": "Committee",
+      "slug": "/committee",
+      "isPublished": true,
+      "createdAt": "2026-07-27T15:25:44.253Z",
+      "updatedAt": "2026-11-15T08:05:23.079Z",
+      "sections": [
+        {
+          "id": "cmuoedqtp0024t8wgdt3hg3dg",
+          "pageId": "cms3dpm7x002gt8d886plf8cx",
+          "type": "HERO",
+          "title": "Committee",
+          "subtitle": "Meet the people who lead OLSC Lebanon",
+          "content": {
+            "primaryButtonLabel": "Explore"
+          },
+          "imageUrl": null,
+          "sortOrder": 1,
+          "isEnabled": true,
+          "createdAt": "2026-09-30T17:47:04.333Z",
+          "updatedAt": "2026-09-30T17:47:04.333Z"
+        },
+        {
+          "id": "cmuoedqtq0025t8wgekewgxc9",
+          "pageId": "cms3dpm7x002gt8d886plf8cx",
+          "type": "COMMITTEE_LIST",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "intro": "OLSC Lebanon is led by a volunteer committee of dedicated Liverpool supporters. They organize watch parties, manage official membership, and build the community that makes the Kop spirit alive in Lebanon.",
+            "members": [
+              {
+                "bio": "Leads OLSC Lebanon with a focus on official LFC / OLSC standards, community growth, and nationwide supporter engagement.",
+                "name": "Ahmad Khalil",
+                "role": "President",
+                "email": "president@olsclebanon.com",
+                "initials": "AK"
+              },
+              {
+                "bio": "Supports committee operations, member relations, and partnerships with local venues for matchday experiences.",
+                "name": "Sara Mansour",
+                "role": "Vice President",
+                "email": "vicepresident@olsclebanon.com",
+                "initials": "SM"
+              },
+              {
+                "bio": "Handles communications, meeting coordination, and official correspondence with members and partners.",
+                "name": "Karim Haddad",
+                "role": "Secretary",
+                "email": "secretary@olsclebanon.com",
+                "initials": "KH"
+              },
+              {
+                "bio": "Plans watch parties, gatherings, and community events across Lebanon — bringing the Kop together on matchday.",
+                "name": "Nour El-Ali",
+                "role": "Events Lead",
+                "email": "events@olsclebanon.com",
+                "initials": "NE"
+              },
+              {
+                "bio": "Manages official membership enquiries, card verification, and onboarding for new OLSC Lebanon members.",
+                "name": "Omar Fares",
+                "role": "Membership Lead",
+                "email": "membership@olsclebanon.com",
+                "initials": "OF"
+              },
+              {
+                "bio": "Oversees RedLeb Hub — Match Hub, digital cards, community feed, and member digital experience.",
+                "name": "Layla Gemayel",
+                "role": "Digital & RedLeb Hub",
+                "email": "digital@olsclebanon.com",
+                "initials": "LG"
+              }
+            ]
+          },
+          "imageUrl": null,
+          "sortOrder": 2,
+          "isEnabled": true,
+          "createdAt": "2026-09-30T17:47:04.333Z",
+          "updatedAt": "2026-11-15T08:05:23.094Z"
+        }
+      ]
+    },
+    "MEMBERSHIP": {
+      "id": "cms3dpm89002pt8d8mpifvu4a",
+      "code": "MEMBERSHIP",
+      "title": "Membership",
+      "slug": "/membership",
+      "isPublished": true,
+      "createdAt": "2026-07-27T15:25:44.266Z",
+      "updatedAt": "2026-11-15T08:05:23.121Z",
+      "sections": [
+        {
+          "id": "cms3dpm8c002rt8d8qr6yq0bj",
+          "pageId": "cms3dpm89002pt8d8mpifvu4a",
+          "type": "HERO",
+          "title": "Membership",
+          "subtitle": "Official OLSC Lebanon membership — with a digital card for active members and upload support for existing physical cards.",
+          "content": {
+            "primaryButtonLabel": "Contact Committee"
+          },
+          "imageUrl": null,
+          "sortOrder": 1,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T15:25:44.268Z",
+          "updatedAt": "2026-11-15T08:05:23.131Z"
+        },
+        {
+          "id": "cms3hdh3r002ht81oxb27rbkr",
+          "pageId": "cms3dpm89002pt8d8mpifvu4a",
+          "type": "RICH_TEXT",
+          "title": "Committee notes",
+          "subtitle": null,
+          "content": {
+            "body": "Official membership remains managed by the OLSC Lebanon committee. The Kop Platform provides digital tools for members who already hold official membership.\n\nIf you received a physical card in previous seasons, log in and upload a clear photo from the Digital Membership Card page. The committee can use it for faster verification at events alongside your QR code."
+          },
+          "imageUrl": null,
+          "sortOrder": 2,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T17:08:16.215Z",
+          "updatedAt": "2026-07-27T17:08:16.215Z"
+        },
+        {
+          "id": "cms3mw2s6002rt8zsj8936i89",
+          "pageId": "cms3dpm89002pt8d8mpifvu4a",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "block": "twoPaths",
+            "intro": "Whether you are joining for the first time or you already have a printed OLSC card, RedLeb Hub supports both journeys.",
+            "eyebrow": "Two paths",
+            "heading": "New members & existing card holders",
+            "newBody": "Request membership information or activate your account after committee approval.",
+            "newTitle": "New to the platform",
+            "existingBody": "Many members already received a physical OLSC card. Log in and upload a photo — we link it to your digital profile.",
+            "existingTitle": "Already have a card"
+          },
+          "imageUrl": null,
+          "sortOrder": 3,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T19:42:42.198Z",
+          "updatedAt": "2026-11-15T08:05:23.145Z"
+        },
+        {
+          "id": "cms3mw2sa002tt8zs8p9u7f4g",
+          "pageId": "cms3dpm89002pt8d8mpifvu4a",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "block": "steps",
+            "items": [
+              {
+                "icon": "📋",
+                "title": "Official membership",
+                "description": "OLSC Lebanon membership is managed by the committee. The platform does not replace official club membership."
+              },
+              {
+                "icon": "✉️",
+                "title": "Invitation & activation",
+                "description": "Existing members receive an email invitation, then activate their account and set a password."
+              },
+              {
+                "icon": "🎫",
+                "title": "Digital card + upload",
+                "description": "After activation, your digital card is generated automatically. Already have a physical card? Upload a photo in the member app."
+              },
+              {
+                "icon": "⚽",
+                "title": "Join the Kop",
+                "description": "Access Match Hub predictions, community feed, events, and your official digital identity."
+              }
+            ],
+            "eyebrow": "How it works",
+            "heading": "From committee to RedLeb Hub"
+          },
+          "imageUrl": null,
+          "sortOrder": 4,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T19:42:42.202Z",
+          "updatedAt": "2026-11-15T08:05:23.157Z"
+        },
+        {
+          "id": "cms3mw2sf002vt8zsd2d29sjl",
+          "pageId": "cms3dpm89002pt8d8mpifvu4a",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "body": "Log in, open your membership card, and upload a scan of your existing OLSC card in one minute.",
+            "block": "footer",
+            "title": "Ready for your digital card?"
+          },
+          "imageUrl": null,
+          "sortOrder": 5,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T19:42:42.207Z",
+          "updatedAt": "2026-11-15T08:05:23.168Z"
+        },
+        {
+          "id": "cmuoa5v3k002ht8xkdkrzkfeu",
+          "pageId": "cms3dpm89002pt8d8mpifvu4a",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "badge": "2026/27 Season",
+            "block": "applyPage",
+            "title": "OLSC Lebanon Branch Membership",
+            "fullBody": "Scarf, Anfield ticket access, UCL away tickets (subject to availability), plus all Light benefits.",
+            "subtitle": "Official Liverpool Supporters Club — Lebanon. Memberships valid until 30 June 2027.",
+            "formIntro": "Complete this form, then transfer the fee via Whish Money or OMT Pay.",
+            "formTitle": "Membership application",
+            "fullTitle": "Full Membership — $25",
+            "lightBody": "Membership card, branch certificate, competitions eligibility, and voting rights.",
+            "lightTitle": "Light Membership — $10",
+            "successBody": "Thank you for applying for OLSC Lebanon membership 2026/27. Your application will only be considered active once payment has been completed and confirmed by the committee.",
+            "successNote": "We'll be in touch to arrange collection of your membership package.",
+            "successTitle": "Application received",
+            "paymentAgreement": "I agree to settle the package amount through money transfer (Whish Money or OMT Pay) and understand that my package will not be activated before payment has been made."
+          },
+          "imageUrl": null,
+          "sortOrder": 6,
+          "isEnabled": true,
+          "createdAt": "2026-09-30T15:48:58.161Z",
+          "updatedAt": "2026-11-15T08:05:23.179Z"
+        },
+        {
+          "id": "cmuoa5v3y002jt8xkp4772wrl",
+          "pageId": "cms3dpm89002pt8d8mpifvu4a",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "block": "applyPayment",
+            "payName": "Mohammad Abdallah",
+            "payExtra": "UK bank account details available upon request.",
+            "payIntro": "Transfer via Whish Money or OMT Pay to:",
+            "payPhone": "+961 3 000 000",
+            "payTitle": "How to pay",
+            "notesBody": "Applications close on 31 August 2026.\nAll members — including previous ones — must re-apply for 2026/27.\nMembership is active only after payment confirmation.",
+            "notesTitle": "Important notes"
+          },
+          "imageUrl": null,
+          "sortOrder": 7,
+          "isEnabled": true,
+          "createdAt": "2026-09-30T15:48:58.175Z",
+          "updatedAt": "2026-11-15T08:05:23.188Z"
+        }
+      ]
+    },
+    "CONTACT": {
+      "id": "cms3dpm8d002st8d8g5c6j3l7",
+      "code": "CONTACT",
+      "title": "Contact",
+      "slug": "/contact",
+      "isPublished": true,
+      "createdAt": "2026-07-27T15:25:44.270Z",
+      "updatedAt": "2026-11-15T08:05:23.193Z",
+      "sections": [
+        {
+          "id": "cms3dpm8f002ut8d82lmjgl2a",
+          "pageId": "cms3dpm8d002st8d8g5c6j3l7",
+          "type": "HERO",
+          "title": "Contact",
+          "subtitle": "Get in touch with OLSC Lebanon",
+          "content": {
+            "primaryButtonLabel": "Explore"
+          },
+          "imageUrl": null,
+          "sortOrder": 1,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T15:25:44.272Z",
+          "updatedAt": "2026-07-27T15:25:44.272Z"
+        },
+        {
+          "id": "cms3obygx002kt884gdijhv70",
+          "pageId": "cms3dpm8d002st8d8g5c6j3l7",
+          "type": "RICH_TEXT",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "body": "Have a question about membership, events, or RedLeb Hub? The OLSC Lebanon committee is here to help. Reach out through any channel below — we aim to respond within a few business days."
+          },
+          "imageUrl": null,
+          "sortOrder": 2,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T20:23:02.722Z",
+          "updatedAt": "2026-11-15T08:05:23.204Z"
+        },
+        {
+          "id": "cms3obyh1002mt8846h4bssyp",
+          "pageId": "cms3dpm8d002st8d8g5c6j3l7",
+          "type": "CTA",
+          "title": null,
+          "subtitle": null,
+          "content": {
+            "block": "channels",
+            "items": [
+              {
+                "href": "mailto:info@olsclebanon.com",
+                "icon": "✉️",
+                "label": "Email",
+                "value": "info@olsclebanon.com"
+              },
+              {
+                "href": "https://wa.me/9613000000",
+                "icon": "📱",
+                "label": "WhatsApp",
+                "value": "+961 3 000 000"
+              },
+              {
+                "href": "https://instagram.com/olsclebanon",
+                "icon": "📸",
+                "label": "Instagram",
+                "value": "@olsclebanon"
+              },
+              {
+                "icon": "📍",
+                "label": "Based in",
+                "value": "Beirut, Lebanon"
+              }
+            ]
+          },
+          "imageUrl": null,
+          "sortOrder": 3,
+          "isEnabled": true,
+          "createdAt": "2026-07-27T20:23:02.725Z",
+          "updatedAt": "2026-11-15T08:05:23.214Z"
+        }
+      ]
+    }
+  },
+  "demo": {
+    "newsSlug": "demo-new-season",
+    "eventId": "cmwgunqtf0000t8dgr87g2sz3",
+    "newsletterSlug": "demo-newsletter-november-2026",
+    "albumId": "cmwgunqvh0002t8dgxzkx4x6o"
+  },
+  "inventory": [
+    {
+      "label": "Branding – Public site name in headers and PWA.",
+      "currentEn": "RedLeb Hub",
+      "currentAr": "رد لب هب",
+      "appearsOn": "Various",
+      "editIn": "Admin → Settings & branding (and sometimes Design)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Branding – Short tagline under the logo.",
+      "currentEn": "OLSC Lebanon digital home",
+      "currentAr": "المنزل الرقمي لجماهير ليفربول في لبنان",
+      "appearsOn": "Various",
+      "editIn": "Admin → Settings & branding (and sometimes Design)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – Home hero main heading.",
+      "currentEn": "Welcome to OLSC Lebanon – RedLeb Hub",
+      "currentAr": "مرحبًا بكم في OLSC لبنان – رد لب هب",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – Home hero supporting text.",
+      "currentEn": "Your community hub for match predictions, events, news, and official digital membership.",
+      "currentAr": "مجتمعكم لتوقعات المباريات والفعاليات والأخبار والعضوية الرقمية الرسمية.",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – Primary hero button — links to membership apply.",
+      "currentEn": "Become a member",
+      "currentAr": "انضم كعضو",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – Feed section title.",
+      "currentEn": "Latest from us",
+      "currentAr": "آخر أخبارنا",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – News column title on home.",
+      "currentEn": "Club News (OLSC announcements)",
+      "currentAr": "أخبار النادي (إعلانات OLSC)",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – Events column title on home.",
+      "currentEn": "Events (Gatherings & meetups)",
+      "currentAr": "الفعاليات (لقاءات وتجمعات)",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – Bottom CTA title.",
+      "currentEn": "Interested in joining us?",
+      "currentAr": "مهتم بالانضمام إلينا؟",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Home – Bottom CTA supporting line.",
+      "currentEn": "Let us cheer for the Reds together.",
+      "currentAr": "لنشجع الريدز معًا.",
+      "appearsOn": "Home",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Header sign-in link label.",
+      "currentEn": "Sign in",
+      "currentAr": "تسجيل الدخول",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Forms – Official Liverpool member ID field label.",
+      "currentEn": "ALLRED SUPPORT ID",
+      "currentAr": "رقم دعم ALLRED",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Header CTA for membership apply.",
+      "currentEn": "Become a member",
+      "currentAr": "انضم كعضو",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — About page.",
+      "currentEn": "About",
+      "currentAr": "من نحن",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — Committee page.",
+      "currentEn": "Committee",
+      "currentAr": "اللجنة",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — Events listing.",
+      "currentEn": "Events",
+      "currentAr": "الفعاليات",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — News listing.",
+      "currentEn": "News",
+      "currentAr": "الأخبار",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — Newsletter archive.",
+      "currentEn": "Newsletter",
+      "currentAr": "النشرة",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — Photo gallery.",
+      "currentEn": "Gallery",
+      "currentAr": "المعرض",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — Membership info.",
+      "currentEn": "Membership",
+      "currentAr": "العضوية",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Public nav — Contact page.",
+      "currentEn": "Contact",
+      "currentAr": "اتصل بنا",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Link to signed-in member experience.",
+      "currentEn": "Member App",
+      "currentAr": "تطبيق الأعضاء",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Committee admin entry link.",
+      "currentEn": "Admin Panel",
+      "currentAr": "لوحة الإدارة",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Header account shortcut when signed in.",
+      "currentEn": "Account",
+      "currentAr": "حسابي",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Mobile menu primary CTA when signed in.",
+      "currentEn": "Open Member App",
+      "currentAr": "فتح تطبيق الأعضاء",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Footer column title for public links.",
+      "currentEn": "Site",
+      "currentAr": "الموقع",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Footer brand blurb on public pages.",
+      "currentEn": "The digital home of Liverpool FC supporters in Lebanon. Community, match predictions, and official membership — managed by the committee.",
+      "currentAr": "المنزل الرقمي لمشجعي ليفربول في لبنان. مجتمع، توقعات مباريات، وعضوية رسمية — بإدارة اللجنة.",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Offline – PWA offline fallback page heading.",
+      "currentEn": "You're offline",
+      "currentAr": "أنت غير متصل",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Offline – PWA offline fallback supporting text.",
+      "currentEn": "RedLeb Hub needs a connection for live scores, events, and your membership tools. Check mobile data or Wi‑Fi, then try again.",
+      "currentAr": "يحتاج رد لب هب إلى اتصال للنتائج المباشرة والفعاليات وأدوات العضوية. تحقق من البيانات أو الواي فاي ثم أعد المحاولة.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Offline – PWA offline retry button label.",
+      "currentEn": "Try again",
+      "currentAr": "أعد المحاولة",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Offline – PWA offline page eyebrow / brand line.",
+      "currentEn": "OLSC Lebanon · RedLeb Hub",
+      "currentAr": "OLSC لبنان · رد لب هب",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Thin top bar label on public pages.",
+      "currentEn": "OLSC Lebanon · RedLeb Hub",
+      "currentAr": "OLSC لبنان · رد لب هب",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Auth – Login page main heading.",
+      "currentEn": "Sign in to RedLeb Hub",
+      "currentAr": "تسجيل الدخول إلى رد لب هب",
+      "appearsOn": "Login / Sign up",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Membership – Public apply form page title.",
+      "currentEn": "Apply for OLSC Lebanon membership",
+      "currentAr": "طلب عضوية OLSC لبنان",
+      "appearsOn": "Membership",
+      "editIn": "Admin → Pages (CMS), or inline edit on the live page while signed in as admin",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Auth – Login page supporting paragraph.",
+      "currentEn": "Sign in to predict matches, join events, and manage your OLSC Lebanon digital experience.",
+      "currentAr": "سجّل الدخول لتوقع المباريات والانضمام للفعاليات وإدارة تجربتك الرقمية مع OLSC لبنان.",
+      "appearsOn": "Login / Sign up",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Auth – Login form panel heading.",
+      "currentEn": "Sign in",
+      "currentAr": "تسجيل الدخول",
+      "appearsOn": "Login / Sign up",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Navigation – Footer column title for member links.",
+      "currentEn": "Members",
+      "currentAr": "الأعضاء",
+      "appearsOn": "All public pages (header/footer)",
+      "editIn": "Admin → Texts & labels (search the label you see on screen)",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Buttons – Generic become-a-member button label.",
+      "currentEn": "Become a member",
+      "currentAr": "انضم كعضو",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Buttons – Generic sign-in button label (not header).",
+      "currentEn": "Sign in",
+      "currentAr": "تسجيل الدخول",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Events – CTA on public event detail when not logged in.",
+      "currentEn": "Sign in to register",
+      "currentAr": "سجّل الدخول للتسجيل",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Events – Guest count field label on registration.",
+      "currentEn": "Guests",
+      "currentAr": "الضيوف",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Events – Helper for naming guests when bringing +1/+2.",
+      "currentEn": "Guest names (optional)",
+      "currentAr": "أسماء الضيوف (اختياري)",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Community page heading.",
+      "currentEn": "Your Kop Feed",
+      "currentAr": "خلاصة الكوب",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Community page description.",
+      "currentEn": "News, events, and achievements from your supporters club.",
+      "currentAr": "أخبار وفعاليات وإنجازات من نادي المشجعين.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Member home banner eyebrow.",
+      "currentEn": "Welcome back",
+      "currentAr": "أهلاً بعودتك",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Member home banner body.",
+      "currentEn": "Your weekly home for Liverpool match predictions, community events, and your official digital membership identity.",
+      "currentAr": "موطنك الأسبوعي لتوقعات مباريات ليفربول وفعاليات المجتمع وهويتك الرقمية الرسمية.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Matches list page title.",
+      "currentEn": "Choose a match",
+      "currentAr": "اختر مباراة",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Matches list page description.",
+      "currentEn": "Tap a fixture, set your score, and submit your prediction before kickoff.",
+      "currentAr": "اضغط على المباراة، حدّد النتيجة، وأرسل توقعك قبل انطلاق الصافرة.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Leaderboard page title.",
+      "currentEn": "Leaderboard",
+      "currentAr": "لوحة المتصدرين",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Leaderboard intro line.",
+      "currentEn": "Overall ranking after Liverpool prediction scoring. Every match can change the order.",
+      "currentAr": "الترتيب العام بعد احتساب نقاط توقعات ليفربول. كل مباراة قد تغيّر الترتيب.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Membership card page title.",
+      "currentEn": "Digital membership card",
+      "currentAr": "بطاقة العضوية الرقمية",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Membership card page intro.",
+      "currentEn": "Take a photo or upload your physical OLSC membership card here.",
+      "currentAr": "التقط صورة أو ارفع بطاقة OLSC الفعلية هنا.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Notifications page title.",
+      "currentEn": "Notifications",
+      "currentAr": "الإشعارات",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Hall of fame page title.",
+      "currentEn": "Hall of Fame",
+      "currentAr": "قاعة المشاهير",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Hall of fame intro.",
+      "currentEn": "Prediction legends and community milestones.",
+      "currentAr": "أساطير التوقعات وإنجازات المجتمع.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Directory page title.",
+      "currentEn": "Member directory",
+      "currentAr": "دليل الأعضاء",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Directory page intro.",
+      "currentEn": "Supporters who chose to appear here. Update your profile to opt in or out.",
+      "currentAr": "المشجعون الذين اختاروا الظهور هنا. حدّث ملفك للانضمام أو إخفاء نفسك.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Link to profile privacy.",
+      "currentEn": "Privacy settings →",
+      "currentAr": "إعدادات الخصوصية ←",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Hint under membership QR.",
+      "currentEn": "Show this QR at watch parties for verification.",
+      "currentAr": "اعرض رمز QR هذا في لقاءات المشاهدة للتحقق.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Profile page title.",
+      "currentEn": "My Profile",
+      "currentAr": "ملفي الشخصي",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Profile page intro.",
+      "currentEn": "Your Kop identity, login details, stats, and membership info.",
+      "currentAr": "هويتك في الكوب، بيانات الدخول، الإحصاءات، ومعلومات العضوية.",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    },
+    {
+      "label": "Member app – Privacy fieldset legend.",
+      "currentEn": "Privacy",
+      "currentAr": "الخصوصية",
+      "appearsOn": "Various",
+      "editIn": "Admin → Texts & labels",
+      "who": "Super Admin, Committee Admin, or Content Manager (Texts/CMS); branding also needs Settings access"
+    }
+  ]
+}

@@ -205,15 +205,403 @@
       "markers": [],
       "url": "http://localhost:5173/admin/applications"
     },
-    "admin-member-edit": {
-      "file": "admin-member-activity.png",
-      "markers": [],
-      "url": "http://localhost:5173/admin/members"
-    },
     "admin-about-edit": {
       "file": "admin-inline-edit-desktop.png",
       "markers": [],
       "url": "http://localhost:5173/about"
+    },
+    "webpub-home-m-top": {
+      "file": "webpub-home-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
+    "webpub-home-m-mid": {
+      "file": "webpub-home-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
+    "webpub-home-d-top": {
+      "file": "webpub-home-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
+    "webpub-home-d-mid": {
+      "file": "webpub-home-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
+    "webpub-about-m-top": {
+      "file": "webpub-about-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/about"
+    },
+    "webpub-about-m-mid": {
+      "file": "webpub-about-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/about"
+    },
+    "webpub-about-d-top": {
+      "file": "webpub-about-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/about"
+    },
+    "webpub-about-d-mid": {
+      "file": "webpub-about-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/about"
+    },
+    "webpub-committee-m-top": {
+      "file": "webpub-committee-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/committee"
+    },
+    "webpub-committee-m-mid": {
+      "file": "webpub-committee-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/committee"
+    },
+    "webpub-committee-d-top": {
+      "file": "webpub-committee-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/committee"
+    },
+    "webpub-committee-d-mid": {
+      "file": "webpub-committee-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/committee"
+    },
+    "webpub-membership-m-top": {
+      "file": "webpub-membership-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership"
+    },
+    "webpub-membership-m-mid": {
+      "file": "webpub-membership-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership"
+    },
+    "webpub-membership-d-top": {
+      "file": "webpub-membership-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership"
+    },
+    "webpub-membership-d-mid": {
+      "file": "webpub-membership-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership"
+    },
+    "webpub-contact-m-top": {
+      "file": "webpub-contact-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/contact"
+    },
+    "webpub-contact-m-mid": {
+      "file": "webpub-contact-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/contact"
+    },
+    "webpub-contact-d-top": {
+      "file": "webpub-contact-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/contact"
+    },
+    "webpub-contact-d-mid": {
+      "file": "webpub-contact-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/contact"
+    },
+    "webpub-events-m-top": {
+      "file": "webpub-events-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/events"
+    },
+    "webpub-events-m-mid": {
+      "file": "webpub-events-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/events"
+    },
+    "webpub-events-d-top": {
+      "file": "webpub-events-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/events"
+    },
+    "webpub-events-d-mid": {
+      "file": "webpub-events-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/events"
+    },
+    "webpub-event-detail-m-top": {
+      "file": "webpub-event-detail-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/events/cmwgunqtf0000t8dgr87g2sz3"
+    },
+    "webpub-event-detail-m-mid": {
+      "file": "webpub-event-detail-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/events/cmwgunqtf0000t8dgr87g2sz3"
+    },
+    "webpub-event-detail-d-top": {
+      "file": "webpub-event-detail-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/events/cmwgunqtf0000t8dgr87g2sz3"
+    },
+    "webpub-event-detail-d-mid": {
+      "file": "webpub-event-detail-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/events/cmwgunqtf0000t8dgr87g2sz3"
+    },
+    "webpub-news-m-top": {
+      "file": "webpub-news-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/news"
+    },
+    "webpub-news-m-mid": {
+      "file": "webpub-news-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/news"
+    },
+    "webpub-news-d-top": {
+      "file": "webpub-news-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/news"
+    },
+    "webpub-news-d-mid": {
+      "file": "webpub-news-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/news"
+    },
+    "webpub-news-detail-m-top": {
+      "file": "webpub-news-detail-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/news/demo-new-season"
+    },
+    "webpub-news-detail-m-mid": {
+      "file": "webpub-news-detail-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/news/demo-new-season"
+    },
+    "webpub-news-detail-d-top": {
+      "file": "webpub-news-detail-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/news/demo-new-season"
+    },
+    "webpub-news-detail-d-mid": {
+      "file": "webpub-news-detail-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/news/demo-new-season"
+    },
+    "webpub-newsletter-m-top": {
+      "file": "webpub-newsletter-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter"
+    },
+    "webpub-newsletter-m-mid": {
+      "file": "webpub-newsletter-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter"
+    },
+    "webpub-newsletter-d-top": {
+      "file": "webpub-newsletter-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter"
+    },
+    "webpub-newsletter-d-mid": {
+      "file": "webpub-newsletter-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter"
+    },
+    "webpub-newsletter-detail-m-top": {
+      "file": "webpub-newsletter-detail-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter/demo-newsletter-november-2026"
+    },
+    "webpub-newsletter-detail-m-mid": {
+      "file": "webpub-newsletter-detail-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter/demo-newsletter-november-2026"
+    },
+    "webpub-newsletter-detail-d-top": {
+      "file": "webpub-newsletter-detail-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter/demo-newsletter-november-2026"
+    },
+    "webpub-newsletter-detail-d-mid": {
+      "file": "webpub-newsletter-detail-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/newsletter/demo-newsletter-november-2026"
+    },
+    "webpub-gallery-m-top": {
+      "file": "webpub-gallery-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery"
+    },
+    "webpub-gallery-m-mid": {
+      "file": "webpub-gallery-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery"
+    },
+    "webpub-gallery-d-top": {
+      "file": "webpub-gallery-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery"
+    },
+    "webpub-gallery-d-mid": {
+      "file": "webpub-gallery-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery"
+    },
+    "webpub-gallery-album-m-top": {
+      "file": "webpub-gallery-album-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery/cmwgunqvh0002t8dgxzkx4x6o"
+    },
+    "webpub-gallery-album-m-mid": {
+      "file": "webpub-gallery-album-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery/cmwgunqvh0002t8dgxzkx4x6o"
+    },
+    "webpub-gallery-album-d-top": {
+      "file": "webpub-gallery-album-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery/cmwgunqvh0002t8dgxzkx4x6o"
+    },
+    "webpub-gallery-album-d-mid": {
+      "file": "webpub-gallery-album-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/gallery/cmwgunqvh0002t8dgxzkx4x6o"
+    },
+    "webpub-apply-m-top": {
+      "file": "webpub-apply-m-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership/apply"
+    },
+    "webpub-apply-m-mid": {
+      "file": "webpub-apply-m-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership/apply"
+    },
+    "webpub-apply-d-top": {
+      "file": "webpub-apply-d-top.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership/apply"
+    },
+    "webpub-apply-d-mid": {
+      "file": "webpub-apply-d-mid.png",
+      "markers": [],
+      "url": "http://localhost:5173/membership/apply"
+    },
+    "webpub-login-m": {
+      "file": "webpub-login-m.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Sign-in button",
+          "xPct": 50,
+          "yPct": 103.82109004739337
+        }
+      ],
+      "url": "http://localhost:5173/login"
+    },
+    "webpub-signup-m": {
+      "file": "webpub-signup-m.png",
+      "markers": [],
+      "url": "http://localhost:5173/signup"
+    },
+    "webpub-forgot-m": {
+      "file": "webpub-forgot-m.png",
+      "markers": [],
+      "url": "http://localhost:5173/forgot-password"
+    },
+    "webpub-login-d": {
+      "file": "webpub-login-d.png",
+      "markers": [],
+      "url": "http://localhost:5173/login"
+    },
+    "webpub-signup-d": {
+      "file": "webpub-signup-d.png",
+      "markers": [],
+      "url": "http://localhost:5173/signup"
+    },
+    "webpub-offline-m": {
+      "file": "webpub-offline-m.png",
+      "markers": [],
+      "url": "http://localhost:5173/offline"
+    },
+    "edit-inline-about": {
+      "file": "edit-inline-about.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Edit mode toolbar (admins only)",
+          "xPct": 50,
+          "yPct": 96.72222222222221
+        }
+      ],
+      "url": "http://localhost:5173/about"
+    },
+    "edit-home-after-hero": {
+      "file": "edit-home-hero-preview.png",
+      "markers": [],
+      "url": "http://localhost:5173/"
+    },
+    "edit-texts-hero": {
+      "file": "edit-texts-hero.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Editable text rows",
+          "xPct": 59.02777777777778,
+          "yPct": 54.05555555555556
+        }
+      ],
+      "url": "http://localhost:5173/admin/texts"
+    },
+    "edit-texts-ar": {
+      "file": "edit-texts-arabic.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/texts"
+    },
+    "edit-cms-membership": {
+      "file": "edit-cms-membership.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/cms"
+    },
+    "edit-settings": {
+      "file": "edit-settings-contact.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/settings"
+    },
+    "edit-design": {
+      "file": "edit-design-branding.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/design"
+    },
+    "edit-news-draft": {
+      "file": "edit-news-publish.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Create or edit a news story",
+          "xPct": 93.34418402777777,
+          "yPct": 28.61111111111111
+        }
+      ],
+      "url": "http://localhost:5173/admin/news"
+    },
+    "edit-newsletter-schedule": {
+      "file": "edit-newsletter-schedule.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/newsletter"
+    },
+    "edit-audit-content": {
+      "file": "edit-audit-trail.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/audit"
+    },
+    "admin-member-edit": {
+      "file": "admin-member-activity.png",
+      "markers": [],
+      "url": "http://localhost:5173/admin/members"
     },
     "admin-texts-mobile": {
       "file": "admin-texts-mobile.png",

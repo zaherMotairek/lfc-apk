@@ -340,11 +340,61 @@ h2.section-break {
   display: none;
 }
 
+.dual-device {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.device-label {
+  font-size: 9pt;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 4px;
+}
+
+.web-copy-cols h3 {
+  margin-top: 10px;
+}
+
+.block-list {
+  margin: 6px 0;
+  padding-left: 18px;
+  font-size: 10pt;
+}
+
+table.status.compact {
+  font-size: 9pt;
+}
+
+table.status.inventory {
+  font-size: 8pt;
+}
+
+table.status.inventory td,
+table.status.inventory th {
+  padding: 5px 6px;
+}
+
+.phone-secondary .phone,
+.desk-secondary .desk-wrap {
+  margin-top: 6px;
+}
+
+.desk-secondary .desktop-shot {
+  max-height: 55mm;
+}
+
 @media print {
   .sheet {
     min-height: auto;
   }
   .guide-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dual-device {
     grid-template-columns: 1fr 1fr;
   }
 }

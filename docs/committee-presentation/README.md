@@ -9,6 +9,7 @@ SEED_E2E_FIXTURES=true npm run prisma:seed -w @kop/api
 node scripts/seed-committee-demo.mjs
 # API (node apps/api/dist/src/main.js) + Vite on :5173
 node scripts/committee-presentation-auth.mjs
+node scripts/snapshot-committee-content.mjs
 PLAYWRIGHT_SKIP_WEBSERVER=1 node scripts/capture-committee-guide.mjs
 node scripts/build-committee-guide-html.mjs
 node scripts/generate-committee-pdf.mjs

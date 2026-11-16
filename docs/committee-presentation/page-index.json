@@ -122,5 +122,173 @@
   {
     "slug": "admin-audit",
     "page": 31
+  },
+  {
+    "slug": "web-exp-intro",
+    "page": 32
+  },
+  {
+    "slug": "web-page-home",
+    "page": 33
+  },
+  {
+    "slug": "web-page-about",
+    "page": 34
+  },
+  {
+    "slug": "web-page-committee",
+    "page": 35
+  },
+  {
+    "slug": "web-page-events",
+    "page": 36
+  },
+  {
+    "slug": "web-page-event-detail",
+    "page": 37
+  },
+  {
+    "slug": "web-page-news",
+    "page": 38
+  },
+  {
+    "slug": "web-page-news-detail",
+    "page": 39
+  },
+  {
+    "slug": "web-page-newsletter",
+    "page": 40
+  },
+  {
+    "slug": "web-page-newsletter-detail",
+    "page": 41
+  },
+  {
+    "slug": "web-page-gallery",
+    "page": 42
+  },
+  {
+    "slug": "web-page-gallery-album",
+    "page": 43
+  },
+  {
+    "slug": "web-page-membership",
+    "page": 44
+  },
+  {
+    "slug": "web-page-apply",
+    "page": 45
+  },
+  {
+    "slug": "web-page-contact",
+    "page": 46
+  },
+  {
+    "slug": "web-page-login",
+    "page": 47
+  },
+  {
+    "slug": "web-page-signup",
+    "page": 48
+  },
+  {
+    "slug": "web-page-forgot",
+    "page": 49
+  },
+  {
+    "slug": "web-page-offline",
+    "page": 50
+  },
+  {
+    "slug": "edit-guide-intro",
+    "page": 51
+  },
+  {
+    "slug": "edit-method-inline",
+    "page": 52
+  },
+  {
+    "slug": "edit-method-texts",
+    "page": 53
+  },
+  {
+    "slug": "edit-method-settings",
+    "page": 54
+  },
+  {
+    "slug": "edit-ex-hero",
+    "page": 55
+  },
+  {
+    "slug": "edit-ex-button",
+    "page": 56
+  },
+  {
+    "slug": "edit-ex-menu",
+    "page": 57
+  },
+  {
+    "slug": "edit-ex-footer",
+    "page": 58
+  },
+  {
+    "slug": "edit-ex-image",
+    "page": 59
+  },
+  {
+    "slug": "edit-ex-payment",
+    "page": 60
+  },
+  {
+    "slug": "edit-ex-brand",
+    "page": 61
+  },
+  {
+    "slug": "edit-ex-ar",
+    "page": 62
+  },
+  {
+    "slug": "edit-ex-undo",
+    "page": 63
+  },
+  {
+    "slug": "edit-ex-default",
+    "page": 64
+  },
+  {
+    "slug": "edit-ex-audit",
+    "page": 65
+  },
+  {
+    "slug": "edit-publish",
+    "page": 66
+  },
+  {
+    "slug": "edit-matrix",
+    "page": 67
+  },
+  {
+    "slug": "edit-dodont",
+    "page": 68
+  },
+  {
+    "slug": "edit-faq",
+    "page": 69
+  },
+  {
+    "slug": "inventory-intro",
+    "page": 70
+  },
+  {
+    "slug": "inventory-1",
+    "page": 71
+  },
+  {
+    "slug": "inventory-2",
+    "page": 72
+  },
+  {
+    "slug": "inventory-3",
+    "page": 73
   }
 ]

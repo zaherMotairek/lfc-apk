@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium, devices } from '@playwright/test';
+import { captureWebsiteExpansion } from './capture-committee-website-expansion.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_DIR = path.join(root, 'docs/committee-presentation/shots');
@@ -206,6 +207,9 @@ async function main() {
   }
   await memberCtx.close();
 
+  const { spawnSync } = await import('node:child_process');
+  spawnSync('node', ['scripts/committee-presentation-auth.mjs'], { cwd: root, stdio: 'inherit' });
+
   const desktop = await browser.newContext({ ...DESKTOP, storageState: adminState });
   const admin = await desktop.newPage();
   console.log('Admin (desktop)…');
@@ -280,6 +284,11 @@ async function main() {
   await capture(mobileAdmin, 'admin-texts-mobile', 'admin-texts-mobile.png', () =>
     mobileAdmin.goto(`${BASE}/admin/texts`),
   );
+
+  await mobileAdminCtx.close();
+
+  console.log('Website expansion captures…');
+  const expansionErrors = await captureWebsiteExpansion(browser, manifest, manifest.errors);
 
   await browser.close();
 
