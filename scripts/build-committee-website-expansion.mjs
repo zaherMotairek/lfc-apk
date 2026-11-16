@@ -361,11 +361,13 @@ export function buildWebsiteExpansion(ctx) {
       ctx,
       'edit-method-settings',
       'Method ③ — Settings, Branding, Design',
-      `<div class="two-col">${editShots('edit-settings', 'edit-settings-contact.png')}${editShots('edit-design', 'edit-design-branding.png')}</div>
+      `<div class="two-col">${editShots('edit-settings', 'edit-settings-branding.png')}${editShots('edit-design', 'edit-design-branding.png')}</div>
+      ${editShots('edit-settings-features', 'edit-settings-features.png')}
       <ol class="steps">
-        <li><strong>Settings</strong> — contact e-mail, phone, payment instructions, feature toggles.</li>
-        <li><strong>Design</strong> — colours and visual tokens tied to the OLSC look.</li>
-        <li>Upload the official logo when you have the file (Settings).</li>
+        <li><strong>Settings → Branding</strong> — site name, colour pickers, big <strong>Choose image</strong> for logos (not pasting URLs).</li>
+        <li><strong>Settings → Features</strong> — on/off <strong>switches</strong> and a guests menu (never type the word &quot;true&quot;).</li>
+        <li><strong>Design</strong> — preview only; live colours come from Branding.</li>
+        <li>Contact and payment tabs — plain text fields, then Save.</li>
       </ol>`,
       'edit-guide-sheet guide-sheet',
     ),
@@ -426,8 +428,12 @@ export function buildWebsiteExpansion(ctx) {
     {
       slug: 'edit-ex-brand',
       title: 'Walkthrough — Logo and colours',
-      shot: ['edit-design', 'edit-settings'],
-      steps: ['Upload logo in Settings.', 'Tune colours in Design (preview on a phone).', 'Keep contrast readable in sunlight.'],
+      shot: ['edit-settings', 'edit-design'],
+      steps: [
+        'Settings → Branding → Choose image for the logo.',
+        'Use the colour picker for brand red — check Design preview.',
+        'Settings → Features → save with switches, not typed true/false.',
+      ],
     },
     {
       slug: 'edit-ex-ar',

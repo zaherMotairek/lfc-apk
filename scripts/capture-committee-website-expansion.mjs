@@ -239,7 +239,7 @@ export async function captureWebsiteExpansion(browser, manifest, errors = []) {
   await captureOne(admin, manifest, errors, 'edit-texts-hero', 'edit-texts-hero.png', async () => {
     await admin.goto(`${BASE}/admin/texts`);
     await admin.waitForTimeout(800);
-    await admin.getByPlaceholder(/Search keys/i).fill('Welcome to OLSC');
+    await admin.getByPlaceholder(/Search words/i).fill('Welcome to OLSC');
     await admin.waitForTimeout(600);
   }, {
     markers: [{ sel: 'table, [class*="TextRow"]', label: 'Editable text rows' }],
@@ -259,9 +259,29 @@ export async function captureWebsiteExpansion(browser, manifest, errors = []) {
     admin.goto(`${BASE}/admin/cms`),
   );
 
-  await captureOne(admin, manifest, errors, 'edit-settings', 'edit-settings-contact.png', () =>
-    admin.goto(`${BASE}/admin/settings`),
-  );
+  await captureOne(admin, manifest, errors, 'edit-settings', 'edit-settings-branding.png', async () => {
+    await admin.goto(`${BASE}/admin/settings`);
+    await admin.getByRole('button', { name: /^Branding$/i }).click();
+    await admin.waitForTimeout(600);
+  }, {
+    markers: [{ role: 'button', name: /Choose image/i, label: 'Upload logo or icon' }],
+    expectPath: '/admin/settings',
+  });
+
+  await captureOne(admin, manifest, errors, 'edit-settings-features', 'edit-settings-features.png', async () => {
+    await admin.goto(`${BASE}/admin/settings`);
+    await admin.getByRole('button', { name: /^Features$/i }).click();
+    await admin.waitForTimeout(600);
+  }, {
+    markers: [{ sel: '[role="switch"]', label: 'On/off switches (not typing true/false)' }],
+    expectPath: '/admin/settings',
+  });
+
+  await captureOne(admin, manifest, errors, 'admin-settings', 'admin-settings.png', async () => {
+    await admin.goto(`${BASE}/admin/settings`);
+    await admin.getByRole('button', { name: /^Features$/i }).click();
+    await admin.waitForTimeout(400);
+  }, { expectPath: '/admin/settings' });
 
   await captureOne(admin, manifest, errors, 'edit-design', 'edit-design-branding.png', () =>
     admin.goto(`${BASE}/admin/design`),

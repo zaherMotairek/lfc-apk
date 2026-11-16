@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T15:44:50.640Z",
+  "generatedAt": "2026-11-16T18:16:59.890Z",
   "en": {
     "brand.siteName": "RedLeb Hub",
     "brand.tagline": "OLSC Lebanon digital home",
@@ -481,10 +481,10 @@
       "slug": "/committee",
       "isPublished": true,
       "createdAt": "2026-07-27T15:25:44.253Z",
-      "updatedAt": "2026-11-15T08:05:23.079Z",
+      "updatedAt": "2026-11-16T18:13:29.477Z",
       "sections": [
         {
-          "id": "cmuoedqtp0024t8wgdt3hg3dg",
+          "id": "cmwjl0r9h000vt8y0bkd0xa57",
           "pageId": "cms3dpm7x002gt8d886plf8cx",
           "type": "HERO",
           "title": "Committee",
@@ -495,11 +495,11 @@
           "imageUrl": null,
           "sortOrder": 1,
           "isEnabled": true,
-          "createdAt": "2026-09-30T17:47:04.333Z",
-          "updatedAt": "2026-09-30T17:47:04.333Z"
+          "createdAt": "2026-11-16T18:13:29.477Z",
+          "updatedAt": "2026-11-16T18:13:29.477Z"
         },
         {
-          "id": "cmuoedqtq0025t8wgekewgxc9",
+          "id": "cmwjl0r9h000wt8y0qhfs64sa",
           "pageId": "cms3dpm7x002gt8d886plf8cx",
           "type": "COMMITTEE_LIST",
           "title": null,
@@ -530,7 +530,7 @@
               },
               {
                 "bio": "Plans watch parties, gatherings, and community events across Lebanon — bringing the Kop together on matchday.",
-                "name": "Nour El-Ali",
+                "name": "zaher motairek",
                 "role": "Events Lead",
                 "email": "events@olsclebanon.com",
                 "initials": "NE"
@@ -554,8 +554,8 @@
           "imageUrl": null,
           "sortOrder": 2,
           "isEnabled": true,
-          "createdAt": "2026-09-30T17:47:04.333Z",
-          "updatedAt": "2026-11-15T08:05:23.094Z"
+          "createdAt": "2026-11-16T18:13:29.477Z",
+          "updatedAt": "2026-11-16T18:13:29.477Z"
         }
       ]
     },
@@ -735,13 +735,13 @@
       "slug": "/contact",
       "isPublished": true,
       "createdAt": "2026-07-27T15:25:44.270Z",
-      "updatedAt": "2026-11-15T08:05:23.193Z",
+      "updatedAt": "2026-11-16T18:12:32.526Z",
       "sections": [
         {
-          "id": "cms3dpm8f002ut8d82lmjgl2a",
+          "id": "cmwjkzjbi000qt8y0brf67gil",
           "pageId": "cms3dpm8d002st8d8g5c6j3l7",
           "type": "HERO",
-          "title": "Contact",
+          "title": "Contactttt",
           "subtitle": "Get in touch with OLSC Lebanon",
           "content": {
             "primaryButtonLabel": "Explore"
@@ -749,11 +749,11 @@
           "imageUrl": null,
           "sortOrder": 1,
           "isEnabled": true,
-          "createdAt": "2026-07-27T15:25:44.272Z",
-          "updatedAt": "2026-07-27T15:25:44.272Z"
+          "createdAt": "2026-11-16T18:12:32.526Z",
+          "updatedAt": "2026-11-16T18:12:32.526Z"
         },
         {
-          "id": "cms3obygx002kt884gdijhv70",
+          "id": "cmwjkzjbi000rt8y0t0pnjyv0",
           "pageId": "cms3dpm8d002st8d8g5c6j3l7",
           "type": "RICH_TEXT",
           "title": null,
@@ -764,11 +764,11 @@
           "imageUrl": null,
           "sortOrder": 2,
           "isEnabled": true,
-          "createdAt": "2026-07-27T20:23:02.722Z",
-          "updatedAt": "2026-11-15T08:05:23.204Z"
+          "createdAt": "2026-11-16T18:12:32.526Z",
+          "updatedAt": "2026-11-16T18:12:32.526Z"
         },
         {
-          "id": "cms3obyh1002mt8846h4bssyp",
+          "id": "cmwjkzjbi000st8y0hk9w4afk",
           "pageId": "cms3dpm8d002st8d8g5c6j3l7",
           "type": "CTA",
           "title": null,
@@ -804,8 +804,8 @@
           "imageUrl": null,
           "sortOrder": 3,
           "isEnabled": true,
-          "createdAt": "2026-07-27T20:23:02.725Z",
-          "updatedAt": "2026-11-15T08:05:23.214Z"
+          "createdAt": "2026-11-16T18:12:32.526Z",
+          "updatedAt": "2026-11-16T18:12:32.526Z"
         }
       ]
     }

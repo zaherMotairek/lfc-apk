@@ -567,8 +567,15 @@
       "url": "http://localhost:5173/admin/cms"
     },
     "edit-settings": {
-      "file": "edit-settings-contact.png",
-      "markers": [],
+      "file": "edit-settings-branding.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "Upload logo or icon",
+          "xPct": 36.58745659722222,
+          "yPct": 119.72222222222221
+        }
+      ],
       "url": "http://localhost:5173/admin/settings"
     },
     "edit-design": {
@@ -607,6 +614,18 @@
       "file": "admin-texts-mobile.png",
       "markers": [],
       "url": "http://localhost:5173/admin/texts"
+    },
+    "edit-settings-features": {
+      "file": "edit-settings-features.png",
+      "markers": [
+        {
+          "n": 1,
+          "label": "On/off switches (not typing true/false)",
+          "xPct": 93.19444444444444,
+          "yPct": 56.611111111111114
+        }
+      ],
+      "url": "http://localhost:5173/admin/settings"
     }
   },
   "errors": []

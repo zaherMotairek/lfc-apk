@@ -274,8 +274,12 @@ const adminPages = [
     qa: [{ q: 'Arabic?', a: 'Import preset bundles, then let a native speaker review before go-live.' }],
   }),
   adminPage('admin-settings', 'Settings & branding', 'admin-settings', 'admin-settings.png', {
-    for: 'Logo, colours, contact details, and feature switches.',
-    steps: ['Upload the OLSC logo when you have the file.', 'Set contact and payment text.', 'Toggle guest limits or other features.'],
+    for: 'Logo uploads, colour pickers, contact and payment text, and feature switches (on/off — not typing true/false).',
+    steps: [
+      'Open Branding for Choose image on logos.',
+      'Open Features for switches and max guests.',
+      'Save each tab after changes.',
+    ],
     headsUp: 'Until the logo is uploaded, a temporary mark may show — that is normal.',
   }),
   adminPage('admin-cms', 'Pages & edit mode', 'admin-cms', 'admin-cms.png', {
@@ -382,6 +386,7 @@ const intro = `
   <table class="status">
     <tr><th>Area</th><th>Status</th></tr>
     <tr><td>Member app + admin</td><td class="tag-ready">Ready for pilot</td></tr>
+    <tr><td>Settings (switches, logo upload)</td><td class="tag-ready">Ready for pilot</td></tr>
     <tr><td>Editable texts EN/AR</td><td class="tag-progress">Arabic needs committee review</td></tr>
     <tr><td>Newsletter e-mail send</td><td class="tag-progress">Needs real sender address</td></tr>
     <tr><td>Drag-and-drop page builder</td><td class="tag-later">Coming later</td></tr>
