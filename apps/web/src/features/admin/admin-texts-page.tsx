@@ -25,6 +25,7 @@ export function AdminTextsPage() {
   const [filter, setFilter] = useState('');
   const [changedOnly, setChangedOnly] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [showTechnicalKeys, setShowTechnicalKeys] = useState(false);
   const [draft, setDraft] = useState('');
   const [message, setMessage] = useState<string | null>(null);
   const editPanelRef = useRef<HTMLFormElement | null>(null);
@@ -172,7 +173,7 @@ export function AdminTextsPage() {
       <PageHeader
         eyebrow="Content"
         title="Texts & Labels"
-        description={`Search and edit registry copy (editing language: ${lang === 'ar' ? 'العربية' : 'English'} — switch via site language toggle).`}
+        description={`Search any wording visitors see on the site (language: ${lang === 'ar' ? 'العربية' : 'English'} — use the language switcher at the top).`}
       />
 
       {message ? (
@@ -184,7 +185,7 @@ export function AdminTextsPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <input
           className="kop-input flex-1"
-          placeholder="Search keys, areas, text…"
+          placeholder="Search words you see on the website…"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
@@ -195,6 +196,14 @@ export function AdminTextsPage() {
             onChange={(e) => setChangedOnly(e.target.checked)}
           />
           Changed only
+        </label>
+        <label className="flex items-center gap-2 text-sm font-medium">
+          <input
+            type="checkbox"
+            checked={showTechnicalKeys}
+            onChange={(e) => setShowTechnicalKeys(e.target.checked)}
+          />
+          Show technical names
         </label>
       </div>
 
@@ -215,8 +224,10 @@ export function AdminTextsPage() {
               <tbody>
                 {areaRows.map((row) => (
                   <tr key={row.key} className="border-b border-black/5 align-top last:border-0">
-                    <td className="px-4 py-3 font-mono text-xs text-black/55">{row.key}</td>
-                    <td className="px-4 py-3">
+                    {showTechnicalKeys ? (
+                      <td className="px-4 py-3 font-mono text-xs text-black/55">{row.key}</td>
+                    ) : null}
+                    <td className="px-4 py-3" colSpan={showTechnicalKeys ? 1 : 2}>
                       <div className="font-medium">{row.currentValue}</div>
                       {row.description ? (
                         <div className="mt-1 text-xs text-black/45">{row.description}</div>
