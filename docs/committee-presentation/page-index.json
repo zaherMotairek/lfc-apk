@@ -1,98 +1,126 @@
 [
   {
-    "slug": "mem-home",
+    "slug": "pub-home",
     "page": 1
   },
   {
-    "slug": "mem-card",
+    "slug": "pub-gallery",
     "page": 2
   },
   {
-    "slug": "mem-matches",
+    "slug": "pub-gallery-album",
     "page": 3
   },
   {
-    "slug": "mem-predict",
+    "slug": "pub-apply",
     "page": 4
   },
   {
-    "slug": "mem-leaderboard",
+    "slug": "pub-lang",
     "page": 5
   },
   {
-    "slug": "mem-community",
+    "slug": "mem-home",
     "page": 6
   },
   {
-    "slug": "mem-notifications",
+    "slug": "mem-card",
     "page": 7
   },
   {
-    "slug": "mem-profile",
+    "slug": "mem-matches",
     "page": 8
   },
   {
-    "slug": "mem-events",
+    "slug": "mem-predict",
     "page": 9
   },
   {
-    "slug": "mem-hof",
+    "slug": "mem-leaderboard",
     "page": 10
   },
   {
-    "slug": "admin-dash",
+    "slug": "mem-community",
     "page": 11
   },
   {
-    "slug": "admin-apps",
+    "slug": "mem-news",
     "page": 12
   },
   {
-    "slug": "admin-members",
+    "slug": "mem-notifications",
     "page": 13
   },
   {
-    "slug": "admin-activity",
+    "slug": "mem-profile",
     "page": 14
   },
   {
-    "slug": "admin-events",
+    "slug": "mem-events",
     "page": 15
   },
   {
-    "slug": "admin-checkin",
+    "slug": "mem-hof",
     "page": 16
   },
   {
-    "slug": "admin-matches",
+    "slug": "admin-dash",
     "page": 17
   },
   {
-    "slug": "admin-news",
+    "slug": "admin-confirm",
     "page": 18
   },
   {
-    "slug": "admin-newsletter",
+    "slug": "admin-apps",
     "page": 19
   },
   {
-    "slug": "admin-texts",
+    "slug": "admin-members",
     "page": 20
   },
   {
-    "slug": "admin-settings",
+    "slug": "admin-activity",
     "page": 21
   },
   {
-    "slug": "admin-cms",
+    "slug": "admin-events",
     "page": 22
   },
   {
-    "slug": "admin-mod",
+    "slug": "admin-checkin",
     "page": 23
   },
   {
-    "slug": "admin-audit",
+    "slug": "admin-matches",
     "page": 24
+  },
+  {
+    "slug": "admin-news",
+    "page": 25
+  },
+  {
+    "slug": "admin-newsletter",
+    "page": 26
+  },
+  {
+    "slug": "admin-texts",
+    "page": 27
+  },
+  {
+    "slug": "admin-settings",
+    "page": 28
+  },
+  {
+    "slug": "admin-cms",
+    "page": 29
+  },
+  {
+    "slug": "admin-mod",
+    "page": 30
+  },
+  {
+    "slug": "admin-audit",
+    "page": 31
   }
 ]

@@ -8,7 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const outDir = path.join(root, 'docs/committee-presentation');
 const htmlPath = path.join(outDir, 'index.html');
-const pdfPath = path.join(outDir, 'RedLeb-Hub-Committee-Presentation.pdf');
+const pdfName = process.env.COMMITTEE_PDF_FILENAME || 'RedLeb-Hub-Committee-Presentation.pdf';
+const pdfPath = path.join(outDir, pdfName);
 const previewDir = path.join(outDir, 'pdf-preview');
 
 function countPdfPages(buffer) {
