@@ -8,7 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const outDir = path.join(root, 'docs/committee-presentation');
 const htmlPath = path.join(outDir, 'index.html');
-const pdfPath = path.join(outDir, 'RedLeb-Hub-Committee-Presentation.pdf');
+const pdfName = process.env.COMMITTEE_PDF_FILENAME || 'RedLeb-Hub-Committee-Presentation.pdf';
+const pdfPath = path.join(outDir, pdfName);
 const previewDir = path.join(outDir, 'pdf-preview');
 
 function countPdfPages(buffer) {
@@ -36,16 +37,17 @@ async function main() {
   });
 
   const pageCount = countPdfPages(pdf);
-  fs.mkdirSync(previewDir, { recursive: true });
-
-  await page.setViewportSize({ width: 794, height: 1123 });
   const sheets = await page.locator('.sheet').count();
-  for (let i = 0; i < sheets; i += 1) {
-    const el = page.locator('.sheet').nth(i);
-    await el.scrollIntoViewIfNeeded();
-    await page.screenshot({
-      path: path.join(previewDir, `page-${String(i + 1).padStart(2, '0')}.png`),
-    });
+  if (process.env.COMMITTEE_PDF_PREVIEW === '1') {
+    fs.mkdirSync(previewDir, { recursive: true });
+    await page.setViewportSize({ width: 794, height: 1123 });
+    for (let i = 0; i < sheets; i += 1) {
+      const el = page.locator('.sheet').nth(i);
+      await el.scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: path.join(previewDir, `page-${String(i + 1).padStart(2, '0')}.png`),
+      });
+    }
   }
 
   await browser.close();
