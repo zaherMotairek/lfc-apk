@@ -46,8 +46,8 @@ export function AdminPushBroadcastPanel() {
     return (
       <InfoCard>
         <p className="text-sm text-black/55">
-          Enable <span className="font-mono text-xs">features.pushEnabled</span> above and configure
-          VAPID keys on the server before broadcasting.
+          Turn on <strong className="text-ink">Enable web push notifications</strong> in the Features switches above, then
+          Save Features. Your host must also configure push keys on the server before broadcasting works.
         </p>
       </InfoCard>
     );
@@ -74,7 +74,12 @@ export function AdminPushBroadcastPanel() {
       </label>
       <label className="block text-sm font-medium">
         Open URL (optional)
-        <input className="kop-input mt-1 font-mono text-xs" value={url} onChange={(e) => setUrl(e.target.value)} />
+        <input
+          className="kop-input mt-1 text-sm"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="/app/notifications"
+        />
       </label>
       <button type="submit" className="kop-btn-primary" disabled={broadcastMutation.isPending}>
         {broadcastMutation.isPending ? 'Sending…' : 'Send push'}

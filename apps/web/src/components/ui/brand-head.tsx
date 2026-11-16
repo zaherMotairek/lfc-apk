@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useBrand } from '../../features/brand/use-brand';
+import { applyBrandCssVars } from '../../lib/brand-color';
 import { resolveMediaUrl } from '../../lib/media-url';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
@@ -15,6 +16,7 @@ export function BrandHead() {
 
   useEffect(() => {
     document.title = brand.siteName;
+    applyBrandCssVars(brand.brandRed, brand.themeColor);
 
     const themeMeta = document.querySelector('meta[name="theme-color"]');
     if (themeMeta) themeMeta.setAttribute('content', brand.themeColor);

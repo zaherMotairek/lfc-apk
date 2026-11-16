@@ -2,7 +2,8 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth-context';
-import { apiRequest } from '../../lib/api';
+import { apiRequest, apiUploadFile } from '../../lib/api';
+import { resolveMediaUrl } from '../../lib/media-url';
 import { PageHeader } from '../../components/ui/page-header';
 import { useConfirm } from '../../components/ui/confirm-provider';
 
@@ -47,6 +48,17 @@ const SECTION_TYPES = [
   'CTA',
 ] as const;
 
+const SECTION_TYPE_LABELS: Record<(typeof SECTION_TYPES)[number], string> = {
+  HERO: 'Hero banner (title + image)',
+  RICH_TEXT: 'Text block',
+  IMAGE_BANNER: 'Wide image banner',
+  FEATURED_NEWS: 'Featured news',
+  FEATURED_EVENTS: 'Featured events',
+  COMMITTEE_LIST: 'Committee list',
+  GALLERY_PREVIEW: 'Gallery preview',
+  CTA: 'Call to action button',
+};
+
 function asRecord(value: CmsSection['content']): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? { ...value } : {};
 }
@@ -63,6 +75,7 @@ export function AdminCmsPage() {
   const [draft, setDraft] = useState<CmsPage | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploadingSection, setUploadingSection] = useState<number | null>(null);
 
   const pageQuery = useQuery({
     queryKey: ['admin-cms', code],
@@ -122,6 +135,24 @@ export function AdminCmsPage() {
         ],
       };
     });
+  }
+
+  async function uploadSectionImage(index: number, file: File) {
+    if (!accessToken) return;
+    setUploadingSection(index);
+    try {
+      const result = await apiUploadFile<{ url: string; message: string }>(
+        '/admin/newsletter/upload-image',
+        file,
+        accessToken,
+      );
+      updateSection(index, { imageUrl: result.url });
+      setMessage(result.message);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Image upload failed');
+    } finally {
+      setUploadingSection(null);
+    }
   }
 
   async function removeSection(index: number) {
@@ -295,7 +326,9 @@ export function AdminCmsPage() {
                   <div key={`${section.type}-${index}`} className="kop-card space-y-4 p-5">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="kop-badge">{section.type}</span>
+                        <span className="kop-badge">
+                          {SECTION_TYPE_LABELS[section.type as (typeof SECTION_TYPES)[number]] ?? section.type}
+                        </span>
                         <span className="text-xs text-black/40">Section {index + 1}</span>
                         {!section.isEnabled ? <span className="kop-badge-red">Hidden</span> : null}
                       </div>
@@ -336,7 +369,7 @@ export function AdminCmsPage() {
                         >
                           {SECTION_TYPES.map((type) => (
                             <option key={type} value={type}>
-                              {type}
+                              {SECTION_TYPE_LABELS[type]}
                             </option>
                           ))}
                         </select>
@@ -386,15 +419,34 @@ export function AdminCmsPage() {
                           placeholder="Join now, Contact us…"
                         />
                       </label>
-                      <label className="block text-sm font-medium">
-                        Image URL
-                        <input
-                          className="kop-input"
-                          value={section.imageUrl ?? ''}
-                          onChange={(e) => updateSection(index, { imageUrl: e.target.value })}
-                          placeholder="https://…"
-                        />
-                      </label>
+                      <div className="block text-sm font-medium">
+                        Section image
+                        <div className="mt-2 flex flex-wrap items-center gap-3">
+                          {section.imageUrl ? (
+                            <img
+                              src={resolveMediaUrl(section.imageUrl)}
+                              alt=""
+                              className="h-14 max-w-[160px] rounded-lg border border-black/10 object-cover"
+                            />
+                          ) : (
+                            <span className="text-xs text-black/45">No image</span>
+                          )}
+                          <label className="kop-btn-secondary cursor-pointer !text-xs">
+                            {uploadingSection === index ? 'Uploading…' : section.imageUrl ? 'Replace' : 'Choose image'}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="sr-only"
+                              disabled={uploadingSection !== null}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) void uploadSectionImage(index, file);
+                                e.target.value = '';
+                              }}
+                            />
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
